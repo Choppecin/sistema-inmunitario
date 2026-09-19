@@ -64,50 +64,50 @@
     <main>
       <section id="view-ruta" class="view-section active">
         
-        <!-- Barra de Progreso Secuencial por Etapas -->
-        <nav id="timeline-stepper" class="timeline-stepper" aria-label="Etapas de la ruta inmunitaria">
-          <!-- Generado dinámicamente por infografia.js -->
-        </nav>
+        <!-- Barra Superior de Navegación de Fases (Siempre visible) -->
+        <div class="phase-nav-toolbar">
+          <button id="phase-prev-btn" class="nav-main-btn" disabled title="Ir a la fase anterior">
+            <span>‹ Anterior</span>
+          </button>
+          
+          <nav id="timeline-stepper" class="timeline-stepper" aria-label="Etapas de la ruta inmunitaria">
+            <!-- 6 tarjetas de fase generadas dinámicamente -->
+          </nav>
+
+          <button id="phase-next-btn" class="nav-main-btn next-btn" title="Ir a la fase siguiente">
+            <span>Siguiente ›</span>
+          </button>
+        </div>
 
         <!-- Escenario Interactivo y Panel de Detalle -->
         <div class="phase-layout">
           
-          <!-- Escenario Visual 16:9 -->
+          <!-- Escenario Visual -->
           <div class="stage-container" id="interactive-stage">
             <img id="stage-backdrop-img" class="stage-backdrop" src="imagenes/fondos/P45_piel.png" alt="Escenario Inmunitario">
             
-            <!-- Capa de Hotspots Interactivos -->
-            <div id="hotspots-overlay" class="hotspots-overlay"></div>
+            <!-- Capa de Personajes y Elementos Vivos Interactivos -->
+            <div id="stage-elements-layer" class="stage-elements-layer"></div>
 
-            <!-- Controles superiores del escenario -->
-            <div class="stage-top-controls">
-              <div class="stage-badge">
-                <span>🔬 Toca los puntos interactivos para inspeccionar células y moléculas</span>
+            <!-- Flechas flotantes dentro del escenario -->
+            <button id="stage-arrow-prev" class="stage-arrow-btn left" disabled title="Fase anterior">‹</button>
+            <button id="stage-arrow-next" class="stage-arrow-btn right" title="Fase siguiente">›</button>
+
+            <!-- Barra superior del escenario con título y ayuda -->
+            <div class="stage-top-bar">
+              <div class="stage-title-pill">
+                <h2 id="stage-phase-title">Fase 1: Barreras Anatómicas y Puerta de Entrada</h2>
               </div>
-            </div>
-
-            <!-- Barra inferior del escenario -->
-            <div class="stage-bottom-bar">
-              <div class="stage-phase-info">
-                <h2 id="stage-phase-title">Fase 1: Barreras Anatómicas</h2>
-                <p id="stage-phase-sub">La primera línea de defensa inespecífica</p>
-              </div>
-
-              <div class="stage-nav-arrows">
-                <button id="phase-prev-btn" class="nav-arrow-btn" disabled>
-                  <span>‹ Anterior</span>
-                </button>
-                <button id="phase-next-btn" class="nav-arrow-btn">
-                  <span>Siguiente ›</span>
-                </button>
+              <div class="stage-help-pill">
+                <span>🔬 Toca cualquier personaje para examinarlo</span>
               </div>
             </div>
           </div>
 
-          <!-- Panel Lateral de Información y Ficha de Hotspot -->
+          <!-- Panel Lateral de Información y Ficha de Detalle -->
           <aside class="phase-sidebar">
             
-            <!-- Ficha Emergente al pulsar un Hotspot -->
+            <!-- Ficha Emergente al pulsar un Personaje -->
             <div id="hotspot-detail-card">
               <button id="close-hotspot-btn" class="close-card-btn" title="Cerrar detalle">&times;</button>
               <div class="hotspot-asset-preview">
@@ -224,10 +224,10 @@
         
         <div class="cell-tree-header">
           <div>
-            <h2 style="font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 4px;">
+            <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 4px;">
               Árbol Hematopoyético & Catálogo Leucocitario
             </h2>
-            <p style="color: var(--color-text-muted); font-size: 14px;">
+            <p style="color: var(--color-text-muted); font-size: 13px;">
               Todos los leucocitos provienen de la Célula Madre Hematopoyética en la médula ósea. Selecciona una célula para examinar su ficha.
             </p>
           </div>
@@ -262,7 +262,7 @@
           
           <!-- Panel de Selección de Vías -->
           <div class="pathway-selector-panel">
-            <h3 style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 12px;">Vías de Activación</h3>
+            <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 10px;">Vías de Activación</h3>
             
             <button class="pathway-btn active" data-pathway="clasica">
               <span class="pathway-title">1. Vía Clásica</span>
@@ -279,9 +279,9 @@
               <span class="pathway-sub">Iniciada por unión de MBL a manosa microbiana</span>
             </button>
 
-            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 14px; margin-top: 8px;">
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 12px; margin-top: 6px;">
               <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; display: block; margin-bottom: 4px;">Las 3 Funciones Clave</span>
-              <p style="font-size: 12px; color: var(--color-text-muted); line-height: 1.5;">
+              <p style="font-size: 11px; color: var(--color-text-muted); line-height: 1.45;">
                 <strong>1. Opsonización:</strong> C3b etiqueta al patógeno.<br>
                 <strong>2. Inflamación:</strong> C3a y C5a reclutan fagocitos.<br>
                 <strong>3. Lisis:</strong> C5b-9 perfora la membrana celular.
@@ -326,7 +326,7 @@
 
             <!-- Controles y Ejecución -->
             <div class="sim-controls-row">
-              <p id="sim-stage-status" style="font-size: 13px; color: var(--color-text-muted); max-width: 60%;">
+              <p id="sim-stage-status" style="font-size: 12px; color: var(--color-text-muted); max-width: 60%;">
                 Proteínas circulantes inactivas listas para activarse.
               </p>
 
@@ -355,7 +355,7 @@
             </div>
           </div>
 
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button id="mark-all-checklist-btn" class="checklist-pill-btn">
               <span>✔ Marcar todos como aprendidos</span>
             </button>

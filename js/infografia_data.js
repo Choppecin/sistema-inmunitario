@@ -22,23 +22,23 @@ window.INFOGRAFIA_DATA = {
       hotspots: [
         {
           id: 'h_piel',
-          x: 28, y: 40,
-          label: 'La Piel (Muralla)',
+          x: 28, y: 48,
+          label: 'Célula Epitelial (Muralla)',
           icon: '🛡️',
-          assetImg: 'imagenes/fondos/P45_piel.png',
-          titulo: 'Barrera Cutánea (La Piel)',
+          assetImg: 'imagenes/assets/P29_epitelial_sana.png',
+          titulo: 'Barrera Cutánea y Epitelial',
           categoria: 'Barrera Física y Bioquímica',
           descripcion: 'Células epiteliales queratinizadas y fuertemente unidas por uniones estrechas. Su superficie seca, el pH ácido (5.5) del sebo y los ácidos grasos secretados por glándulas sebáceas impiden la proliferación bacteriana.'
         },
         {
           id: 'h_mucosa',
-          x: 52, y: 35,
-          label: 'Mucosas y Cilios',
-          icon: '🌊',
-          assetImg: 'imagenes/fondos/P46_mucosa.png',
-          titulo: 'Mucosas Respiratorias y Cilios',
-          categoria: 'Mecanismo Mecánico',
-          descripcion: 'Epitelios húmedos provistos de células caliciformes productoras de moco espeso que atrapa partículas y patógenos. Los cilios vibrátiles barren el moco hacia el exterior (escalera mucociliar).'
+          x: 52, y: 38,
+          label: 'Virus Invasor',
+          icon: '👾',
+          assetImg: 'imagenes/assets/P25_virus.png',
+          titulo: 'Microorganismo Invasor (Patógeno)',
+          categoria: 'Amenaza Biológica',
+          descripcion: 'Partículas virales o bacterias que buscan franquear los epitelios y mucosas para invadir las células del organismo y replicarse.'
         },
         {
           id: 'h_antigeno',
@@ -199,14 +199,14 @@ window.INFOGRAFIA_DATA = {
           descripcion: 'CMH-I: presente en todas las células nucleadas (muestra lo que ocurre dentro). CMH-II: exclusivo de CPAs profesionales (dendríticas, macrófagos, células B) para activar a CD4+.'
         },
         {
-          id: 'h_ganglio',
-          x: 50, y: 25,
-          label: 'Ganglio Linfático (Base Militar)',
-          icon: '🏰',
-          assetImg: 'imagenes/fondos/P50_ganglio.png',
-          titulo: 'Microambiente del Ganglio',
-          categoria: 'Órgano Linfoide Secundario',
-          descripcion: 'Punto de encuentro donde millones de linfocitos T y B vírgenes esperan el contacto con su antígeno específico presentado por las dendríticas.'
+          id: 'h_tcr',
+          x: 75, y: 35,
+          label: 'Receptor TCR (Linfocito T)',
+          icon: '🔑',
+          assetImg: 'imagenes/assets/P35_TCR.png',
+          titulo: 'Receptor TCR de Linfocito T',
+          categoria: 'Receptor Específico',
+          descripcion: 'Receptor de membrana de los linfocitos T que reconoce específicamente el complejo CMH + péptido antigénico como una llave en su cerradura.'
         }
       ],
       mecanismos: [

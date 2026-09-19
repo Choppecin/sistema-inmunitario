@@ -2,7 +2,7 @@
  * INFOGRAFIA.JS — Controlador Principal de la Infografía Interactiva
  * "El Sistema Inmunitario: Atlas Biológico y Ruta del Patógeno"
  * 
- * Gestiona navegación por pestañas, etapas secuenciales, hotspots interactivos,
+ * Gestiona navegación por pestañas, etapas secuenciales, personajes animados,
  * simulador del complemento, árbol celular, checklist de conceptos y audio WebAudio.
  */
 
@@ -10,7 +10,7 @@
   'use strict';
 
   // =========================================================================
-  // 1. MOTOR DE AUDIO SINTETIZADO (WebAudio API, sin archivos externos)
+  // 1. MOTOR DE AUDIO PROCEDIMENTAL (Totalmente seguro contra bloqueos)
   // =========================================================================
   class AudioSintetizador {
     constructor() {
@@ -19,29 +19,35 @@
     }
 
     init() {
-      if (!this.ctx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-          this.ctx = new AudioContext();
+      try {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
         }
-      }
-      if (this.ctx && this.ctx.state === 'suspended') {
-        this.ctx.resume();
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      } catch (e) {
+        // Fallback silencioso
       }
     }
 
     toggleMute() {
       this.muted = !this.muted;
-      localStorage.setItem('inmuno_sonido', this.muted ? 'off' : 'on');
+      try {
+        localStorage.setItem('inmuno_sonido', this.muted ? 'off' : 'on');
+      } catch (e) {}
       return !this.muted;
     }
 
-    playTone(freq, duration, type = 'sine', gainVal = 0.12) {
+    playTone(freq, duration, type = 'sine', gainVal = 0.1) {
       if (this.muted) return;
-      this.init();
-      if (!this.ctx) return;
-
       try {
+        this.init();
+        if (!this.ctx) return;
+
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
 
@@ -56,27 +62,26 @@
 
         osc.start();
         osc.stop(this.ctx.currentTime + duration);
-      } catch (e) {
-        // Silencio seguro en caso de bloqueo del navegador
-      }
+      } catch (e) {}
     }
 
     playClick() {
-      this.playTone(880, 0.04, 'triangle', 0.1);
+      this.playTone(880, 0.04, 'triangle', 0.08);
     }
 
     playHotspot() {
       if (this.muted) return;
-      this.init();
-      if (!this.ctx) return;
       try {
+        this.init();
+        if (!this.ctx) return;
         const now = this.ctx.currentTime;
-        const notes = [587.33, 880]; // D5, A5
+        const notes = [587.33, 880];
         notes.forEach((f, i) => {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
+          osc.type = 'sine';
           osc.frequency.setValueAtTime(f, now + i * 0.06);
-          gain.gain.setValueAtTime(0.12, now + i * 0.06);
+          gain.gain.setValueAtTime(0.1, now + i * 0.06);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.15);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -87,22 +92,22 @@
     }
 
     playTab() {
-      this.playTone(440, 0.08, 'sine', 0.08);
+      this.playTone(440, 0.06, 'sine', 0.07);
     }
 
     playCascadeStep() {
       if (this.muted) return;
-      this.init();
-      if (!this.ctx) return;
       try {
-        const notes = [440, 554.37, 659.25, 880]; // A major arpeggio
+        this.init();
+        if (!this.ctx) return;
+        const notes = [440, 554.37, 659.25, 880];
         const now = this.ctx.currentTime;
         notes.forEach((f, i) => {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(f, now + i * 0.08);
-          gain.gain.setValueAtTime(0.1, now + i * 0.08);
+          gain.gain.setValueAtTime(0.09, now + i * 0.08);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.2);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -114,17 +119,17 @@
 
     playVictory() {
       if (this.muted) return;
-      this.init();
-      if (!this.ctx) return;
       try {
-        const notes = [523.25, 659.25, 783.99, 1046.50]; // C - E - G - C
+        this.init();
+        if (!this.ctx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50];
         const now = this.ctx.currentTime;
         notes.forEach((f, i) => {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(f, now + i * 0.1);
-          gain.gain.setValueAtTime(0.15, now + i * 0.1);
+          gain.gain.setValueAtTime(0.12, now + i * 0.1);
           gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.3);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -135,23 +140,32 @@
     }
   }
 
-  // =========================================================================
-  // 2. ESTADO GLOBAL DE LA INFOGRAFÍA
-  // =========================================================================
   const audio = new AudioSintetizador();
+
+  function safeAudio(fn) {
+    try { fn(); } catch (e) {}
+  }
+
+  // =========================================================================
+  // 2. ESTADO GLOBAL
+  // =========================================================================
+  let storedChecklist = [];
+  try {
+    storedChecklist = JSON.parse(localStorage.getItem('inmuno_checklist') || '[]');
+  } catch (e) {}
 
   const STATE = {
     activeTab: 'ruta',
     activePhaseIdx: 0,
-    exploredConcepts: new Set(JSON.parse(localStorage.getItem('inmuno_checklist') || '[]')),
+    exploredConcepts: new Set(storedChecklist),
     selectedCellFilter: 'todos',
     selectedPathway: 'clasica',
     cascadeRunning: false
   };
 
-  // Mapeo auxiliar de conceptos del checklist por ID de fase o hotspot
   const CONCEPT_MAP = {
     'h_antigeno': 'antigeno',
+    'h_piel': 'inmunidad_innata',
     'h_madre': 'celulas_inmunitarias',
     'h_neutrofilo': 'inmunidad_innata',
     'h_macrofago': 'inmunidad_innata',
@@ -160,12 +174,13 @@
     'h_cd8': 'linfocitos_t',
     'h_cd4': 'linfocitos_t',
     'h_b': 'linfocitos_b',
-    'h_anticuerpos': 'anticuerpo',
+    'h_anticuerpo': 'anticuerpo',
+    'h_plasmatica': 'linfocitos_b',
     'h_memoria': 'memoria_inmunologica'
   };
 
   // =========================================================================
-  // 3. INICIALIZACIÓN Y CONTROLADOR DE PESTAÑAS
+  // 3. INICIALIZACIÓN
   // =========================================================================
   function initApp() {
     setupSoundButton();
@@ -176,16 +191,17 @@
     setupComplementLab();
     setupChecklistGlosario();
     setupCellDetailModal();
+    setupKeyboardNavigation();
 
-    // Cargar fase inicial (Fase 1)
+    // Cargar Fase 1
     cargarFase(0);
     actualizarContadorChecklist();
 
-    // Permitir clic fuera para cerrar panel de hotspot
+    // Cierre suave al hacer clic fuera del detalle
     document.addEventListener('click', (e) => {
       const card = document.getElementById('hotspot-detail-card');
-      if (card && card.style.display !== 'none') {
-        const isClickInside = card.contains(e.target) || e.target.closest('.hotspot-pin');
+      if (card && card.style.display === 'block') {
+        const isClickInside = card.contains(e.target) || e.target.closest('.stage-character');
         if (!isClickInside) {
           cerrarDetalleHotspot();
         }
@@ -193,7 +209,7 @@
     });
   }
 
-  // Sonido ON/OFF
+  // Configurar botón de sonido
   function setupSoundButton() {
     const soundBtn = document.getElementById('sound-toggle-btn');
     const soundIcon = document.getElementById('sound-icon');
@@ -201,10 +217,11 @@
 
     soundIcon.textContent = audio.muted ? '🔇' : '🔊';
 
-    soundBtn.addEventListener('click', () => {
+    soundBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const isAudible = audio.toggleMute();
       soundIcon.textContent = isAudible ? '🔊' : '🔇';
-      if (isAudible) audio.playClick();
+      if (isAudible) safeAudio(() => audio.playClick());
     });
   }
 
@@ -212,20 +229,21 @@
   function setupTabNavigation() {
     const tabButtons = document.querySelectorAll('.tab-btn');
     tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
         const targetTab = btn.getAttribute('data-tab');
-        if (targetTab === STATE.activeTab) return;
+        if (!targetTab) return;
 
-        audio.playTab();
+        safeAudio(() => audio.playTab());
         cambiarTab(targetTab);
       });
     });
 
-    // Botón de acceso rápido al glosario desde la cabecera
     const headerChecklistBtn = document.getElementById('header-checklist-btn');
     if (headerChecklistBtn) {
-      headerChecklistBtn.addEventListener('click', () => {
-        audio.playTab();
+      headerChecklistBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        safeAudio(() => audio.playTab());
         cambiarTab('glosario');
       });
     }
@@ -234,12 +252,10 @@
   function cambiarTab(tabId) {
     STATE.activeTab = tabId;
 
-    // Actualizar botones de pestaña
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
     });
 
-    // Actualizar secciones
     document.querySelectorAll('.view-section').forEach(sec => {
       sec.classList.remove('active');
     });
@@ -249,46 +265,63 @@
       targetSection.classList.add('active');
     }
 
-    // Si abrimos glosario, refrescar la lista
     if (tabId === 'glosario') {
       renderizarGlosario();
     }
   }
 
+  // Atajos de teclado (Flechas izquierda y derecha para avanzar de fase)
+  function setupKeyboardNavigation() {
+    window.addEventListener('keydown', (e) => {
+      if (STATE.activeTab !== 'ruta') return;
+      if (e.key === 'ArrowRight') {
+        const fases = window.INFOGRAFIA_DATA.FASES;
+        if (STATE.activePhaseIdx < fases.length - 1) {
+          safeAudio(() => audio.playClick());
+          cargarFase(STATE.activePhaseIdx + 1);
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (STATE.activePhaseIdx > 0) {
+          safeAudio(() => audio.playClick());
+          cargarFase(STATE.activePhaseIdx - 1);
+        }
+      }
+    });
+  }
+
   // =========================================================================
-  // 4. TAB 1: RUTA INMUNITARIA (ESCENARIO Y HOTSPOTS)
+  // 4. TAB 1: RUTA INMUNITARIA (PERSONAJES VIVOS EN ESCENA Y CONTROLES)
   // =========================================================================
   function setupRutaNavigation() {
     const stepperContainer = document.getElementById('timeline-stepper');
     const fases = window.INFOGRAFIA_DATA.FASES;
     if (!stepperContainer || !fases) return;
 
-    // Generar las 6 tarjetas de la barra superior
+    // Generar las 6 tarjetas de fase en la barra superior
     stepperContainer.innerHTML = '';
     fases.forEach((fase, idx) => {
       const card = document.createElement('div');
       card.className = `step-card ${idx === 0 ? 'active' : ''}`;
       card.setAttribute('data-phase-idx', idx);
       card.innerHTML = `
-        <span class="step-num-badge">Fase 0${fase.numero}</span>
+        <span class="step-num-badge">0${fase.numero}</span>
         <span class="step-title-text">${fase.titulo.split(':')[0]}</span>
-        <span class="step-time-text">${fase.tiempoRespuesta.split('(')[0]}</span>
       `;
       card.addEventListener('click', () => {
-        audio.playClick();
+        safeAudio(() => audio.playClick());
         cargarFase(idx);
       });
       stepperContainer.appendChild(card);
     });
 
-    // Flechas anterior y siguiente
+    // Botones de navegación (Toolbar superior)
     const prevBtn = document.getElementById('phase-prev-btn');
     const nextBtn = document.getElementById('phase-next-btn');
 
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
         if (STATE.activePhaseIdx > 0) {
-          audio.playClick();
+          safeAudio(() => audio.playClick());
           cargarFase(STATE.activePhaseIdx - 1);
         }
       });
@@ -297,17 +330,39 @@
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
         if (STATE.activePhaseIdx < fases.length - 1) {
-          audio.playClick();
+          safeAudio(() => audio.playClick());
           cargarFase(STATE.activePhaseIdx + 1);
         }
       });
     }
 
-    // Botón cerrar tarjeta de hotspot
+    // Flechas flotantes dentro del escenario
+    const stageArrowPrev = document.getElementById('stage-arrow-prev');
+    const stageArrowNext = document.getElementById('stage-arrow-next');
+
+    if (stageArrowPrev) {
+      stageArrowPrev.addEventListener('click', () => {
+        if (STATE.activePhaseIdx > 0) {
+          safeAudio(() => audio.playClick());
+          cargarFase(STATE.activePhaseIdx - 1);
+        }
+      });
+    }
+
+    if (stageArrowNext) {
+      stageArrowNext.addEventListener('click', () => {
+        if (STATE.activePhaseIdx < fases.length - 1) {
+          safeAudio(() => audio.playClick());
+          cargarFase(STATE.activePhaseIdx + 1);
+        }
+      });
+    }
+
+    // Botón cerrar ficha de detalle
     const closeHotspotBtn = document.getElementById('close-hotspot-btn');
     if (closeHotspotBtn) {
       closeHotspotBtn.addEventListener('click', () => {
-        audio.playClick();
+        safeAudio(() => audio.playClick());
         cerrarDetalleHotspot();
       });
     }
@@ -328,61 +383,80 @@
     // Actualizar botones de navegación
     const prevBtn = document.getElementById('phase-prev-btn');
     const nextBtn = document.getElementById('phase-next-btn');
-    if (prevBtn) prevBtn.disabled = (phaseIdx === 0);
-    if (nextBtn) nextBtn.disabled = (phaseIdx === fases.length - 1);
+    const stageArrowPrev = document.getElementById('stage-arrow-prev');
+    const stageArrowNext = document.getElementById('stage-arrow-next');
+
+    const isFirst = (phaseIdx === 0);
+    const isLast = (phaseIdx === fases.length - 1);
+
+    if (prevBtn) prevBtn.disabled = isFirst;
+    if (nextBtn) nextBtn.disabled = isLast;
+    if (stageArrowPrev) stageArrowPrev.disabled = isFirst;
+    if (stageArrowNext) stageArrowNext.disabled = isLast;
 
     // Actualizar Escenario
     const backdropImg = document.getElementById('stage-backdrop-img');
     if (backdropImg) {
-      backdropImg.style.opacity = '0.2';
+      backdropImg.style.opacity = '0.3';
       setTimeout(() => {
         backdropImg.src = fase.fondo;
         backdropImg.style.opacity = '1';
-      }, 150);
+      }, 100);
     }
 
-    // Título y datos de fase en la barra inferior del escenario
+    // Título de la fase en la barra superior del escenario
     const stageTitle = document.getElementById('stage-phase-title');
-    const stageSub = document.getElementById('stage-phase-sub');
     if (stageTitle) stageTitle.textContent = `Fase ${fase.numero}: ${fase.titulo}`;
-    if (stageSub) stageSub.textContent = fase.subtitulo;
 
-    // Actualizar Hotspots
-    renderizarHotspots(fase.hotspots);
+    // Renderizar los personajes interactivos sobre el escenario
+    renderizarPersonajesEnEscenario(fase.hotspots);
 
     // Actualizar Panel Lateral de la Fase
     actualizarSidebarFase(fase);
 
-    // Cerrar detalle anterior de hotspot
+    // Cerrar detalle anterior de personaje
     cerrarDetalleHotspot();
   }
 
-  function renderizarHotspots(hotspots) {
-    const container = document.getElementById('hotspots-overlay');
+  function renderizarPersonajesEnEscenario(hotspots) {
+    const container = document.getElementById('stage-elements-layer');
     if (!container) return;
 
     container.innerHTML = '';
     if (!hotspots || hotspots.length === 0) return;
 
-    hotspots.forEach(h => {
-      const pin = document.createElement('div');
-      pin.className = 'hotspot-pin';
-      pin.style.left = `${h.x}%`;
-      pin.style.top = `${h.y}%`;
-      pin.setAttribute('data-hotspot-id', h.id);
+    hotspots.forEach((h, idx) => {
+      const charEl = document.createElement('div');
+      charEl.className = 'stage-character';
+      charEl.style.left = `${h.x}%`;
+      charEl.style.top = `${h.y}%`;
+      charEl.setAttribute('data-char-id', h.id);
 
-      pin.innerHTML = `
-        <div class="pin-beacon">${h.icon || '🔍'}</div>
-        <div class="pin-label">${h.label}</div>
+      // Ligero retardo en la flotación para dar variedad orgánica
+      const delay = (idx * 0.4).toFixed(2);
+
+      charEl.innerHTML = `
+        <div class="char-sprite-wrap" style="animation-delay: ${delay}s;">
+          <img src="${h.assetImg}" alt="${h.label}" loading="eager">
+          <div class="char-beacon-ring"></div>
+        </div>
+        <div class="char-badge">
+          <span>${h.icon || '🔍'}</span>
+          <span>${h.label}</span>
+        </div>
       `;
 
-      pin.addEventListener('click', (e) => {
+      charEl.addEventListener('click', (e) => {
         e.stopPropagation();
-        audio.playHotspot();
+        safeAudio(() => audio.playHotspot());
+
+        document.querySelectorAll('.stage-character').forEach(c => c.classList.remove('selected'));
+        charEl.classList.add('selected');
+
         mostrarDetalleHotspot(h);
       });
 
-      container.appendChild(pin);
+      container.appendChild(charEl);
     });
   }
 
@@ -422,6 +496,10 @@
 
     detailCard.style.display = 'block';
 
+    // Desplazar el sidebar hacia arriba para que la ficha sea visible
+    const sidebar = document.querySelector('.phase-sidebar');
+    if (sidebar) sidebar.scrollTop = 0;
+
     // Desbloquear concepto asociado en el checklist si existe
     if (CONCEPT_MAP[h.id]) {
       desbloquearConcepto(CONCEPT_MAP[h.id]);
@@ -433,6 +511,7 @@
     if (detailCard) {
       detailCard.style.display = 'none';
     }
+    document.querySelectorAll('.stage-character').forEach(c => c.classList.remove('selected'));
   }
 
   // =========================================================================
@@ -442,7 +521,6 @@
     const comp = window.INFOGRAFIA_DATA.COMPARATIVA_INMUNIDAD;
     if (!comp || !comp.caracteristicas) return;
 
-    // Renderizar características de Inmunidad Innata
     const innataList = document.getElementById('innata-features-list');
     if (innataList) {
       innataList.innerHTML = comp.caracteristicas.map(c => `
@@ -453,7 +531,6 @@
       `).join('');
     }
 
-    // Renderizar características de Inmunidad Adaptativa
     const adaptativaList = document.getElementById('adaptativa-features-list');
     if (adaptativaList) {
       adaptativaList.innerHTML = comp.caracteristicas.map(c => `
@@ -475,7 +552,6 @@
 
     renderizarCatalogoCelular('todos');
 
-    // Botones de filtro
     const filterBtns = document.querySelectorAll('.filter-btn');
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -483,7 +559,7 @@
         btn.classList.add('active');
         const filter = btn.getAttribute('data-filter');
         STATE.selectedCellFilter = filter;
-        audio.playClick();
+        safeAudio(() => audio.playClick());
         renderizarCatalogoCelular(filter);
       });
     });
@@ -499,15 +575,15 @@
 
     const filtered = celulas.filter(c => {
       if (filter === 'todos') return true;
-      if (filter === 'mieloide') return c.linaje.toLowerCase() === 'mieloide';
-      if (filter === 'linfoide') return c.linaje.toLowerCase() === 'linfoide';
+      if (filter === 'mieloide') return c.linaje.toLowerCase().includes('mieloide');
+      if (filter === 'linfoide') return c.linaje.toLowerCase().includes('linfoide');
       if (filter === 'fagocitos') return c.nombre.includes('Neutrófilo') || c.nombre.includes('Macrófago') || c.nombre.includes('Monocito') || c.nombre.includes('Dendrítica');
       return true;
     });
 
     filtered.forEach(c => {
       const card = document.createElement('div');
-      const linajeCls = c.linaje.toLowerCase();
+      const linajeCls = c.linaje.toLowerCase().includes('mieloide') ? 'mieloide' : 'linfoide';
       card.className = `cell-card ${linajeCls}`;
       const imgPath = manifest[c.id] || 'imagenes/assets/P08_celula_madre.png';
 
@@ -521,7 +597,7 @@
       `;
 
       card.addEventListener('click', () => {
-        audio.playHotspot();
+        safeAudio(() => audio.playHotspot());
         abrirModalCelula(c, imgPath);
       });
 
@@ -535,7 +611,7 @@
 
     if (closeBtn) {
       closeBtn.addEventListener('click', () => {
-        audio.playClick();
+        safeAudio(() => audio.playClick());
         modal.classList.remove('active');
       });
     }
@@ -543,7 +619,7 @@
     if (modal) {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
-          audio.playClick();
+          safeAudio(() => audio.playClick());
           modal.classList.remove('active');
         }
       });
@@ -559,7 +635,6 @@
     document.getElementById('modal-cell-lineage').textContent = `Linaje: ${c.linaje}`;
     document.getElementById('modal-cell-role').textContent = c.papel;
 
-    // Desbloquear concepto en checklist si corresponde
     if (c.id === 'P18' || c.id === 'P22' || c.id === 'P23') desbloquearConcepto('linfocitos_b');
     if (c.id === 'P19' || c.id === 'P20' || c.id === 'P24') desbloquearConcepto('linfocitos_t');
     if (c.id === 'P08') desbloquearConcepto('celulas_inmunitarias');
@@ -578,7 +653,7 @@
         btn.classList.add('active');
         const pathway = btn.getAttribute('data-pathway');
         STATE.selectedPathway = pathway;
-        audio.playClick();
+        safeAudio(() => audio.playClick());
         actualizarInfoViaComplemento(pathway);
       });
     });
@@ -591,7 +666,6 @@
       });
     }
 
-    // Inicializar con la vía clásica
     actualizarInfoViaComplemento('clasica');
   }
 
@@ -632,39 +706,39 @@
 
     if (btn) btn.disabled = true;
 
-    // Paso 1: Iniciación
-    audio.playCascadeStep();
+    // Paso 1
+    safeAudio(() => audio.playCascadeStep());
     steps.forEach(s => s.classList.remove('active'));
     steps[0].classList.add('active');
     stageImg.src = 'imagenes/assets/P37_complemento_dormido.png';
     stageStatus.textContent = '1/4: Detección y reconocimiento inicial.';
 
-    // Paso 2: Cascada y C3
+    // Paso 2
     setTimeout(() => {
-      audio.playCascadeStep();
+      safeAudio(() => audio.playCascadeStep());
       steps[1].classList.add('active');
       stageImg.src = 'imagenes/assets/P38_cascada.png';
       stageStatus.textContent = '2/4: Activación exponencial. C3 se escinde en C3a (inflamación) y C3b (opsonización).';
-    }, 1000);
+    }, 900);
 
-    // Paso 3: C5 y Taladro MAC
+    // Paso 3
     setTimeout(() => {
-      audio.playCascadeStep();
+      safeAudio(() => audio.playCascadeStep());
       steps[2].classList.add('active');
       stageImg.src = 'imagenes/assets/P39_MAC_taladro.png';
       stageStatus.textContent = '3/4: Ensamblaje del Complejo de Ataque a la Membrana (MAC: C5b-C9).';
-    }, 2000);
+    }, 1800);
 
-    // Paso 4: Lisis osmótica y destrucción del patógeno
+    // Paso 4
     setTimeout(() => {
-      audio.playVictory();
+      safeAudio(() => audio.playVictory());
       steps[3].classList.add('active');
       stageImg.src = 'imagenes/assets/P28_virus_perforado.png';
       stageStatus.textContent = '¡4/4: Poro lítico completado! Entrada masiva de agua e iones → Lisis celular y muerte del patógeno.';
       desbloquearConcepto('sistema_complemento');
       STATE.cascadeRunning = false;
       if (btn) btn.disabled = false;
-    }, 3200);
+    }, 2800);
   }
 
   // =========================================================================
@@ -678,8 +752,8 @@
       resetBtn.addEventListener('click', () => {
         if (confirm('¿Deseas reiniciar el registro de conceptos explorados?')) {
           STATE.exploredConcepts.clear();
-          localStorage.removeItem('inmuno_checklist');
-          audio.playClick();
+          try { localStorage.removeItem('inmuno_checklist'); } catch (e) {}
+          safeAudio(() => audio.playClick());
           actualizarContadorChecklist();
           renderizarGlosario();
         }
@@ -692,8 +766,10 @@
         window.INFOGRAFIA_DATA.GLOSARIO_CHECKLIST.forEach(item => {
           STATE.exploredConcepts.add(item.id);
         });
-        localStorage.setItem('inmuno_checklist', JSON.stringify(Array.from(STATE.exploredConcepts)));
-        audio.playVictory();
+        try {
+          localStorage.setItem('inmuno_checklist', JSON.stringify(Array.from(STATE.exploredConcepts)));
+        } catch (e) {}
+        safeAudio(() => audio.playVictory());
         actualizarContadorChecklist();
         renderizarGlosario();
       });
@@ -703,10 +779,10 @@
   function desbloquearConcepto(conceptoId) {
     if (!STATE.exploredConcepts.has(conceptoId)) {
       STATE.exploredConcepts.add(conceptoId);
-      localStorage.setItem('inmuno_checklist', JSON.stringify(Array.from(STATE.exploredConcepts)));
+      try {
+        localStorage.setItem('inmuno_checklist', JSON.stringify(Array.from(STATE.exploredConcepts)));
+      } catch (e) {}
       actualizarContadorChecklist();
-      // Notificación sonora suave
-      audio.playHotspot();
     }
   }
 
@@ -760,10 +836,9 @@
         </button>
       `;
 
-      // Botón para saltar a la fase correspondiente en la Ruta
       const locateBtn = card.querySelector('.locate-phase-btn');
       locateBtn.addEventListener('click', () => {
-        audio.playClick();
+        safeAudio(() => audio.playClick());
         localizarConceptoEnRuta(item.id);
       });
 
@@ -775,22 +850,20 @@
 
   function localizarConceptoEnRuta(conceptoId) {
     const faseMap = {
-      'antigeno': 0, // Fase 1
-      'inmunidad_innata': 0, // Fase 1 o 3
-      'celulas_inmunitarias': 1, // Fase 2
-      'sistema_complemento': 2, // Fase 3
-      'linfocitos_t': 3, // Fase 4
-      'linfocitos_b': 4, // Fase 5
-      'anticuerpo': 4, // Fase 5
-      'inmunidad_adaptativa': 4, // Fase 5
-      'memoria_inmunologica': 5 // Fase 6
+      'antigeno': 0,
+      'inmunidad_innata': 0,
+      'celulas_inmunitarias': 1,
+      'sistema_complemento': 2,
+      'linfocitos_t': 3,
+      'linfocitos_b': 4,
+      'anticuerpo': 4,
+      'inmunidad_adaptativa': 4,
+      'memoria_inmunologica': 5
     };
 
     const targetFase = faseMap[conceptoId] !== undefined ? faseMap[conceptoId] : 0;
     cambiarTab('ruta');
     cargarFase(targetFase);
-
-    // Desplazar hacia arriba suavemente
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
