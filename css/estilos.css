@@ -1,0 +1,649 @@
+/* ==========================================================================
+   ESTILOS - El sistema inmunitario (Novela Visual Interactiva)
+   Estilo visual inspirado en Kurzgesagt: limpio, vibrante, moderno y accesible
+   ========================================================================== */
+
+:root {
+  --color-bg: #0d1117;
+  --color-canvas-bg: #000000;
+  --color-panel: rgba(18, 22, 34, 0.92);
+  --color-panel-border: rgba(80, 140, 255, 0.35);
+  --color-panel-glow: rgba(64, 120, 255, 0.2);
+  --color-primary: #38bdf8;
+  --color-primary-hover: #7dd3fc;
+  --color-accent: #f59e0b;
+  --color-text-main: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-serif: Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  font-family: var(--font-sans);
+  color: var(--color-text-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenedor Letterbox con proporción 16:9 fija */
+#game-container {
+  position: relative;
+  width: 1280px;
+  height: 720px;
+  max-width: 100vw;
+  max-height: 100vh;
+  aspect-ratio: 16 / 9;
+  background-color: var(--color-canvas-bg);
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+/* Canvas del motor gráfico */
+#gameCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+}
+
+/* Capa de interfaz de usuario encima del canvas */
+#ui-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#ui-overlay > * {
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   BARRA SUPERIOR DE PROGRESO Y CONTROLES
+   ========================================================================== */
+#top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, rgba(10, 14, 26, 0.88) 0%, rgba(10, 14, 26, 0) 100%);
+  z-index: 20;
+}
+
+/* 6 Etapas del sistema inmunitario */
+#stages-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.stage-pill {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.stage-pill.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+  animation: pulse-badge 2s infinite ease-in-out;
+}
+
+.stage-pill.completed {
+  color: #34d399;
+  opacity: 0.9;
+}
+
+.stage-divider {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 10px;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* Botones de control en la esquina superior */
+#header-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-btn {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--color-text-main);
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.icon-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.icon-btn:active {
+  transform: translateY(1px);
+}
+
+/* ==========================================================================
+   PANEL INFERIOR DE NARRACIÓN
+   ========================================================================== */
+#narration-container {
+  padding: 0 24px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20;
+}
+
+#narration-box {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 100px;
+  background: var(--color-panel);
+  border: 1px solid var(--color-panel-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px var(--color-panel-glow);
+  border-radius: 14px;
+  padding: 16px 24px 18px 24px;
+  position: relative;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.2s ease;
+}
+
+#narration-box:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+}
+
+#speaker-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 6px;
+  background: rgba(245, 158, 11, 0.12);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+#narration-text {
+  font-size: 19px;
+  line-height: 1.45;
+  color: #ffffff;
+  font-weight: 500;
+  min-height: 52px;
+}
+
+#narration-prompt {
+  position: absolute;
+  right: 20px;
+  bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: bounce-prompt 1.2s infinite ease-in-out;
+}
+
+@keyframes bounce-prompt {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+#skip-scene-btn {
+  align-self: flex-end;
+  margin-top: 6px;
+  margin-right: calc((100% - 1100px) / 2);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 4px 8px;
+}
+
+#skip-scene-btn:hover {
+  opacity: 1;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   PANTALLA DE PORTADA (S00) - BOTONES DE ENTRADA
+   ========================================================================== */
+#title-screen-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 15;
+  pointer-events: none;
+  gap: 20px;
+}
+
+#title-screen-ui .btn-container {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 260px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 14px 44px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.5);
+  transition: all 0.25s ease;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 30px rgba(14, 165, 233, 0.7);
+}
+
+.primary-btn:active {
+  transform: translateY(1px);
+}
+
+.secondary-btn {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f1f5f9;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 32px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.secondary-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   PANEL LATERAL: TARJETA DE INFORMACIÓN EDUCATIVA
+   ========================================================================== */
+#card-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#card-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#card-panel {
+  width: 440px;
+  max-width: 90%;
+  height: 85%;
+  margin-right: 36px;
+  background: linear-gradient(160deg, #161f38 0%, #0f172a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.25);
+  border-radius: 20px;
+  padding: 30px 28px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(60px);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow-y: auto;
+}
+
+#card-modal.open #card-panel {
+  transform: translateX(0);
+}
+
+#card-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #cbd5e1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+#card-close-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #ffffff;
+}
+
+.card-header-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+#card-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin-bottom: 18px;
+  line-height: 1.2;
+}
+
+#card-icon-container {
+  width: 100%;
+  height: 180px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#card-icon-img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
+}
+
+#card-description {
+  font-size: 17px;
+  line-height: 1.55;
+  color: #e2e8f0;
+  font-weight: 400;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.card-checklist-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #34d399;
+}
+
+/* ==========================================================================
+   MODAL DE CHECKLIST DE CONCEPTOS
+   ========================================================================== */
+#checklist-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#checklist-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#checklist-content {
+  width: 580px;
+  max-width: 90%;
+  background: #111827;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  border-radius: 18px;
+  padding: 28px;
+  position: relative;
+}
+
+#checklist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+#checklist-items-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  transition: all 0.2s ease;
+}
+
+.checklist-item.checked {
+  color: #ffffff;
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.checklist-item .checkbox-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.checklist-item.checked .checkbox-icon {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   PANTALLA DE CARGA (LOADING SCREEN)
+   ========================================================================== */
+#loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #090d16;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-logo {
+  font-size: 42px;
+  margin-bottom: 12px;
+  animation: float-pulse 2s infinite ease-in-out;
+}
+
+@keyframes float-pulse {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.05); }
+}
+
+.loading-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #f8fafc;
+  margin-bottom: 6px;
+}
+
+.loading-subtitle {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-bottom: 30px;
+}
+
+.progress-bar-track {
+  width: 380px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8 0%, #6366f1 100%);
+  border-radius: 999px;
+  transition: width 0.15s ease-out;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+}
+
+.loading-status-text {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+
+/* ==========================================================================
+   DEBUG HUD
+   ========================================================================== */
+#debug-hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid #10b981;
+  color: #10b981;
+  font-family: monospace;
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 1000;
+  pointer-events: none;
+  display: none;
+}
+
+#debug-hud.visible {
+  display: block;
+}

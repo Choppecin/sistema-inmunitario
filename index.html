@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El sistema inmunitario — Novela Visual Interactiva</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <!-- Contenedor Letterbox con proporción 16:9 fija (1280x720 lógico) -->
+  <div id="game-container">
+    
+    <!-- Canvas de renderizado 2D -->
+    <canvas id="gameCanvas" width="1280" height="720"></canvas>
+
+    <!-- Monitor de depuración (activado con ?debug=1) -->
+    <div id="debug-hud">
+      <div>FPS: <span id="debug-fps">60</span></div>
+      <div>Escena: <span id="debug-scene">-</span></div>
+      <div>Coords: <span id="debug-coords">0.00, 0.00</span></div>
+      <div>Entidades: <span id="debug-entities">0</span></div>
+    </div>
+
+    <!-- Pantalla de carga inicial de assets -->
+    <div id="loading-screen">
+      <div class="loading-logo">🛡️</div>
+      <h1 class="loading-title">EL SISTEMA INMUNITARIO</h1>
+      <p class="loading-subtitle">¿Qué ocurre desde que entra un patógeno hasta que es eliminado?</p>
+      <div class="progress-bar-track">
+        <div id="loading-bar-fill" class="progress-bar-fill"></div>
+      </div>
+      <div id="loading-status" class="loading-status-text">Cargando recursos... 0%</div>
+    </div>
+
+    <!-- Interfaz de la portada (S00) -->
+    <div id="title-screen-ui" style="display: none;">
+      <div class="btn-container">
+        <button id="btn-start" class="primary-btn">
+          <span>⚔️ Empezar aventura</span>
+        </button>
+        <button id="btn-continue" class="secondary-btn" style="display: none;">
+          <span>▶ Continuar partida</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Capa de Interfaz de Usuario Overlay -->
+    <div id="ui-overlay">
+      
+      <!-- Barra superior: etapas y accesos rápidos -->
+      <header id="top-bar">
+        <nav id="stages-progress" aria-label="Progreso de la historia">
+          <span class="stage-pill" data-stage="1">1. Entrada</span>
+          <span class="stage-divider">›</span>
+          <span class="stage-pill" data-stage="2">2. Innata</span>
+          <span class="stage-divider">›</span>
+          <span class="stage-pill" data-stage="3">3. Presentación</span>
+          <span class="stage-divider">›</span>
+          <span class="stage-pill" data-stage="4">4. Adaptativa</span>
+          <span class="stage-divider">›</span>
+          <span class="stage-pill" data-stage="5">5. Eliminación</span>
+          <span class="stage-divider">›</span>
+          <span class="stage-pill" data-stage="6">6. Memoria</span>
+        </nav>
+
+        <div id="header-controls">
+          <button id="checklist-btn" class="icon-btn" title="Ver checklist de conceptos">
+            <span>📋 Conceptos</span>
+            <span id="checklist-counter" style="background:#38bdf8;color:#0f172a;font-size:10px;padding:1px 5px;border-radius:10px;font-weight:bold;">0/9</span>
+          </button>
+          <button id="sound-btn" class="icon-btn" title="Silenciar / Activar sonido">
+            <span id="sound-icon">🔊</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Panel inferior de narración -->
+      <footer id="narration-container">
+        <div id="narration-box">
+          <div id="speaker-tag">Narrador</div>
+          <div id="narration-text"></div>
+          <div id="narration-prompt">▼ Haz clic para continuar</div>
+        </div>
+        <button id="skip-scene-btn" title="Saltar animaciones y avanzar diálogo">Saltar animación ›</button>
+      </footer>
+
+    </div>
+
+    <!-- Modal lateral: Tarjeta informativa educativa -->
+    <aside id="card-modal">
+      <div id="card-panel">
+        <button id="card-close-btn" title="Cerrar tarjeta">&times;</button>
+        <div class="card-header-badge">Ficha Educativa</div>
+        <h2 id="card-title">TÍTULO DE TARJETA</h2>
+        <div id="card-icon-container">
+          <img id="card-icon-img" src="" alt="Ilustración del concepto">
+        </div>
+        <div id="card-description">Descripción detallada del concepto.</div>
+        <div class="card-checklist-status">
+          <span>✔ Concepto registrado en tu checklist</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Modal de Checklist de conceptos aprendidos -->
+    <section id="checklist-modal">
+      <div id="checklist-content">
+        <div id="checklist-header">
+          <h3 style="font-size: 20px; font-weight: 700; color: #f8fafc;">📋 Checklist de Conceptos</h3>
+          <button id="checklist-close-btn" class="icon-btn">&times; Cerrar</button>
+        </div>
+        <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
+          Descubre e interactúa con los personajes y elementos durante la historia para desbloquear todas las fichas.
+        </p>
+        <div id="checklist-items-grid">
+          <!-- Generado dinámicamente desde data.js -->
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Módulos de la aplicación en orden de dependencia -->
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/games.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
