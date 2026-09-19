@@ -1,0 +1,11 @@
+# Reglas de Git segun AGENTS.md:
+# "No subir raw/ ni _descartes/ al repositorio."
+raw/
+_descartes/
+frames/
+
+# Entornos y caches
+__pycache__/
+*.pyc
+.vscode/
+.idea/
