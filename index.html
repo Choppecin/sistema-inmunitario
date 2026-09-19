@@ -3,129 +3,400 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>El sistema inmunitario — Novela Visual Interactiva</title>
-  <link rel="stylesheet" href="css/estilos.css">
+  <title>El Sistema Inmunitario — Infografía Interactiva & Atlas Biológico</title>
+  <link rel="stylesheet" href="css/infografia.css">
 </head>
 <body>
 
-  <!-- Contenedor Letterbox con proporción 16:9 fija (1280x720 lógico) -->
-  <div id="game-container">
-    
-    <!-- Canvas de renderizado 2D -->
-    <canvas id="gameCanvas" width="1280" height="720"></canvas>
+  <div id="app-container">
 
-    <!-- Monitor de depuración (activado con ?debug=1) -->
-    <div id="debug-hud">
-      <div>FPS: <span id="debug-fps">60</span></div>
-      <div>Escena: <span id="debug-scene">-</span></div>
-      <div>Coords: <span id="debug-coords">0.00, 0.00</span></div>
-      <div>Entidades: <span id="debug-entities">0</span></div>
-    </div>
-
-    <!-- Pantalla de carga inicial de assets -->
-    <div id="loading-screen">
-      <div class="loading-logo">🛡️</div>
-      <h1 class="loading-title">EL SISTEMA INMUNITARIO</h1>
-      <p class="loading-subtitle">¿Qué ocurre desde que entra un patógeno hasta que es eliminado?</p>
-      <div class="progress-bar-track">
-        <div id="loading-bar-fill" class="progress-bar-fill"></div>
+    <!-- ======================================================================
+         CABECERA SUPERIOR CON BRANDING, PESTAÑAS Y HERRAMIENTAS
+         ====================================================================== -->
+    <header id="infografia-header">
+      <div class="header-branding">
+        <div class="header-logo-icon">🛡️</div>
+        <div class="header-title-box">
+          <h1>El Sistema Inmunitario</h1>
+          <p>Infografía Interactiva & Atlas Biológico · Desde la Invasión hasta la Eliminación</p>
+        </div>
       </div>
-      <div id="loading-status" class="loading-status-text">Cargando recursos... 0%</div>
-    </div>
 
-    <!-- Interfaz de la portada (S00) -->
-    <div id="title-screen-ui" style="display: none;">
-      <div class="btn-container">
-        <button id="btn-start" class="primary-btn">
-          <span>⚔️ Empezar aventura</span>
+      <!-- Pestañas Principales -->
+      <nav class="nav-tabs" aria-label="Secciones de la infografía">
+        <button class="tab-btn active" data-tab="ruta">
+          <span class="tab-icon">🗺️</span>
+          <span>Ruta Inmunitaria</span>
         </button>
-        <button id="btn-continue" class="secondary-btn" style="display: none;">
-          <span>▶ Continuar partida</span>
+        <button class="tab-btn" data-tab="comparativa">
+          <span class="tab-icon">⚖️</span>
+          <span>Innata vs Adaptativa</span>
+        </button>
+        <button class="tab-btn" data-tab="arbol">
+          <span class="tab-icon">🌳</span>
+          <span>Árbol Celular</span>
+        </button>
+        <button class="tab-btn" data-tab="complemento">
+          <span class="tab-icon">⚡</span>
+          <span>Lab Complemento</span>
+        </button>
+        <button class="tab-btn" data-tab="glosario">
+          <span class="tab-icon">📖</span>
+          <span>Conceptos Clave</span>
+        </button>
+      </nav>
+
+      <!-- Herramientas de Cabecera -->
+      <div class="header-actions">
+        <button id="header-checklist-btn" class="checklist-pill-btn" title="Ver progreso de conceptos aprendidos">
+          <span>📋 Checklist:</span>
+          <span id="checklist-count-badge" class="badge-count">0/9</span>
+        </button>
+        <button id="sound-toggle-btn" class="icon-action-btn" title="Silenciar / Activar Efectos de Sonido">
+          <span id="sound-icon">🔊</span>
         </button>
       </div>
-    </div>
+    </header>
 
-    <!-- Capa de Interfaz de Usuario Overlay -->
-    <div id="ui-overlay">
-      
-      <!-- Barra superior: etapas y accesos rápidos -->
-      <header id="top-bar">
-        <nav id="stages-progress" aria-label="Progreso de la historia">
-          <span class="stage-pill" data-stage="1">1. Entrada</span>
-          <span class="stage-divider">›</span>
-          <span class="stage-pill" data-stage="2">2. Innata</span>
-          <span class="stage-divider">›</span>
-          <span class="stage-pill" data-stage="3">3. Presentación</span>
-          <span class="stage-divider">›</span>
-          <span class="stage-pill" data-stage="4">4. Adaptativa</span>
-          <span class="stage-divider">›</span>
-          <span class="stage-pill" data-stage="5">5. Eliminación</span>
-          <span class="stage-divider">›</span>
-          <span class="stage-pill" data-stage="6">6. Memoria</span>
+    <!-- ======================================================================
+         SECCIÓN 1: RUTA INMUNITARIA (POSTER INTERACTIVO Y FASES)
+         ====================================================================== -->
+    <main>
+      <section id="view-ruta" class="view-section active">
+        
+        <!-- Barra de Progreso Secuencial por Etapas -->
+        <nav id="timeline-stepper" class="timeline-stepper" aria-label="Etapas de la ruta inmunitaria">
+          <!-- Generado dinámicamente por infografia.js -->
         </nav>
 
-        <div id="header-controls">
-          <button id="checklist-btn" class="icon-btn" title="Ver checklist de conceptos">
-            <span>📋 Conceptos</span>
-            <span id="checklist-counter" style="background:#38bdf8;color:#0f172a;font-size:10px;padding:1px 5px;border-radius:10px;font-weight:bold;">0/9</span>
-          </button>
-          <button id="sound-btn" class="icon-btn" title="Silenciar / Activar sonido">
-            <span id="sound-icon">🔊</span>
-          </button>
-        </div>
-      </header>
+        <!-- Escenario Interactivo y Panel de Detalle -->
+        <div class="phase-layout">
+          
+          <!-- Escenario Visual 16:9 -->
+          <div class="stage-container" id="interactive-stage">
+            <img id="stage-backdrop-img" class="stage-backdrop" src="imagenes/fondos/P45_piel.png" alt="Escenario Inmunitario">
+            
+            <!-- Capa de Hotspots Interactivos -->
+            <div id="hotspots-overlay" class="hotspots-overlay"></div>
 
-      <!-- Panel inferior de narración -->
-      <footer id="narration-container">
-        <div id="narration-box">
-          <div id="speaker-tag">Narrador</div>
-          <div id="narration-text"></div>
-          <div id="narration-prompt">▼ Haz clic para continuar</div>
-        </div>
-        <button id="skip-scene-btn" title="Saltar animaciones y avanzar diálogo">Saltar animación ›</button>
-      </footer>
+            <!-- Controles superiores del escenario -->
+            <div class="stage-top-controls">
+              <div class="stage-badge">
+                <span>🔬 Toca los puntos interactivos para inspeccionar células y moléculas</span>
+              </div>
+            </div>
 
-    </div>
+            <!-- Barra inferior del escenario -->
+            <div class="stage-bottom-bar">
+              <div class="stage-phase-info">
+                <h2 id="stage-phase-title">Fase 1: Barreras Anatómicas</h2>
+                <p id="stage-phase-sub">La primera línea de defensa inespecífica</p>
+              </div>
 
-    <!-- Modal lateral: Tarjeta informativa educativa -->
-    <aside id="card-modal">
-      <div id="card-panel">
-        <button id="card-close-btn" title="Cerrar tarjeta">&times;</button>
-        <div class="card-header-badge">Ficha Educativa</div>
-        <h2 id="card-title">TÍTULO DE TARJETA</h2>
-        <div id="card-icon-container">
-          <img id="card-icon-img" src="" alt="Ilustración del concepto">
-        </div>
-        <div id="card-description">Descripción detallada del concepto.</div>
-        <div class="card-checklist-status">
-          <span>✔ Concepto registrado en tu checklist</span>
-        </div>
-      </div>
-    </aside>
+              <div class="stage-nav-arrows">
+                <button id="phase-prev-btn" class="nav-arrow-btn" disabled>
+                  <span>‹ Anterior</span>
+                </button>
+                <button id="phase-next-btn" class="nav-arrow-btn">
+                  <span>Siguiente ›</span>
+                </button>
+              </div>
+            </div>
+          </div>
 
-    <!-- Modal de Checklist de conceptos aprendidos -->
-    <section id="checklist-modal">
-      <div id="checklist-content">
-        <div id="checklist-header">
-          <h3 style="font-size: 20px; font-weight: 700; color: #f8fafc;">📋 Checklist de Conceptos</h3>
-          <button id="checklist-close-btn" class="icon-btn">&times; Cerrar</button>
+          <!-- Panel Lateral de Información y Ficha de Hotspot -->
+          <aside class="phase-sidebar">
+            
+            <!-- Ficha Emergente al pulsar un Hotspot -->
+            <div id="hotspot-detail-card">
+              <button id="close-hotspot-btn" class="close-card-btn" title="Cerrar detalle">&times;</button>
+              <div class="hotspot-asset-preview">
+                <img id="hotspot-img" src="" alt="Detalle del elemento">
+              </div>
+              <span id="hotspot-cat" class="hotspot-cat-badge">Categoría</span>
+              <h3 id="hotspot-title">Título del Elemento</h3>
+              <p id="hotspot-desc" class="sidebar-desc">Descripción anatómica y fisiológica.</p>
+            </div>
+
+            <!-- Ficha Predeterminada de la Fase Activa -->
+            <div id="phase-default-card" class="sidebar-card">
+              <div class="sidebar-header-badge">Ficha Anatómica</div>
+              <h3 id="sidebar-fase-title">Título de la Fase</h3>
+
+              <div class="meta-grid">
+                <div class="meta-item">
+                  <span class="meta-label">Tiempo de Respuesta</span>
+                  <span id="sidebar-meta-time" class="meta-val">Inmediato</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Localización</span>
+                  <span id="sidebar-meta-loc" class="meta-val">Superficies epiteliales</span>
+                </div>
+              </div>
+
+              <p id="sidebar-fase-desc" class="sidebar-desc">
+                Resumen didáctico del proceso biológico que tiene lugar en esta etapa.
+              </p>
+
+              <div class="sidebar-header-badge">Mecanismos Principales</div>
+              <div id="sidebar-mechanisms-list" class="mechanism-list"></div>
+            </div>
+
+          </aside>
         </div>
-        <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
-          Descubre e interactúa con los personajes y elementos durante la historia para desbloquear todas las fichas.
-        </p>
-        <div id="checklist-items-grid">
-          <!-- Generado dinámicamente desde data.js -->
+
+      </section>
+
+      <!-- ======================================================================
+           SECCIÓN 2: INNATA VS ADAPTATIVA (COMPARATIVA Y LÍNEA TEMPORAL)
+           ====================================================================== -->
+      <section id="view-comparativa" class="view-section">
+        
+        <div class="comparative-hero">
+          <h2>Inmunidad Innata vs Inmunidad Adaptativa</h2>
+          <p>
+            Dos subsistemas evolutivos que operan de forma coordinada e interdependiente. La inmunidad innata contiene la amenaza en minutos, mientras que la adaptativa genera armas específicas de alta afinidad y memoria duradera.
+          </p>
         </div>
-      </div>
-    </section>
+
+        <!-- Tarjetas Cara a Cara -->
+        <div class="duel-grid">
+          
+          <!-- Inmunidad Innata -->
+          <article class="duel-card innata">
+            <span class="duel-badge">⚡ Primera Línea Inmediata</span>
+            <h3>Inmunidad Innata (Inespecífica)</h3>
+            <p class="duel-subtitle">Presente desde el nacimiento · Sin memoria · Reconocimiento por PAMPs</p>
+            <div id="innata-features-list" class="feature-list"></div>
+          </article>
+
+          <!-- Inmunidad Adaptativa -->
+          <article class="duel-card adaptativa">
+            <span class="duel-badge">🎯 Alta Precisión y Recuerdo</span>
+            <h3>Inmunidad Adaptativa (Específica)</h3>
+            <p class="duel-subtitle">Requiere presentación antigénica · Genera memoria · Receptores V(D)J</p>
+            <div id="adaptativa-features-list" class="feature-list"></div>
+          </article>
+
+        </div>
+
+        <!-- Matriz Temporal de la Respuesta -->
+        <div class="timeline-matrix">
+          <h3>⏱️ Cronología de la Respuesta ante la Infección</h3>
+          <div class="temporal-steps-row">
+            <div class="temporal-step-card">
+              <div class="temporal-time-tag">0 a 4 Horas</div>
+              <div class="temporal-title">Fase Inicial Inmediata</div>
+              <p class="temporal-desc">
+                Barreras físicas y bioquímicas. Reconocimiento por macrófagos tisulares y activación de la vía alterna del complemento.
+              </p>
+            </div>
+            <div class="temporal-step-card">
+              <div class="temporal-time-tag">4 a 96 Horas</div>
+              <div class="temporal-title">Respuesta Innata Inducida</div>
+              <p class="temporal-desc">
+                Quimiotaxis y reclutamiento masivo de neutrófilos. Inflamación aguda, secreción de citoquinas e inicio de la maduración dendrítica.
+              </p>
+            </div>
+            <div class="temporal-step-card">
+              <div class="temporal-time-tag">3 a 7 Días</div>
+              <div class="temporal-title">Inducción Adaptativa</div>
+              <p class="temporal-desc">
+                Presentación de antígenos en ganglios linfáticos. Selección y expansión clonal de linfocitos T (CD4+, CD8+) y linfocitos B.
+              </p>
+            </div>
+            <div class="temporal-step-card">
+              <div class="temporal-time-tag">> 7 Días a Años</div>
+              <div class="temporal-title">Resolución y Memoria</div>
+              <p class="temporal-desc">
+                Células plasmáticas producen anticuerpos IgG de alta afinidad. Lisis por CD8+, neutralización total y patrulla de memoria permanente.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================================
+           SECCIÓN 3: ÁRBOL CELULAR (MIELOIDE Y LINFOIDE)
+           ====================================================================== -->
+      <section id="view-arbol" class="view-section">
+        
+        <div class="cell-tree-header">
+          <div>
+            <h2 style="font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 4px;">
+              Árbol Hematopoyético & Catálogo Leucocitario
+            </h2>
+            <p style="color: var(--color-text-muted); font-size: 14px;">
+              Todos los leucocitos provienen de la Célula Madre Hematopoyética en la médula ósea. Selecciona una célula para examinar su ficha.
+            </p>
+          </div>
+
+          <!-- Filtros de linaje -->
+          <div class="filter-tags">
+            <button class="filter-btn active" data-filter="todos">Todas las Células</button>
+            <button class="filter-btn" data-filter="mieloide">Línea Mieloide (Innata)</button>
+            <button class="filter-btn" data-filter="linfoide">Línea Linfoide (Adaptativa)</button>
+            <button class="filter-btn" data-filter="fagocitos">Fagocitos Principales</button>
+          </div>
+        </div>
+
+        <!-- Grilla de Tarjetas Celulares -->
+        <div id="cells-catalog-grid" class="cells-grid"></div>
+
+      </section>
+
+      <!-- ======================================================================
+           SECCIÓN 4: LABORATORIO DEL COMPLEMENTO (SIMULADOR DE LAS 3 VÍAS)
+           ====================================================================== -->
+      <section id="view-complemento" class="view-section">
+        
+        <div class="comparative-hero">
+          <h2>Laboratorio del Sistema del Complemento</h2>
+          <p>
+            Más de 30 proteínas plasmáticas circulantes en forma inactiva que se activan en cascada enzimática. Observa cómo convergen las tres vías en la formación del complejo de ataque a la membrana (MAC) y la lisis osmótica del invasor.
+          </p>
+        </div>
+
+        <div class="complement-simulator-container">
+          
+          <!-- Panel de Selección de Vías -->
+          <div class="pathway-selector-panel">
+            <h3 style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 12px;">Vías de Activación</h3>
+            
+            <button class="pathway-btn active" data-pathway="clasica">
+              <span class="pathway-title">1. Vía Clásica</span>
+              <span class="pathway-sub">Iniciada por complejos Antígeno - Anticuerpo</span>
+            </button>
+
+            <button class="pathway-btn" data-pathway="alterna">
+              <span class="pathway-title">2. Vía Alterna</span>
+              <span class="pathway-sub">Iniciada directamente en la superficie microbiana</span>
+            </button>
+
+            <button class="pathway-btn" data-pathway="lectinas">
+              <span class="pathway-title">3. Vía de las Lectinas</span>
+              <span class="pathway-sub">Iniciada por unión de MBL a manosa microbiana</span>
+            </button>
+
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 14px; margin-top: 8px;">
+              <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; display: block; margin-bottom: 4px;">Las 3 Funciones Clave</span>
+              <p style="font-size: 12px; color: var(--color-text-muted); line-height: 1.5;">
+                <strong>1. Opsonización:</strong> C3b etiqueta al patógeno.<br>
+                <strong>2. Inflamación:</strong> C3a y C5a reclutan fagocitos.<br>
+                <strong>3. Lisis:</strong> C5b-9 perfora la membrana celular.
+              </p>
+            </div>
+          </div>
+
+          <!-- Escenario de la Simulación de Cascada -->
+          <div class="sim-stage">
+            
+            <!-- Pasos de la Cascada -->
+            <div class="sim-steps-chain">
+              <div id="cascade-step-1" class="cascade-step-card active">
+                <div class="cascade-num">1</div>
+                <div id="sim-step1-title" class="cascade-title">Iniciador</div>
+                <div id="sim-step1-desc" class="cascade-desc">Reconocimiento específico</div>
+              </div>
+
+              <div id="cascade-step-2" class="cascade-step-card">
+                <div class="cascade-num">2</div>
+                <div id="sim-step2-title" class="cascade-title">C3 Convertasa</div>
+                <div id="sim-step2-desc" class="cascade-desc">Escisión masiva de C3</div>
+              </div>
+
+              <div id="cascade-step-3" class="cascade-step-card">
+                <div class="cascade-num">3</div>
+                <div id="sim-step3-title" class="cascade-title">C5 Convertasa</div>
+                <div id="sim-step3-desc" class="cascade-desc">Genera C5b + quimiotaxis</div>
+              </div>
+
+              <div id="cascade-step-4" class="cascade-step-card">
+                <div class="cascade-num">4</div>
+                <div id="sim-step4-title" class="cascade-title">Poro MAC</div>
+                <div id="sim-step4-desc" class="cascade-desc">Lisis osmótica directa</div>
+              </div>
+            </div>
+
+            <!-- Gráfico Interactivo de la Cascada -->
+            <div class="sim-interactive-box">
+              <img id="sim-stage-img" src="imagenes/assets/P37_complemento_dormido.png" alt="Proteínas del Complemento">
+            </div>
+
+            <!-- Controles y Ejecución -->
+            <div class="sim-controls-row">
+              <p id="sim-stage-status" style="font-size: 13px; color: var(--color-text-muted); max-width: 60%;">
+                Proteínas circulantes inactivas listas para activarse.
+              </p>
+
+              <button id="trigger-cascade-btn" class="trigger-cascade-btn">
+                <span>⚡ Activar Cascada Enzimática</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ======================================================================
+           SECCIÓN 5: GLOSARIO & CHECKLIST DE CONCEPTOS
+           ====================================================================== -->
+      <section id="view-glosario" class="view-section">
+        
+        <div class="checklist-overview-banner">
+          <div class="checklist-progress-wrap">
+            <h3>Checklist de Conceptos Clave Evaluativos</h3>
+            <p id="checklist-percent-text">0 de 9 conceptos dominados (0%)</p>
+            <div class="progress-track">
+              <div id="checklist-progress-bar" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button id="mark-all-checklist-btn" class="checklist-pill-btn">
+              <span>✔ Marcar todos como aprendidos</span>
+            </button>
+            <button id="reset-checklist-btn" class="checklist-pill-btn" style="border-color: rgba(244,63,94,0.4); color: #f43f5e;">
+              <span>↺ Reiniciar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjetas del Checklist -->
+        <div id="checklist-cards-grid" class="checklist-grid"></div>
+
+      </section>
+    </main>
 
   </div>
 
-  <!-- Módulos de la aplicación en orden de dependencia -->
+  <!-- ======================================================================
+       MODAL FLOTANTE DE DETALLE DE CÉLULA
+       ====================================================================== -->
+  <div id="cell-detail-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <button id="close-cell-modal-btn" class="modal-close-btn">&times;</button>
+      
+      <div class="modal-cell-view">
+        <div class="modal-cell-img-wrap">
+          <img id="modal-cell-img" src="" alt="Célula">
+        </div>
+        <h3 id="modal-cell-name">Nombre de la Célula</h3>
+        <div class="modal-cell-meta">
+          <span id="modal-cell-lineage" class="badge-count">Linaje</span>
+        </div>
+        <p id="modal-cell-role" class="modal-cell-desc">Función fisiológica detallada.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="js/data.js"></script>
-  <script src="js/engine.js"></script>
-  <script src="js/games.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/infografia_data.js"></script>
+  <script src="js/infografia.js"></script>
 
 </body>
 </html>
