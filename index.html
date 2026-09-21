@@ -115,8 +115,15 @@
        ====================================================================== -->
   <div id="zoomed-stage-overlay">
     
-    <!-- Fondo nítido de la escena activa -->
-    <img id="stage-hero-bg" class="stage-hero-background" src="" alt="Escenario Biológico">
+    <!-- Contenedor de Fondos Dinámicos y Crossfading -->
+    <div id="stage-bg-container" class="stage-bg-container">
+      <img id="stage-hero-bg-a" class="stage-hero-background active" src="" alt="Fondo Biológico Principal">
+      <img id="stage-hero-bg-b" class="stage-hero-background" src="" alt="Fondo Biológico Secundario">
+      <img id="stage-hero-bg-overlay" class="stage-hero-background overlay" src="" alt="Red Inmunitaria Overlay">
+    </div>
+
+    <!-- Capa de decorados de escena (ej. Dos Caminos, Barreras) -->
+    <div id="stage-decorations-layer" class="stage-decorations-container"></div>
 
     <!-- Botón para volver al panel de los 7 puntos (sin flecha) -->
     <button id="btn-back-to-panel" class="back-to-panel-btn" title="Volver al panel principal">
@@ -127,6 +134,9 @@
     <div id="stage-characters-layer" class="stage-characters-container">
       <!-- Personajes inyectados dinámicamente -->
     </div>
+
+    <!-- Capa de partículas efímeras (chispas, billetes, aerosoles) -->
+    <div id="stage-particles-layer" class="stage-particles-container"></div>
 
     <!-- Caja de narración inferior con mecanografiado (sin etiqueta de narrador) -->
     <div id="pizarra-narration-box">
@@ -160,8 +170,8 @@
   </div>
 
   <!-- Scripts con versionado anti-cache -->
-  <script src="js/pizarra_data.js?v=8"></script>
-  <script src="js/pizarra_engine.js?v=8"></script>
+  <script src="js/pizarra_data.js?v=9"></script>
+  <script src="js/pizarra_engine.js?v=9"></script>
 
 </body>
 </html>

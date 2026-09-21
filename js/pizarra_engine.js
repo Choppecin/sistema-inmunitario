@@ -14,9 +14,16 @@ class PizarraEngine {
     this.cards = Array.from(document.querySelectorAll('.station-card'));
 
     this.zoomedOverlay = document.getElementById('zoomed-stage-overlay');
-    this.stageBg = document.getElementById('stage-hero-bg');
+    this.bgA = document.getElementById('stage-hero-bg-a') || document.getElementById('stage-hero-bg');
+    this.bgB = document.getElementById('stage-hero-bg-b');
+    this.bgOverlay = document.getElementById('stage-hero-bg-overlay');
+    this.stageBg = this.bgA;
     this.stageChars = document.getElementById('stage-characters-layer');
+    this.stageDecorations = document.getElementById('stage-decorations-layer');
+    this.stageParticles = document.getElementById('stage-particles-layer');
     this.btnBackToPanel = document.getElementById('btn-back-to-panel');
+    this.activeBg = 'A';
+    this.currentBgAsset = null;
 
     this.narrationBox = document.getElementById('pizarra-narration-box');
     this.speakerTag = document.getElementById('narration-speaker');
@@ -167,33 +174,13 @@ class PizarraEngine {
     const enterScene = () => {
       this.reproducirSonido('whoosh_in');
 
-      // Cargar fondo nítido
-      this.stageBg.src = data.ASSETS[est.fondo];
+      // Limpiar decorados, partículas y overlay previos
+      this.currentBgAsset = null;
+      if (this.stageParticles) this.stageParticles.innerHTML = '';
+      if (this.stageDecorations) this.stageDecorations.innerHTML = '';
+      this.setOverlay(null);
 
-      // Cargar personajes vivos y animados
-      this.stageChars.innerHTML = '';
-      est.personajes.forEach(p => {
-        const charEl = document.createElement('div');
-        charEl.className = `stage-character-item anim-${p.anim || 'float'}`;
-        charEl.style.left = `${p.x * 100}%`;
-        charEl.style.top = `${p.y * 100}%`;
-        charEl.style.transform = 'translate(-50%, -50%)';
-
-        const imgSrc = data.ASSETS[p.img];
-        charEl.innerHTML = `
-          <img src="${imgSrc}" alt="${p.nombre}">
-          <span class="stage-character-badge">${p.nombre}</span>
-        `;
-
-        charEl.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.abrirFichaPersonaje(p, est);
-        });
-
-        this.stageChars.appendChild(charEl);
-      });
-
-      // Iniciar narración
+      // Iniciar narración en el primer paso (mostrarLineaNarracion cargará fondo y personajes dinámicos)
       this.currentLineIndex = 0;
       this.zoomedOverlay.classList.add('active');
       this.mostrarLineaNarracion(0);
@@ -285,6 +272,9 @@ class PizarraEngine {
 
     this.reproducirSonido('whoosh_out');
     this.zoomedOverlay.classList.remove('active');
+    this.setOverlay(null);
+    if (this.stageParticles) this.stageParticles.innerHTML = '';
+    if (this.stageDecorations) this.stageDecorations.innerHTML = '';
     this.cerrarFichaPersonaje();
     this.actualizarUI();
     this.actualizarLineaConectora();
@@ -299,6 +289,178 @@ class PizarraEngine {
     }
   }
 
+  // =========================================================================
+  // DINAMISMO BIOLÓGICO: FONDOS, OVERLAYS, DECORADOS Y PARTÍCULAS
+  // =========================================================================
+
+  cambiarFondo(assetId, animClass = null) {
+    if (!assetId) return;
+    const data = window.PIZARRA_DATA;
+    const src = data.ASSETS[assetId];
+    if (!src) return;
+
+    if (this.currentBgAsset === assetId) {
+      if (animClass) {
+        const activeEl = this.activeBg === 'A' ? this.bgA : this.bgB;
+        if (activeEl) {
+          activeEl.classList.remove(animClass);
+          void activeEl.offsetWidth;
+          activeEl.classList.add(animClass);
+        }
+      }
+      return;
+    }
+
+    this.currentBgAsset = assetId;
+
+    if (this.bgA && this.bgB) {
+      const nextTarget = this.activeBg === 'A' ? this.bgB : this.bgA;
+      const currentTarget = this.activeBg === 'A' ? this.bgA : this.bgB;
+
+      nextTarget.src = src;
+      const applyActive = () => {
+        nextTarget.className = 'stage-hero-background active' + (animClass ? ' ' + animClass : '');
+        currentTarget.className = 'stage-hero-background';
+        this.activeBg = this.activeBg === 'A' ? 'B' : 'A';
+        this.stageBg = nextTarget;
+      };
+
+      if (nextTarget.complete && nextTarget.naturalWidth > 0) {
+        applyActive();
+      } else {
+        nextTarget.onload = applyActive;
+      }
+    } else if (this.stageBg) {
+      this.stageBg.src = src;
+      this.stageBg.className = 'stage-hero-background active' + (animClass ? ' ' + animClass : '');
+    }
+  }
+
+  setOverlay(overlayAssetId) {
+    if (!this.bgOverlay) return;
+    if (overlayAssetId && window.PIZARRA_DATA.ASSETS[overlayAssetId]) {
+      this.bgOverlay.src = window.PIZARRA_DATA.ASSETS[overlayAssetId];
+      this.bgOverlay.classList.add('visible');
+    } else {
+      this.bgOverlay.classList.remove('visible');
+    }
+  }
+
+  aplicarShakeStage() {
+    if (!this.zoomedOverlay) return;
+    this.zoomedOverlay.classList.remove('stage-shake');
+    void this.zoomedOverlay.offsetWidth;
+    this.zoomedOverlay.classList.add('stage-shake');
+  }
+
+  crearParticulas(burstConfig) {
+    if (!burstConfig || !this.stageParticles) return;
+    const x = (burstConfig.x || 0.5) * 100;
+    const y = (burstConfig.y || 0.5) * 100;
+    const count = burstConfig.tipo === 'gold' ? 22 : 16;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'stage-particle';
+      p.style.left = `${x}%`;
+      p.style.top = `${y}%`;
+
+      const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.5;
+      const dist = 30 + Math.random() * (burstConfig.tipo === 'gold' ? 90 : 65);
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      p.style.setProperty('--dx', `${dx}px`);
+      p.style.setProperty('--dy', `${dy}px`);
+
+      if (burstConfig.tipo === 'gold') {
+        p.style.width = '10px';
+        p.style.height = '10px';
+        p.style.backgroundColor = '#fbbf24';
+        p.style.boxShadow = '0 0 10px #f59e0b';
+      } else if (burstConfig.tipo === 'aerosol') {
+        p.style.width = '6px';
+        p.style.height = '6px';
+        p.style.backgroundColor = 'rgba(255, 255, 255, 0.85)';
+        p.style.boxShadow = '0 0 8px rgba(255, 255, 255, 0.6)';
+      } else {
+        p.style.width = '8px';
+        p.style.height = '8px';
+        p.style.backgroundColor = '#38bdf8';
+        p.style.boxShadow = '0 0 8px rgba(56, 189, 248, 0.8)';
+      }
+
+      this.stageParticles.appendChild(p);
+      setTimeout(() => p.remove(), 850);
+    }
+    this.reproducirSonido('pop');
+  }
+
+  renderizarDecorados(decoradoTipo) {
+    if (!this.stageDecorations) return;
+    this.stageDecorations.innerHTML = '';
+    if (!decoradoTipo) return;
+
+    if (decoradoTipo === 'dos_caminos') {
+      const banner = document.createElement('div');
+      banner.className = 'two-paths-banner';
+      banner.innerHTML = `
+        <div class="path-badge innata">
+          <div class="path-title">Respuesta Innata</div>
+          <div class="path-desc">Rápida · Inespecífica · Inmediata desde el nacimiento</div>
+        </div>
+        <div class="path-badge adaptativa">
+          <div class="path-title">Respuesta Adaptativa</div>
+          <div class="path-desc">Específica · Más eficaz · Genera memoria duradera</div>
+        </div>
+      `;
+      this.stageDecorations.appendChild(banner);
+    } else if (decoradoTipo === 'barreras') {
+      const pills = document.createElement('div');
+      pills.className = 'barriers-pill-row';
+      pills.innerHTML = `
+        <div class="barrier-pill"><span>🛡️</span> Piel y Queratina</div>
+        <div class="barrier-pill"><span>💧</span> Cilios y Mucosas</div>
+        <div class="barrier-pill"><span>🦠</span> Microbiota Comensal</div>
+      `;
+      this.stageDecorations.appendChild(pills);
+    }
+  }
+
+  renderizarPersonajesPaso(personajes, est) {
+    if (!this.stageChars) return;
+    this.stageChars.innerHTML = '';
+    if (!personajes || personajes.length === 0) return;
+
+    const data = window.PIZARRA_DATA;
+    personajes.forEach(p => {
+      const charEl = document.createElement('div');
+      const animCls = p.anim ? `anim-${p.anim}` : 'anim-float';
+      const enterCls = p.entra ? `anim-enter-${p.entra}` : '';
+      const shakeCls = p.shake ? 'char-shaking' : '';
+      charEl.className = `stage-character-item ${animCls} ${enterCls} ${shakeCls}`.trim();
+      charEl.style.left = `${p.x * 100}%`;
+      charEl.style.top = `${p.y * 100}%`;
+      charEl.style.transform = 'translate(-50%, -50%)';
+
+      const imgSrc = data.ASSETS[p.img];
+      charEl.innerHTML = `
+        <img src="${imgSrc}" alt="${p.nombre}">
+        <span class="stage-character-badge">${p.nombre}</span>
+      `;
+
+      charEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.abrirFichaPersonaje(p, est);
+      });
+
+      this.stageChars.appendChild(charEl);
+
+      if (p.entra === 'pop' || p.entra === 'zoom' || p.entra === 'slideRight') {
+        this.reproducirSonido('pop');
+      }
+    });
+  }
+
   mostrarLineaNarracion(index) {
     const est = window.PIZARRA_DATA.ESTACIONES[this.currentStationIndex];
     if (!est || !est.narracion || index >= est.narracion.length) {
@@ -310,6 +472,23 @@ class PizarraEngine {
     const totalLines = est.narracion.length;
     if (this.narrCounter) this.narrCounter.textContent = `${index + 1} / ${totalLines}`;
     if (this.speakerTag) this.speakerTag.textContent = `NARRADOR · ${est.faseNombre}`;
+
+    // Ejecutar dinamismo biológico de la escena (si la estación define pasos específicos)
+    if (est.pasos && est.pasos[index]) {
+      const paso = est.pasos[index];
+      this.cambiarFondo(paso.fondo, paso.fondoAnim);
+      this.setOverlay(paso.overlay);
+      if (paso.shakeStage) this.aplicarShakeStage();
+      if (paso.burst) this.crearParticulas(paso.burst);
+      this.renderizarDecorados(paso.decorado || null);
+      this.renderizarPersonajesPaso(paso.personajes || [], est);
+    } else {
+      // Fallback para estaciones estándar
+      this.cambiarFondo(est.fondo);
+      this.setOverlay(null);
+      this.renderizarDecorados(null);
+      this.renderizarPersonajesPaso(est.personajes || [], est);
+    }
 
     const text = est.narracion[index];
     this.currentFullLine = text;

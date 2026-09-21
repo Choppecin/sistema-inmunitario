@@ -80,7 +80,7 @@ window.PIZARRA_DATA = {
       id: 'punto_1',
       numero: '1',
       fila: 1,
-      fondo: 'P45',
+      fondo: 'P45', // Fondo representativo para la tarjeta del panel principal
       faseNombre: '1. Puerta de Entrada y Barreras',
       titulo: 'Barreras Anatómicas y el Antígeno',
       narracion: [
@@ -90,15 +90,116 @@ window.PIZARRA_DATA = {
         'Un antígeno es toda molécula que el cuerpo reconoce como extraña y capaz de desencadenar una respuesta inmunitaria. Es decir, un guiri, un extranjero que quiere robarnos todos los dineros.',
         'Pueden ser desde virus, bacterias, hongos, parásitos, polen o tejidos trasplantados.',
         'Y su enemigo natural es el anticuerpo: una proteína producida por los linfocitos B que reconoce específicamente a un antígeno y facilita su neutralización y eliminación.',
+        'Está claro que nuestro sistema no va a atacar de la misma manera a un tipo de ataques que a otros. No es lo mismo un carterista que un aviso de bomba en una ciudad importante.',
+        'Por eso, podemos distinguir entre dos tipos de respuestas: la respuesta innata y adaptativa.',
         'La respuesta innata es la rápida, la inespecífica, la inmediata; es lo primero que se encuentra el patógeno antes de hacer nada, y está presente desde el nacimiento.',
         'Entre los métodos de defensa de esta inmunidad podemos encontrar barreras bioquímicas y físicas: la piel, los cilios, las mucosas, los MALT, los ácidos… y la microbiota.',
         'Imaginemos que el virus entra por la nariz, debido a un aerosol, por ejemplo el virus de la COVID-19.',
         'Lo primero que hace nuestro cuerpo de manera automática es intentar pararlo con los mecanismos físicos más básicos: pelos en la nariz, mucosas…'
       ],
       personajes: [
-        { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula o patógeno foráneo reconocido como extraño.', x: 0.72, y: 0.58, scale: 0.26, anim: 'float' },
-        { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca infectar células huésped.', x: 0.48, y: 0.42, scale: 0.22, anim: 'pulse' },
-        { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Primera línea de barrera física hermética e infranqueable.', x: 0.22, y: 0.60, scale: 0.26, anim: 'float' }
+        // Personajes por defecto para visualización general
+        { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.72, y: 0.58, scale: 0.28, anim: 'float' },
+        { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.48, y: 0.42, scale: 0.22, anim: 'pulse' },
+        { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Muralla celular externa y protectora del organismo.', x: 0.22, y: 0.60, scale: 0.28, anim: 'float' }
+      ],
+      // Definición paso a paso del dinamismo biológico de las escenas de AGENTS.md
+      pasos: [
+        // S01: Nuestro cuerpo (Fondo P02, red inmunitaria P03)
+        {
+          fondo: 'P02',
+          fondoAnim: 'slide-up',
+          overlay: null,
+          personajes: []
+        },
+        {
+          fondo: 'P02',
+          overlay: 'P03', // Se enciende la red inmunitaria
+          burst: { x: 0.5, y: 0.45, tipo: 'spark' },
+          personajes: []
+        },
+        {
+          fondo: 'P02',
+          overlay: 'P03',
+          personajes: []
+        },
+        // S02: El antígeno (Fondo P02, Guiri P04 entra con billetes/chispas)
+        {
+          fondo: 'P02',
+          overlay: null,
+          burst: { x: 0.68, y: 0.52, tipo: 'gold' },
+          personajes: [
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.68, y: 0.52, scale: 0.32, entra: 'slideRight', anim: 'float', shake: true }
+          ]
+        },
+        {
+          fondo: 'P02',
+          overlay: null,
+          burst: { x: 0.34, y: 0.44, tipo: 'spark' },
+          personajes: [
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.68, y: 0.52, scale: 0.32, entra: null, anim: 'float' },
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.34, y: 0.44, scale: 0.25, entra: 'pop', anim: 'pulse' }
+          ]
+        },
+        {
+          fondo: 'P02',
+          overlay: null,
+          burst: { x: 0.82, y: 0.48, tipo: 'spark' },
+          personajes: [
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.50, y: 0.52, scale: 0.28, entra: null, anim: 'float' },
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.25, y: 0.44, scale: 0.22, entra: null, anim: 'pulse' },
+            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulina producida por linfocitos B para neutralizar patógenos.', x: 0.80, y: 0.48, scale: 0.26, entra: 'slideRight', anim: 'float' }
+          ]
+        },
+        // S03: Dos tipos de amenaza (Fondo P05 carterista -> P07 dos caminos innata y adaptativa)
+        {
+          fondo: 'P05',
+          overlay: null,
+          shakeStage: true,
+          personajes: []
+        },
+        {
+          fondo: 'P07',
+          overlay: null,
+          decorado: 'dos_caminos',
+          personajes: []
+        },
+        // S04: Barreras innatas (Fondo P45 piel -> P46 mucosa)
+        {
+          fondo: 'P45',
+          overlay: null,
+          burst: { x: 0.50, y: 0.54, tipo: 'spark' },
+          personajes: [
+            { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Barrera física queratinizada que bloquea la penetración microbiana.', x: 0.50, y: 0.54, scale: 0.32, entra: 'pop', anim: 'float' }
+          ]
+        },
+        {
+          fondo: 'P46',
+          overlay: null,
+          decorado: 'barreras',
+          personajes: [
+            { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Barrera física queratinizada que bloquea la penetración microbiana.', x: 0.26, y: 0.54, scale: 0.28, entra: null, anim: 'float' }
+          ]
+        },
+        // S09: Entra el virus (Fondo P44 nariz, aerosoles y virus filtrándose)
+        {
+          fondo: 'P44',
+          overlay: null,
+          burst: { x: 0.50, y: 0.38, tipo: 'aerosol' },
+          personajes: [
+            { id: 'virus_nasal', img: 'P25', nombre: 'Virus', desc: 'Partícula viral transportada por microgotas de aerosol.', x: 0.50, y: 0.38, scale: 0.28, entra: 'zoom', anim: 'pulse' }
+          ]
+        },
+        {
+          fondo: 'P44',
+          overlay: null,
+          shakeStage: true,
+          burst: { x: 0.32, y: 0.58, tipo: 'spark' },
+          personajes: [
+            { id: 'virus_atrapado', img: 'P25', nombre: 'Virus', desc: 'Patógeno inmovilizado por la barrera física de cilios y moco.', x: 0.32, y: 0.58, scale: 0.23, entra: null, anim: 'trapped' },
+            { id: 'virus_infiltrado', img: 'P25', nombre: 'Virus', desc: 'Virus que logra superar el filtrado mecánico nasal.', x: 0.74, y: 0.42, scale: 0.25, entra: 'slideRight', anim: 'pulse' }
+          ]
+        }
       ]
     },
 
