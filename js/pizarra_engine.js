@@ -1,6 +1,6 @@
 /**
  * PIZARRA_ENGINE.JS — Motor de la Infografía Interactiva
- * Pantalla de bienvenida con máquina de escribir, fondo azul oscuro liso y panel principal
+ * Pantalla de bienvenida con máquina de escribir, cuadrícula de 7 puntos y línea conectora normal
  */
 
 class PizarraEngine {
@@ -9,25 +9,26 @@ class PizarraEngine {
     this.introTextEl = document.getElementById('intro-text');
     this.introPromptEl = document.getElementById('intro-prompt');
 
-    this.viewport = document.getElementById('pizarra-viewport');
-    this.world = document.getElementById('pizarra-world');
-    this.svgLayer = document.getElementById('pizarra-svg-layer');
-    this.stationsContainer = document.getElementById('pizarra-stations-layer');
+    this.mainPanel = document.getElementById('main-panel');
+    this.connectingPath = document.getElementById('main-connecting-path');
+    this.cards = Array.from(document.querySelectorAll('.station-card'));
+
     this.zoomedOverlay = document.getElementById('zoomed-stage-overlay');
     this.stageBg = document.getElementById('stage-hero-bg');
     this.stageChars = document.getElementById('stage-characters-layer');
+    this.btnBackToPanel = document.getElementById('btn-back-to-panel');
+
     this.narrationBox = document.getElementById('pizarra-narration-box');
     this.speakerTag = document.getElementById('narration-speaker');
     this.narrTextEl = document.getElementById('narration-text');
     this.narrCounter = document.getElementById('narration-counter');
     this.btnContinue = document.getElementById('btn-narr-continue');
 
-    // Estado de la cámara y de la historia
-    this.cameraMode = 'overview'; // 'overview' | 'station'
+    // Estado
     this.currentStationIndex = 0;
     this.visitedStations = new Set();
 
-    // Estado del mecanografiado de la escena
+    // Mecanografiado de narración
     this.currentLineIndex = 0;
     this.isTyping = false;
     this.typewriterTimer = null;
@@ -45,15 +46,14 @@ class PizarraEngine {
 
   init() {
     this.cargarProgreso();
-    this.construirPizarra();
-    this.setupEventListeners();
-    this.ajustarCamaraOverview(false);
     this.iniciarIntro();
-
-    if (this.visitedStations.size === 0) {
-      this.currentStationIndex = 0;
-    }
+    this.setupEventListeners();
     this.actualizarUI();
+
+    // Dibujar la línea conectora normal entre los 7 puntos
+    setTimeout(() => {
+      this.actualizarLineaConectora();
+    }, 100);
   }
 
   // =========================================================================
@@ -65,7 +65,7 @@ class PizarraEngine {
     this.introTextEl.textContent = '';
     this.introTyping = true;
     let i = 0;
-    const velocidad = 40; // ms por carácter
+    const velocidad = 38;
 
     const timer = setInterval(() => {
       if (i < textoCompleto.length) {
@@ -82,7 +82,6 @@ class PizarraEngine {
 
     const finalizarIntro = () => {
       if (this.introTyping) {
-        // Completar texto inmediatamente
         clearInterval(timer);
         this.introTextEl.textContent = textoCompleto;
         this.introTyping = false;
@@ -90,17 +89,17 @@ class PizarraEngine {
         return;
       }
 
-      // Transición hacia el panel principal
       this.reproducirSonido('whoosh_out');
       this.introScreen.classList.add('fade-out');
       setTimeout(() => {
         this.introScreen.style.display = 'none';
+        this.actualizarLineaConectora();
       }, 650);
     };
 
     this.introScreen.addEventListener('click', finalizarIntro);
     window.addEventListener('keydown', (e) => {
-      if (this.introScreen.style.display !== 'none' && (e.key === ' ' || e.key === 'Enter')) {
+      if (this.introScreen && this.introScreen.style.display !== 'none' && (e.key === ' ' || e.key === 'Enter')) {
         e.preventDefault();
         finalizarIntro();
       }
@@ -108,166 +107,63 @@ class PizarraEngine {
   }
 
   // =========================================================================
-  // 1. CONSTRUCCIÓN DEL PANEL PRINCIPAL (RUTAS SVG Y TARJETAS DE ESTACIÓN)
+  // 1. DIBUJAR LÍNEA NORMAL CONECTORA ENTRE LOS 7 PUNTOS
   // =========================================================================
 
-  construirPizarra() {
-    const data = window.PIZARRA_DATA;
+  actualizarLineaConectora() {
+    if (!this.cards || this.cards.length < 7 || !this.connectingPath) return;
 
-    // 1. Capa SVG de conexiones
-    this.svgLayer.innerHTML = '';
-    data.CONEXIONES.forEach(con => {
-      const pathBase = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      pathBase.setAttribute('d', con.d);
-      pathBase.setAttribute('class', 'chalk-path-base');
-      this.svgLayer.appendChild(pathBase);
+    const panelRect = this.mainPanel.getBoundingClientRect();
+    if (panelRect.width === 0 || panelRect.height === 0) return;
 
-      const pathDrawn = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      pathDrawn.setAttribute('d', con.d);
-      pathDrawn.setAttribute('class', 'chalk-path-drawn');
-      pathDrawn.id = `chalk-path-${con.desde}-${con.hacia}`;
-      this.svgLayer.appendChild(pathDrawn);
+    // Obtener centros exactos de cada una de las 7 tarjetas
+    const pts = this.cards.map(card => {
+      const r = card.getBoundingClientRect();
+      return {
+        x: r.left + r.width / 2 - panelRect.left,
+        y: r.top + r.height / 2 - panelRect.top
+      };
     });
 
-    setTimeout(() => {
-      data.CONEXIONES.forEach(con => {
-        const p = document.getElementById(`chalk-path-${con.desde}-${con.hacia}`);
-        if (p) {
-          const len = p.getTotalLength();
-          p.style.strokeDasharray = len;
-          const haciaIdx = data.ESTACIONES.findIndex(e => e.id === con.hacia);
-          if (this.visitedStations.has(haciaIdx)) {
-            p.style.strokeDashoffset = '0';
-          } else {
-            p.style.strokeDashoffset = len;
-          }
-        }
-      });
-    }, 80);
+    // Fila superior: 1 -> 2 -> 3 -> 4
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    d += ` L ${pts[1].x} ${pts[1].y}`;
+    d += ` L ${pts[2].x} ${pts[2].y}`;
+    d += ` L ${pts[3].x} ${pts[3].y}`;
 
-    // 2. Tarjetas de estación del panel principal
-    this.stationsContainer.innerHTML = '';
-    data.ESTACIONES.forEach((est, idx) => {
-      const node = document.createElement('div');
-      node.className = `pizarra-station-node station-node-${idx}`;
-      node.style.left = `${est.x}px`;
-      node.style.top = `${est.y}px`;
-      node.dataset.index = idx;
+    // Conexión suave desde el punto 4 (fin fila 1) al punto 5 (inicio fila 2):
+    const cp1x = pts[3].x + 80;
+    const cp1y = (pts[3].y + pts[4].y) / 2;
+    const cp2x = pts[4].x - 80;
+    const cp2y = (pts[3].y + pts[4].y) / 2;
+    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${pts[4].x} ${pts[4].y}`;
 
-      const isVisited = this.visitedStations.has(idx);
-      const isCurrent = idx === this.currentStationIndex;
+    // Fila inferior: 5 -> 6 -> 7
+    d += ` L ${pts[5].x} ${pts[5].y}`;
+    d += ` L ${pts[6].x} ${pts[6].y}`;
 
-      if (isVisited) node.classList.add('completed');
-      if (isCurrent) node.classList.add('current-active');
-
-      const bgImg = data.ASSETS[est.fondo];
-      const previewChars = est.personajes.map(p => 
-        `<img src="${data.ASSETS[p.img]}" alt="${p.nombre}" title="${p.nombre}">`
-      ).join('');
-
-      node.innerHTML = `
-        <div class="station-thumb-backdrop">
-          <img src="${bgImg}" class="station-thumb-img" alt="${est.titulo}">
-          <div class="station-thumb-overlay">
-            <div class="station-pill-num">${est.icono} ${est.numero}</div>
-            <div class="station-status-badge ${isVisited ? 'completed' : 'pending'}">
-              ${isVisited ? '✔ Completado' : (isCurrent ? '⚡ Activo' : 'En ruta')}
-            </div>
-          </div>
-        </div>
-        <div class="station-info-body">
-          <div>
-            <h3 class="station-title">${est.titulo}</h3>
-            <p class="station-sub">${est.subtitulo}</p>
-          </div>
-          <div class="station-footer">
-            <div class="station-chars-preview">${previewChars}</div>
-            <div class="station-explore-cta">Entrar ➔</div>
-          </div>
-        </div>
-      `;
-
-      node.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.hacerZoomAEstacion(idx);
-      });
-
-      this.stationsContainer.appendChild(node);
-    });
+    this.connectingPath.setAttribute('d', d);
   }
 
   // =========================================================================
-  // 2. MOTOR DE CÁMARA (VISTA MACRO / ZOOM A DETALLE)
+  // 2. ABRIR Y CARGAR ESCENA DE UN PUNTO
   // =========================================================================
 
-  ajustarCamaraOverview(animar = true) {
-    this.cameraMode = 'overview';
-    this.viewport.classList.remove('zoomed-in');
-    this.zoomedOverlay.classList.remove('active');
-
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const mw = window.PIZARRA_DATA.MUNDO_ANCHO;
-    const mh = window.PIZARRA_DATA.MUNDO_ALTO;
-
-    const scaleX = vw / mw;
-    const scaleY = vh / mh;
-    const scale = Math.min(scaleX, scaleY) * 0.94;
-
-    const tx = (vw - mw * scale) / 2;
-    const ty = (vh - mh * scale) / 2;
-
-    if (!animar) {
-      this.world.style.transition = 'none';
-      this.world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
-      this.world.offsetHeight;
-      this.world.style.transition = 'transform 1.25s cubic-bezier(0.22, 1, 0.36, 1)';
-    } else {
-      this.reproducirSonido('whoosh_out');
-      this.world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
-    }
-
-    this.actualizarNodosPizarra();
-  }
-
-  hacerZoomAEstacion(index) {
+  abrirPunto(index) {
     const data = window.PIZARRA_DATA;
     if (index < 0 || index >= data.ESTACIONES.length) return;
 
     this.currentStationIndex = index;
     this.visitedStations.add(index);
     this.guardarProgreso();
-    this.cameraMode = 'station';
-    this.viewport.classList.add('zoomed-in');
 
     const est = data.ESTACIONES[index];
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
     this.reproducirSonido('whoosh_in');
 
-    const zoomScale = Math.max(1.15, Math.min(vw / 900, vh / 600));
-    const tx = vw / 2 - est.x * zoomScale;
-    const ty = vh / 2 - est.y * zoomScale;
-
-    this.world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${zoomScale})`;
-
-    setTimeout(() => {
-      this.cargarEscenaAmpliada(est);
-    }, 450);
-
-    this.actualizarUI();
-  }
-
-  // =========================================================================
-  // 3. MODO DETALLE: NOVELA VISUAL Y PERSONAJES INTERACTIVOS
-  // =========================================================================
-
-  cargarEscenaAmpliada(est) {
-    const data = window.PIZARRA_DATA;
-
+    // Cargar fondo nítido
     this.stageBg.src = data.ASSETS[est.fondo];
 
+    // Cargar personajes vivos y animados
     this.stageChars.innerHTML = '';
     est.personajes.forEach(p => {
       const charEl = document.createElement('div');
@@ -291,15 +187,24 @@ class PizarraEngine {
       this.stageChars.appendChild(charEl);
     });
 
+    // Iniciar narración
     this.currentLineIndex = 0;
     this.zoomedOverlay.classList.add('active');
     this.mostrarLineaNarracion(0);
+    this.actualizarUI();
+  }
+
+  cerrarEscena() {
+    this.reproducirSonido('whoosh_out');
+    this.zoomedOverlay.classList.remove('active');
+    this.actualizarUI();
+    this.actualizarLineaConectora();
   }
 
   mostrarLineaNarracion(index) {
     const est = window.PIZARRA_DATA.ESTACIONES[this.currentStationIndex];
     if (!est || !est.narracion || index >= est.narracion.length) {
-      this.completarEstacion();
+      this.completarPunto();
       return;
     }
 
@@ -316,7 +221,7 @@ class PizarraEngine {
     this.narrTextEl.textContent = '';
     let charIdx = 0;
 
-    const speed = 24;
+    const speed = 22;
     this.typewriterTimer = setInterval(() => {
       if (charIdx < text.length) {
         this.narrTextEl.textContent += text.charAt(charIdx);
@@ -329,7 +234,7 @@ class PizarraEngine {
     }, speed);
 
     if (index === totalLines - 1) {
-      this.btnContinue.textContent = 'Volver al Panel Principal ➔';
+      this.btnContinue.textContent = 'Volver al Esquema ➔';
     } else {
       this.btnContinue.textContent = 'Siguiente ›';
     }
@@ -337,7 +242,7 @@ class PizarraEngine {
 
   avanzarNarracion() {
     if (this.isTyping) {
-      if (this.typewriterTimer) clearInterval(this.typewriterTimer);
+      clearInterval(this.typewriterTimer);
       this.typewriterTimer = null;
       this.isTyping = false;
       this.narrTextEl.textContent = this.currentFullLine;
@@ -350,48 +255,21 @@ class PizarraEngine {
     if (this.currentLineIndex < est.narracion.length - 1) {
       this.mostrarLineaNarracion(this.currentLineIndex + 1);
     } else {
-      this.completarEstacion();
+      this.completarPunto();
     }
   }
 
-  completarEstacion() {
+  completarPunto() {
     this.reproducirSonido('chime');
-    const currentIndex = this.currentStationIndex;
-    const nextIndex = currentIndex + 1;
-
-    this.ajustarCamaraOverview(true);
-
-    if (nextIndex < window.PIZARRA_DATA.ESTACIONES.length) {
-      const currentId = window.PIZARRA_DATA.ESTACIONES[currentIndex].id;
-      const nextId = window.PIZARRA_DATA.ESTACIONES[nextIndex].id;
-      this.animarTrazoTiza(currentId, nextId, () => {
-        this.currentStationIndex = nextIndex;
-        this.actualizarUI();
-      });
-    } else {
-      this.actualizarUI();
+    const nextIdx = this.currentStationIndex + 1;
+    if (nextIdx < window.PIZARRA_DATA.ESTACIONES.length) {
+      this.currentStationIndex = nextIdx;
     }
-  }
-
-  animarTrazoTiza(desdeId, haciaId, onComplete) {
-    const pathEl = document.getElementById(`chalk-path-${desdeId}-${haciaId}`);
-    if (!pathEl) {
-      if (onComplete) onComplete();
-      return;
-    }
-
-    this.reproducirSonido('chalk');
-    pathEl.style.transition = 'stroke-dashoffset 1.3s ease-in-out';
-    pathEl.style.strokeDashoffset = '0';
-
-    setTimeout(() => {
-      this.reproducirSonido('pop');
-      if (onComplete) onComplete();
-    }, 1350);
+    this.cerrarEscena();
   }
 
   // =========================================================================
-  // 4. MODAL DE FICHA EDUCATIVA DE PERSONAJE
+  // 3. FICHA EDUCATIVA DE PERSONAJE
   // =========================================================================
 
   abrirFichaPersonaje(p, est) {
@@ -416,22 +294,34 @@ class PizarraEngine {
   }
 
   // =========================================================================
-  // 5. EVENT LISTENERS
+  // 4. EVENT LISTENERS
   // =========================================================================
 
   setupEventListeners() {
     window.addEventListener('resize', () => {
-      if (this.cameraMode === 'overview') {
-        this.ajustarCamaraOverview(false);
-      }
+      this.actualizarLineaConectora();
     });
 
+    // Clic en las tarjetas de la cuadrícula
+    this.cards.forEach((card, idx) => {
+      card.addEventListener('click', () => {
+        this.abrirPunto(idx);
+      });
+    });
+
+    // Botón volver al panel
+    this.btnBackToPanel.addEventListener('click', () => {
+      this.cerrarEscena();
+    });
+
+    // Avanzar narración
     this.narrationBox.addEventListener('click', () => this.avanzarNarracion());
     this.btnContinue.addEventListener('click', (e) => {
       e.stopPropagation();
       this.avanzarNarracion();
     });
 
+    // Cerrar modal personaje
     document.getElementById('btn-close-modal-char').addEventListener('click', () => {
       this.cerrarFichaPersonaje();
     });
@@ -439,58 +329,37 @@ class PizarraEngine {
       if (e.target.id === 'character-detail-modal') this.cerrarFichaPersonaje();
     });
 
+    // Teclado
     window.addEventListener('keydown', (e) => {
-      if (this.introScreen.style.display !== 'none') return;
+      if (this.introScreen && this.introScreen.style.display !== 'none') return;
 
       if (e.key === ' ' || e.key === 'Enter') {
-        if (this.cameraMode === 'station') {
+        if (this.zoomedOverlay.classList.contains('active')) {
           e.preventDefault();
           this.avanzarNarracion();
         }
       } else if (e.key === 'Escape') {
-        if (this.cameraMode === 'station') {
-          this.ajustarCamaraOverview(true);
+        if (this.zoomedOverlay.classList.contains('active')) {
+          this.cerrarEscena();
         }
         this.cerrarFichaPersonaje();
-      } else if (e.key === 'ArrowRight') {
-        if (this.cameraMode === 'overview') {
-          this.hacerZoomAEstacion(this.currentStationIndex);
-        } else {
-          this.avanzarNarracion();
-        }
-      } else if (e.key === 'ArrowLeft') {
-        if (this.cameraMode === 'station') {
-          this.ajustarCamaraOverview(true);
-        }
-      }
-    });
-  }
-
-  actualizarNodosPizarra() {
-    const nodes = document.querySelectorAll('.pizarra-station-node');
-    nodes.forEach(node => {
-      const idx = parseInt(node.dataset.index, 10);
-      const isVisited = this.visitedStations.has(idx);
-      const isCurrent = idx === this.currentStationIndex;
-
-      node.classList.remove('current-active', 'completed');
-      if (isVisited) node.classList.add('completed');
-      if (isCurrent) node.classList.add('current-active');
-
-      const badge = node.querySelector('.station-status-badge');
-      if (badge) {
-        badge.className = `station-status-badge ${isVisited ? 'completed' : 'pending'}`;
-        badge.textContent = isVisited ? '✔ Completado' : (isCurrent ? '⚡ Activo' : 'En ruta');
       }
     });
   }
 
   actualizarUI() {
-    this.actualizarNodosPizarra();
+    this.cards.forEach((card, idx) => {
+      const isVisited = this.visitedStations.has(idx);
+      const isCurrent = idx === this.currentStationIndex;
+
+      card.classList.remove('current-active', 'completed');
+      if (isVisited) card.classList.add('completed');
+      if (isCurrent) card.classList.add('current-active');
+    });
   }
 
   // =========================================================================
-  // 6. AUDIO SINTÉTICO WEBAUDIO (FAIL-PROOF)
+  // 5. AUDIO WEBAUDIO (FAIL-PROOF)
   // =========================================================================
 
   reproducirSonido(tipo) {
@@ -529,18 +398,6 @@ class PizarraEngine {
         gain.connect(ctx.destination);
         osc.start(now);
         osc.stop(now + 0.4);
-      } else if (tipo === 'chalk') {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(320, now);
-        osc.frequency.linearRampToValueAtTime(280, now + 0.2);
-        gain.gain.setValueAtTime(0.04, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.26);
       } else if (tipo === 'chime') {
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const osc = ctx.createOscillator();
@@ -585,7 +442,7 @@ class PizarraEngine {
   }
 
   // =========================================================================
-  // 7. PERSISTENCIA
+  // 6. PERSISTENCIA
   // =========================================================================
 
   guardarProgreso() {

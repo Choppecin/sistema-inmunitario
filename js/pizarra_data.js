@@ -1,19 +1,15 @@
 /**
- * PIZARRA_DATA.JS — Datos del Lienzo Infográfico con Zoom Dinámico
- * Estructura de las 8 Estaciones en la Pizarra Infinita (3200 × 2000 px)
+ * PIZARRA_DATA.JS — Datos de las 7 Estaciones de la Infografía Interactiva
+ * Mapeo exacto de toda la historia biológica en 7 puntos en orden:
+ * Fila superior: 1, 2, 3, 4
+ * Fila inferior: 5, 6, 7
  * 
- * Regla fundamental (AGENTS.md): Los textos de narración son EXACTOS.
- * No reescribir, no resumir, no corregir estilo.
+ * Regla de oro (AGENTS.md): Los textos de narración son EXACTOS.
  */
 
 window.PIZARRA_DATA = {
-  // Dimensiones del mundo virtual de la pizarra (optimizado para vista nítida y legible)
-  MUNDO_ANCHO: 2200,
-  MUNDO_ALTO: 1300,
-
   // Manifiesto de assets utilizados
   ASSETS: {
-    // Fondos
     'P01': 'imagenes/fondos/P01_portada.png',
     'P02': 'imagenes/fondos/P02_cuerpo.png',
     'P03': 'imagenes/fondos/P03_red_inmunitaria.png',
@@ -73,19 +69,20 @@ window.PIZARRA_DATA = {
     'P54': 'imagenes/assets/P54_respuesta_secundaria.png'
   },
 
-  // 8 Estaciones Espaciales en el Árbol de la Pizarra
+  // 7 Estaciones organizadas exactamente según el esquema del usuario:
+  // Fila 1 (arriba): Puntos 1, 2, 3, 4
+  // Fila 2 (abajo):  Puntos 5, 6, 7
   ESTACIONES: [
+    // -------------------------------------------------------------
+    // PUNTO 1 (Fila 1, Pos 1): La Invasión y Barreras Innatas
+    // -------------------------------------------------------------
     {
-      id: 'estacion_1',
-      numero: '01',
-      icono: '🛡️',
-      titulo: 'La Invasión & Barreras Anatómicas',
-      subtitulo: 'Piel, Mucosas, Cilios y el Antígeno "Guiri"',
-      x: 360,
-      y: 340,
+      id: 'punto_1',
+      numero: '1',
+      fila: 1,
       fondo: 'P45',
-      fondosAlternativos: ['P02', 'P44', 'P46'],
-      faseNombre: '1. Puerta de Entrada',
+      faseNombre: '1. Puerta de Entrada y Barreras',
+      titulo: 'Barreras Anatómicas y el Antígeno',
       narracion: [
         'Este es nuestro cuerpo humano. Un mundo complejo de aparatos y sistemas.',
         'Entre ellos, el sistema inmunitario, compuesto por todas las células, moléculas, órganos y tejidos que se encargan de defender a nuestro cuerpo de todos los antígenos.',
@@ -102,20 +99,19 @@ window.PIZARRA_DATA = {
         { id: 'guiri', img: 'P04', nombre: 'El Antígeno (El Guiri)', desc: 'Molécula o patógeno foráneo reconocido como extraño.', x: 0.72, y: 0.58, scale: 0.26, anim: 'float' },
         { id: 'virus', img: 'P25', nombre: 'Virus Invasor', desc: 'Microorganismo patógeno que busca infectar células huésped.', x: 0.48, y: 0.42, scale: 0.22, anim: 'pulse' },
         { id: 'epitelio', img: 'P29', nombre: 'Célula Epitelial (Muralla)', desc: 'Primera línea de barrera física hermética e infranqueable.', x: 0.22, y: 0.60, scale: 0.26, anim: 'float' }
-      ],
-      checklistConceptos: ['antigeno', 'anticuerpo', 'inmunidad_innata']
+      ]
     },
 
+    // -------------------------------------------------------------
+    // PUNTO 2 (Fila 1, Pos 2): La Fábrica Hematopoyética
+    // -------------------------------------------------------------
     {
-      id: 'estacion_2',
-      numero: '02',
-      icono: '🏭',
-      titulo: 'La Fábrica Hematopoyética',
-      subtitulo: 'Médula Ósea: Linaje Mieloide e Inmunidad Adaptativa',
-      x: 920,
-      y: 240,
+      id: 'punto_2',
+      numero: '2',
+      fila: 1,
       fondo: 'P47',
       faseNombre: '2. Fábrica Celular',
+      titulo: 'La Fábrica Celular: Médula Ósea',
       narracion: [
         'Y lo más importante, de lo que no hemos hablado aún: los policías que se encargan de que todo funcione bien.',
         'Vamos a hablar de las células, los leucocitos o glóbulos blancos, las verdaderas defensoras de todo.',
@@ -132,21 +128,19 @@ window.PIZARRA_DATA = {
         { id: 'neutrofilo', img: 'P09', nombre: 'Neutrófilo (Policía)', desc: 'Leucocito más abundante (60-70%), primer respondedor y fagocito.', x: 0.42, y: 0.40, scale: 0.24, anim: 'float' },
         { id: 'macrofago', img: 'P14', nombre: 'Macrófago Tisular', desc: 'Gran comedor fagocitario derivado de monocitos sanguíneos.', x: 0.65, y: 0.55, scale: 0.28, anim: 'float' },
         { id: 'nk', img: 'P21', nombre: 'Célula NK (Natural Killer)', desc: 'Linfocito innato destructor de infectadas y tumorales sin antígeno específico.', x: 0.85, y: 0.62, scale: 0.24, anim: 'pulse' }
-      ],
-      checklistConceptos: ['celulas_inmunitarias']
+      ]
     },
 
+    // -------------------------------------------------------------
+    // PUNTO 3 (Fila 1, Pos 3): Alarma Tisular, Quimiotaxis y Fagocitosis
+    // -------------------------------------------------------------
     {
-      id: 'estacion_3',
-      numero: '03',
-      icono: '🚨',
-      titulo: 'Alarma Tisular & Quimiotaxis',
-      subtitulo: 'La Infección Comienza y los Fagocitos Acuden',
-      x: 880,
-      y: 750,
+      id: 'punto_3',
+      numero: '3',
+      fila: 1,
       fondo: 'P49',
-      faseNombre: '3. Infección & Quimiotaxis',
-      minijuego: 1, // Minijuego 1: Macrófago Comilón
+      faseNombre: '3. Infección y Fagocitosis',
+      titulo: 'Alarma Tisular, Quimiotaxis y Fagocitosis',
       narracion: [
         'Nuestro cuerpo es un poco malo y el virus ha comenzado a infectar células.',
         'Lo primero que entra en acción son las células de la respuesta inmunitaria innata.',
@@ -156,21 +150,20 @@ window.PIZARRA_DATA = {
       personajes: [
         { id: 'infectada', img: 'P30', nombre: 'Célula Infectada', desc: 'Célula epitelial invadida por virus que emite señales de estrés.', x: 0.22, y: 0.62, scale: 0.28, anim: 'pulse' },
         { id: 'quimio', img: 'P43', nombre: 'Rastro de Quimiotaxis', desc: 'Gradiente de citoquinas y quimioquinas que guía a los leucocitos.', x: 0.50, y: 0.52, scale: 0.25, anim: 'float' },
-        { id: 'macro_comilon', img: 'P14', nombre: 'Macrófago Comilón', desc: 'Fagocita activamente invasores opsonizados mediante fagosomas.', x: 0.78, y: 0.58, scale: 0.28, anim: 'float' }
-      ],
-      checklistConceptos: ['inmunidad_innata']
+        { id: 'macro_comilon', img: 'P14', nombre: 'Macrófago Tisular', desc: 'Fagocita activamente invasores opsonizados mediante fagosomas.', x: 0.78, y: 0.58, scale: 0.28, anim: 'float' }
+      ]
     },
 
+    // -------------------------------------------------------------
+    // PUNTO 4 (Fila 1, Pos 4): El Sistema del Complemento
+    // -------------------------------------------------------------
     {
-      id: 'estacion_4',
-      numero: '04',
-      icono: '⚡',
-      titulo: 'El Sistema del Complemento',
-      subtitulo: 'Más de 30 Proteínas en Cascada y Perforación MAC',
-      x: 1520,
-      y: 260,
+      id: 'punto_4',
+      numero: '4',
+      fila: 1,
       fondo: 'P48',
       faseNombre: '4. Bioquímica del Complemento',
+      titulo: 'El Sistema del Complemento',
       narracion: [
         'Por otra parte, podemos encontrarnos el sistema del complemento. Este es un conjunto de más de treinta proteínas plasmáticas termolábiles que circulan por la sangre de forma inactiva, y que se activan cuando detectan anomalías.',
         'Tiene tres vías de activación: la clásica (a través de un anticuerpo unido al antígeno), la alterna (directamente sobre la superficie de muchos microorganismos, sin anticuerpos) y la vía de las lectinas (cuando reconocen azúcares de la superficie del microbio), pero eso es otra cosa.',
@@ -180,92 +173,66 @@ window.PIZARRA_DATA = {
         { id: 'dormido', img: 'P37', nombre: 'Proteínas Inactivas', desc: 'Proteínas termolábiles sintetizadas en hígado que patrullan la sangre.', x: 0.25, y: 0.54, scale: 0.26, anim: 'float' },
         { id: 'cascada', img: 'P38', nombre: 'Cascada Enzimática', desc: 'Activación proteolítica secuencial (C3 convertasa, C5 convertasa).', x: 0.55, y: 0.45, scale: 0.28, anim: 'pulse' },
         { id: 'mac_drill', img: 'P39', nombre: 'Complejo de Ataque a la Membrana (MAC)', desc: 'Poro lítico (C5b-9) que perfora la envoltura y causa lisis osmótica.', x: 0.82, y: 0.58, scale: 0.28, anim: 'pulse' }
-      ],
-      checklistConceptos: ['sistema_complemento']
+      ]
     },
 
+    // -------------------------------------------------------------
+    // PUNTO 5 (Fila 2, Pos 1): Migración y Presentación Antigénica
+    // -------------------------------------------------------------
     {
-      id: 'estacion_5',
-      numero: '05',
-      icono: '🌉',
-      titulo: 'El Puente Inmune: La Célula Dendrítica',
-      subtitulo: 'Captura en Tejido y Viaje al Ganglio Linfático',
-      x: 1420,
-      y: 760,
-      fondo: 'P51',
-      faseNombre: '5. Migración Linfática',
+      id: 'punto_5',
+      numero: '5',
+      fila: 2,
+      fondo: 'P50',
+      faseNombre: '5. Presentación Antigénica',
+      titulo: 'La Célula Dendrítica y el Ganglio Linfático',
       narracion: [
         'Por otra parte, las células dendríticas, que también van por allí, una vez captan los antígenos en los tejidos, maduran y viajan hasta los ganglios linfáticos.',
         'Allí, como células presentadoras de antígeno, muestran los fragmentos de estos virus unidos a sus moléculas del CMH (complejo mayor de histocompatibilidad, en inglés MHC), como si agitaran banderitas de alarma.',
-        'Y es que los linfocitos T no pueden reconocer un antígeno libre: necesitan que otra célula se lo muestre, y lo detectan mediante su receptor TCR.'
-      ],
-      personajes: [
-        { id: 'dendritica_viajera', img: 'P15', nombre: 'Célula Dendrítica (CPA)', desc: 'El centinela maestro que procesa el antígeno y activa la inmunidad adaptativa.', x: 0.38, y: 0.55, scale: 0.30, anim: 'float' },
-        { id: 'mapa_linfa', img: 'P51', nombre: 'Vasos Linfáticos Aferentes', desc: 'Autopistas vasculares que transportan linfa y CPA hacia los ganglios.', x: 0.72, y: 0.50, scale: 0.35, anim: 'pulse' }
-      ],
-      checklistConceptos: ['inmunidad_adaptativa', 'celulas_inmunitarias']
-    },
-
-    {
-      id: 'estacion_6',
-      numero: '06',
-      icono: '🔑',
-      titulo: 'Presentación Antigénica en el Ganglio',
-      subtitulo: 'Banderas de CMH y Llave TCR en Linfocitos T',
-      x: 1900,
-      y: 580,
-      fondo: 'P50',
-      faseNombre: '6. Sinapsis Inmunitaria',
-      minijuego: 3, // Minijuego 3: Llave CMH-TCR
-      narracion: [
+        'Y es que los linfocitos T no pueden reconocer un antígeno libre: necesitan que otra célula se lo muestre, y lo detectan mediante su receptor TCR.',
         'Si la infección es grave, estas células presentan esos fragmentos de estos virus en los ganglios linfáticos a los linfocitos T y ya comienza la respuesta adaptativa.',
-        'Los linfocitos T maduran en el timo y se dividen en dos equipos: los CD4+ colaboradores, que dirigen la respuesta liberando citoquinas, y los CD8+ citotóxicos, que eliminan células infectadas.',
-        'Los T CD4+ reconocen el antígeno presentado sobre moléculas CMH-II en la célula dendrítica.',
-        'Y los T CD8+ reconocen el antígeno presentado sobre moléculas CMH-I.'
+        'Los linfocitos T maduran en el timo y se dividen en dos equipos: los CD4+ colaboradores, que dirigen la respuesta liberando citoquinas, y los CD8+ citotóxicos, que eliminan células infectadas.'
       ],
       personajes: [
-        { id: 'cmh_bandera', img: 'P34', nombre: 'Complejo CMH (MHC)', desc: 'Molécula presentadora de superficie que exhibe el péptido antigénico.', x: 0.28, y: 0.52, scale: 0.28, anim: 'pulse' },
-        { id: 'tcr_llave', img: 'P35', nombre: 'Receptor TCR', desc: 'Receptor clonotípico del linfocito T que reconoce el binomio CMH-antígeno.', x: 0.52, y: 0.44, scale: 0.28, anim: 'pulse' },
-        { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+ (Helper)', desc: 'Director de orquesta que secreta citoquinas activadoras.', x: 0.78, y: 0.56, scale: 0.28, anim: 'float' }
-      ],
-      checklistConceptos: ['linfocitos_t', 'inmunidad_adaptativa']
+        { id: 'dendritica', img: 'P15', nombre: 'Célula Dendrítica (CPA)', desc: 'Centinela que procesa el antígeno y viaja al ganglio linfático.', x: 0.26, y: 0.55, scale: 0.28, anim: 'float' },
+        { id: 'cmh', img: 'P34', nombre: 'Complejo CMH (MHC)', desc: 'Molécula de superficie que exhibe el péptido antigénico.', x: 0.50, y: 0.46, scale: 0.28, anim: 'pulse' },
+        { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+ (Helper)', desc: 'Reconoce CMH-II y orquesta la respuesta liberando citoquinas.', x: 0.78, y: 0.54, scale: 0.28, anim: 'float' }
+      ]
     },
 
+    // -------------------------------------------------------------
+    // PUNTO 6 (Fila 2, Pos 2): Batalla Adaptativa Celular y Humoral
+    // -------------------------------------------------------------
     {
-      id: 'estacion_7',
-      numero: '07',
-      icono: '⚔️',
-      titulo: 'La Batalla Adaptativa: Celular & Humoral',
-      subtitulo: 'Lisis por CD8+ y Expansión Clonal de Linfocitos B',
-      x: 1650,
-      y: 1100,
+      id: 'punto_6',
+      numero: '6',
+      fila: 2,
       fondo: 'P49',
-      faseNombre: '7. Ataque Celular & Humoral',
-      minijuego: 2, // Minijuego 2: Operación CD8+
+      faseNombre: '6. Inmunidad Celular y Humoral',
+      titulo: 'Lisis por CD8+ y Expansión Clonal B',
       narracion: [
         'Una vez ha llegado a los ganglios, los linfocitos T ya se han enterado. Los T CD4+, que reconocen el antígeno presentado sobre moléculas CMH-II, activan a los linfocitos B liberando citoquinas.',
         'Y los T CD8+, que reconocen el antígeno sobre CMH-I en la superficie de las células infectadas, comienzan a eliminar por lisis todas las células que están plagadas de virus. Esta es la inmunidad celular, la que actúa contra los patógenos que viven dentro de las células.',
         'Los linfocitos B activados —que reconocen su antígeno específico y reciben la ayuda de los T CD4+— se dividen y se diferencian en células plasmáticas que generan anticuerpos, multiplicándose en lo que se llama la expansión clonal y comenzando la inmunidad humoral, la que actúa contra los patógenos extracelulares y sus toxinas.'
       ],
       personajes: [
-        { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+ (Citotóxico)', desc: 'Asesino de precisión que induce apoptosis por perforinas y granzimas.', x: 0.22, y: 0.54, scale: 0.28, anim: 'pulse' },
-        { id: 'lysis', img: 'P31', nombre: 'Lisis Celular', desc: 'Destrucción programada de la célula huésped para impedir replicación viral.', x: 0.44, y: 0.46, scale: 0.26, anim: 'float' },
-        { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Célula productora de anticuerpos que madura en la médula ósea.', x: 0.68, y: 0.52, scale: 0.26, anim: 'float' },
-        { id: 'plasmatica', img: 'P22', nombre: 'Célula Plasmática', desc: 'Fábrica biológica secretora de más de 2.000 anticuerpos por segundo.', x: 0.88, y: 0.60, scale: 0.28, anim: 'pulse' }
-      ],
-      checklistConceptos: ['linfocitos_b', 'linfocitos_t', 'inmunidad_adaptativa']
+        { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+ (Citotóxico)', desc: 'Elimina células infectadas que exhiben CMH-I mediante lisis.', x: 0.22, y: 0.52, scale: 0.28, anim: 'pulse' },
+        { id: 'lysis', img: 'P31', nombre: 'Lisis Celular', desc: 'Perforación e inducción de apoptosis de la célula infectada.', x: 0.46, y: 0.48, scale: 0.26, anim: 'float' },
+        { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Célula de la inmunidad humoral productora de anticuerpos.', x: 0.70, y: 0.54, scale: 0.26, anim: 'float' },
+        { id: 'plasmatica', img: 'P22', nombre: 'Célula Plasmática', desc: 'Fábrica celular multiplicada por expansión clonal secretora de anticuerpos.', x: 0.88, y: 0.60, scale: 0.28, anim: 'pulse' }
+      ]
     },
 
+    // -------------------------------------------------------------
+    // PUNTO 7 (Fila 2, Pos 3): Neutralización Terminal y Memoria
+    // -------------------------------------------------------------
     {
-      id: 'estacion_8',
-      numero: '08',
-      icono: '🛡️',
-      titulo: 'Victoria, Neutralización & Memoria Inmunológica',
-      subtitulo: 'Lluvia de Anticuerpos, Tejido Sano y Patrulla Permanente',
-      x: 750,
-      y: 1120,
+      id: 'punto_7',
+      numero: '7',
+      fila: 2,
       fondo: 'P52',
-      faseNombre: '8. Memoria Inmune',
+      faseNombre: '7. Victoria y Memoria',
+      titulo: 'Anticuerpos y Memoria Inmunológica',
       narracion: [
         'Estas células comienzan a formar anticuerpos: se trata de moléculas llamadas glicoproteínas o inmunoglobulinas (Ig) —las primeras en aparecer son las IgM y las más abundantes en sangre son las IgG—.',
         'Estos anticuerpos se unen a los epítopos, zonas concretas de la superficie de los virus, a los que atacan para neutralizarlos, facilitando su opsonización y su fagocitosis, además de activar el complemento.',
@@ -274,36 +241,11 @@ window.PIZARRA_DATA = {
         'Con todo esto acabamos el proceso de la respuesta inmunitaria. Muchas gracias.'
       ],
       personajes: [
-        { id: 'anticuerpo_arma', img: 'P32', nombre: 'Anticuerpo (Inmunoglobulina)', desc: 'Efector soluble específico con regiones Fab de alta afinidad.', x: 0.18, y: 0.45, scale: 0.24, anim: 'pulse' },
-        { id: 'enjambre', img: 'P33', nombre: 'Enjambre Neutralizador', desc: 'Bloqueo estérico masivo que anula la infectividad del virus.', x: 0.42, y: 0.52, scale: 0.32, anim: 'float' },
-        { id: 'patrulla', img: 'P53', nombre: 'Linfocitos de Memoria en Patrulla', desc: 'Vigilantes de larga vida (décadas) con umbral de activación bajísimo.', x: 0.72, y: 0.48, scale: 0.30, anim: 'float' },
-        { id: 'respuesta_sec', img: 'P54', nombre: 'Respuesta Secundaria Fulminante', desc: 'Neutralización en cuestión de horas sin dar tiempo a que se desarrolle la enfermedad.', x: 0.90, y: 0.60, scale: 0.26, anim: 'pulse' }
-      ],
-      checklistConceptos: ['anticuerpo', 'memoria_inmunologica']
+        { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo (Inmunoglobulina)', desc: 'Proteína específica que neutraliza epítopos y activa el complemento.', x: 0.20, y: 0.46, scale: 0.26, anim: 'pulse' },
+        { id: 'enjambre', img: 'P33', nombre: 'Enjambre Neutralizador', desc: 'Inmovilización y bloqueo masivo de los viriones.', x: 0.46, y: 0.52, scale: 0.30, anim: 'float' },
+        { id: 'patrulla', img: 'P53', nombre: 'Linfocitos de Memoria', desc: 'Vigilancia permanente de larga duración para respuesta secundaria inmediata.', x: 0.76, y: 0.50, scale: 0.30, anim: 'float' },
+        { id: 'secundaria', img: 'P54', nombre: 'Respuesta Secundaria Fulminante', desc: 'Eliminación en cuestión de horas ante una segunda exposición.', x: 0.90, y: 0.60, scale: 0.26, anim: 'pulse' }
+      ]
     }
-  ],
-
-  // Rutas conectoras dibujadas con trazo en la pizarra (curvas Bézier SVG)
-  CONEXIONES: [
-    { desde: 'estacion_1', hacia: 'estacion_2', d: 'M 460 300 C 600 240, 780 230, 840 240' },
-    { desde: 'estacion_1', hacia: 'estacion_3', d: 'M 440 400 C 560 560, 700 680, 800 740' },
-    { desde: 'estacion_2', hacia: 'estacion_4', d: 'M 1040 240 C 1180 240, 1340 240, 1420 250' },
-    { desde: 'estacion_3', hacia: 'estacion_5', d: 'M 980 750 C 1120 750, 1240 760, 1320 760' },
-    { desde: 'estacion_5', hacia: 'estacion_6', d: 'M 1520 740 C 1640 700, 1740 640, 1820 600' },
-    { desde: 'estacion_6', hacia: 'estacion_7', d: 'M 1860 650 C 1820 800, 1750 960, 1700 1040' },
-    { desde: 'estacion_7', hacia: 'estacion_8', d: 'M 1540 1100 C 1320 1120, 1020 1120, 850 1120' }
-  ],
-
-  // Los 9 conceptos clave del checklist evaluativo (idénticos a AGENTS.md)
-  CHECKLIST: [
-    { id: 'antigeno', nombre: 'Antígeno', desc: 'Toda molécula que el cuerpo reconoce como extraña y es capaz de desencadenar respuesta inmune.' },
-    { id: 'anticuerpo', nombre: 'Anticuerpo', desc: 'Proteína producida por linfocitos B que reconoce específicamente al antígeno y facilita su eliminación.' },
-    { id: 'inmunidad_innata', nombre: 'Inmunidad innata', desc: 'Primera línea de defensa rápida, inespecífica e inmediata, presente desde el nacimiento.' },
-    { id: 'inmunidad_adaptativa', nombre: 'Inmunidad adaptativa', desc: 'Respuesta específica y especializada que genera memoria celular duradera.' },
-    { id: 'celulas_inmunitarias', nombre: 'Células del sistema inmunitario', desc: 'Leucocitos originados en médula ósea divididos en estirpe mieloide y linfoide.' },
-    { id: 'linfocitos_b', nombre: 'Linfocitos B', desc: 'Células de la inmunidad humoral que maduran en médula ósea y sintetizan anticuerpos.' },
-    { id: 'linfocitos_t', nombre: 'Linfocitos T', desc: 'Células de la inmunidad celular divididas en T CD4+ (colaboradores) y T CD8+ (citotóxicos).' },
-    { id: 'sistema_complemento', nombre: 'Sistema del complemento', desc: 'Más de 30 proteínas plasmáticas termolábiles que lisan patógenos, opsonizan e inflaman.' },
-    { id: 'memoria_inmunologica', nombre: 'Memoria inmunológica', desc: 'Células de larga vida que recuerdan al antígeno para una respuesta secundaria fulminante.' }
   ]
 };
