@@ -45,6 +45,11 @@ class PizarraEngine {
   }
 
   init() {
+    if (window.location.hash) {
+      try {
+        history.replaceState(null, '', window.location.pathname);
+      } catch (e) {}
+    }
     this.cargarProgreso();
     this.iniciarIntro();
     this.setupEventListeners();
@@ -149,7 +154,7 @@ class PizarraEngine {
   // 2. ABRIR Y CARGAR ESCENA DE UN PUNTO
   // =========================================================================
 
-  abrirPunto(index) {
+  abrirPunto(index, pushHistory = true) {
     const data = window.PIZARRA_DATA;
     if (index < 0 || index >= data.ESTACIONES.length) return;
 
@@ -192,13 +197,34 @@ class PizarraEngine {
     this.zoomedOverlay.classList.add('active');
     this.mostrarLineaNarracion(0);
     this.actualizarUI();
+
+    // Sincronizar con el historial del navegador para soporte de flecha atrás y botón de ratón
+    if (pushHistory) {
+      try {
+        history.pushState({ inScene: true, stationIndex: index }, '', '#punto-' + (index + 1));
+      } catch (err) {
+        console.warn('history.pushState no disponible:', err);
+      }
+    }
   }
 
-  cerrarEscena() {
+  cerrarEscena(triggerHistory = false) {
+    if (!this.zoomedOverlay.classList.contains('active')) return;
+
     this.reproducirSonido('whoosh_out');
     this.zoomedOverlay.classList.remove('active');
+    this.cerrarFichaPersonaje();
     this.actualizarUI();
     this.actualizarLineaConectora();
+
+    // Si se cerró por botón o teclado/ratón, volver atrás en el historial si hay hash
+    if (triggerHistory && window.location.hash) {
+      try {
+        history.back();
+      } catch (err) {
+        if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+      }
+    }
   }
 
   mostrarLineaNarracion(index) {
@@ -265,7 +291,7 @@ class PizarraEngine {
     if (nextIdx < window.PIZARRA_DATA.ESTACIONES.length) {
       this.currentStationIndex = nextIdx;
     }
-    this.cerrarEscena();
+    this.cerrarEscena(true);
   }
 
   // =========================================================================
@@ -289,8 +315,11 @@ class PizarraEngine {
   }
 
   cerrarFichaPersonaje() {
-    this.reproducirSonido('click');
-    document.getElementById('character-detail-modal').classList.remove('active');
+    const modal = document.getElementById('character-detail-modal');
+    if (modal && modal.classList.contains('active')) {
+      this.reproducirSonido('click');
+      modal.classList.remove('active');
+    }
   }
 
   // =========================================================================
@@ -305,13 +334,14 @@ class PizarraEngine {
     // Clic en las tarjetas de la cuadrícula
     this.cards.forEach((card, idx) => {
       card.addEventListener('click', () => {
-        this.abrirPunto(idx);
+        this.abrirPunto(idx, true);
       });
     });
 
-    // Botón volver al panel
-    this.btnBackToPanel.addEventListener('click', () => {
-      this.cerrarEscena();
+    // Botón en pantalla volver al panel
+    this.btnBackToPanel.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.cerrarEscena(true);
     });
 
     // Avanzar narración
@@ -329,20 +359,63 @@ class PizarraEngine {
       if (e.target.id === 'character-detail-modal') this.cerrarFichaPersonaje();
     });
 
-    // Teclado
-    window.addEventListener('keydown', (e) => {
-      if (this.introScreen && this.introScreen.style.display !== 'none') return;
+    // --- NAVEGACIÓN HACIA ATRÁS ---
 
-      if (e.key === ' ' || e.key === 'Enter') {
+    // 1. Flecha atrás del navegador (History API popstate)
+    window.addEventListener('popstate', () => {
+      if (this.zoomedOverlay.classList.contains('active')) {
+        this.cerrarEscena(false);
+      }
+      this.cerrarFichaPersonaje();
+    });
+
+    // 2. Botón del ratón para volver atrás
+    // Botón físico 3 (botón lateral "Atrás" de ratones de 4/5 botones)
+    const handleMouseBackButton = (e) => {
+      if (e.button === 3) {
         if (this.zoomedOverlay.classList.contains('active')) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.cerrarEscena(true);
+        }
+      }
+    };
+    window.addEventListener('mouseup', handleMouseBackButton);
+    window.addEventListener('auxclick', handleMouseBackButton);
+    window.addEventListener('pointerdown', handleMouseBackButton);
+
+    // Clic secundario (botón derecho del ratón) dentro de la escena para volver atrás
+    this.zoomedOverlay.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.cerrarEscena(true);
+    });
+
+    // 3. Flecha para atrás del teclado (ArrowLeft, Backspace, Escape)
+    window.addEventListener('keydown', (e) => {
+      const isSceneOpen = this.zoomedOverlay.classList.contains('active');
+      const modalChar = document.getElementById('character-detail-modal');
+      const isCharModalOpen = modalChar && modalChar.classList.contains('active');
+
+      if (!isSceneOpen && !isCharModalOpen) {
+        if (this.introScreen && this.introScreen.style.display !== 'none') return;
+      }
+
+      if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'Escape') {
+        if (isCharModalOpen) {
+          e.preventDefault();
+          this.cerrarFichaPersonaje();
+          return;
+        }
+        if (isSceneOpen) {
+          e.preventDefault();
+          this.cerrarEscena(true);
+        }
+      } else if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') {
+        if (isSceneOpen && !isCharModalOpen) {
           e.preventDefault();
           this.avanzarNarracion();
         }
-      } else if (e.key === 'Escape') {
-        if (this.zoomedOverlay.classList.contains('active')) {
-          this.cerrarEscena();
-        }
-        this.cerrarFichaPersonaje();
       }
     });
   }
