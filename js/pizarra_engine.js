@@ -27,6 +27,7 @@ class PizarraEngine {
     // Estado
     this.currentStationIndex = 0;
     this.visitedStations = new Set();
+    this.shownChapterIntros = new Set();
 
     // Mecanografiado de narración
     this.currentLineIndex = 0;
@@ -137,11 +138,10 @@ class PizarraEngine {
     d += ` L ${pts[3].x} ${pts[3].y}`;
 
     // Conexión suave desde el punto 4 (fin fila 1) al punto 5 (inicio fila 2):
-    const cp1x = pts[3].x + 80;
-    const cp1y = (pts[3].y + pts[4].y) / 2;
-    const cp2x = pts[4].x - 80;
-    const cp2y = (pts[3].y + pts[4].y) / 2;
-    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${pts[4].x} ${pts[4].y}`;
+    const midY = (pts[3].y + pts[4].y) / 2 + 10;
+    const cp1x = pts[3].x + 70;
+    const cp2x = pts[4].x - 70;
+    d += ` C ${cp1x} ${midY}, ${cp2x} ${midY}, ${pts[4].x} ${pts[4].y}`;
 
     // Fila inferior: 5 -> 6 -> 7
     d += ` L ${pts[5].x} ${pts[5].y}`;
@@ -163,48 +163,121 @@ class PizarraEngine {
     this.guardarProgreso();
 
     const est = data.ESTACIONES[index];
-    this.reproducirSonido('whoosh_in');
 
-    // Cargar fondo nítido
-    this.stageBg.src = data.ASSETS[est.fondo];
+    const enterScene = () => {
+      this.reproducirSonido('whoosh_in');
 
-    // Cargar personajes vivos y animados
-    this.stageChars.innerHTML = '';
-    est.personajes.forEach(p => {
-      const charEl = document.createElement('div');
-      charEl.className = `stage-character-item anim-${p.anim || 'float'}`;
-      charEl.style.left = `${p.x * 100}%`;
-      charEl.style.top = `${p.y * 100}%`;
-      charEl.style.transform = 'translate(-50%, -50%)';
+      // Cargar fondo nítido
+      this.stageBg.src = data.ASSETS[est.fondo];
 
-      const imgSrc = data.ASSETS[p.img];
-      charEl.innerHTML = `
-        <img src="${imgSrc}" alt="${p.nombre}">
-        <span class="stage-character-badge">${p.nombre}</span>
-      `;
+      // Cargar personajes vivos y animados
+      this.stageChars.innerHTML = '';
+      est.personajes.forEach(p => {
+        const charEl = document.createElement('div');
+        charEl.className = `stage-character-item anim-${p.anim || 'float'}`;
+        charEl.style.left = `${p.x * 100}%`;
+        charEl.style.top = `${p.y * 100}%`;
+        charEl.style.transform = 'translate(-50%, -50%)';
 
-      charEl.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.abrirFichaPersonaje(p, est);
+        const imgSrc = data.ASSETS[p.img];
+        charEl.innerHTML = `
+          <img src="${imgSrc}" alt="${p.nombre}">
+          <span class="stage-character-badge">${p.nombre}</span>
+        `;
+
+        charEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.abrirFichaPersonaje(p, est);
+        });
+
+        this.stageChars.appendChild(charEl);
       });
 
-      this.stageChars.appendChild(charEl);
-    });
+      // Iniciar narración
+      this.currentLineIndex = 0;
+      this.zoomedOverlay.classList.add('active');
+      this.mostrarLineaNarracion(0);
+      this.actualizarUI();
 
-    // Iniciar narración
-    this.currentLineIndex = 0;
-    this.zoomedOverlay.classList.add('active');
-    this.mostrarLineaNarracion(0);
-    this.actualizarUI();
-
-    // Sincronizar con el historial del navegador para soporte de flecha atrás y botón de ratón
-    if (pushHistory) {
-      try {
-        history.pushState({ inScene: true, stationIndex: index }, '', '#punto-' + (index + 1));
-      } catch (err) {
-        console.warn('history.pushState no disponible:', err);
+      // Sincronizar con el historial del navegador para soporte de flecha atrás y botón de ratón
+      if (pushHistory) {
+        try {
+          history.pushState({ inScene: true, stationIndex: index }, '', '#punto-' + (index + 1));
+        } catch (err) {
+          console.warn('history.pushState no disponible:', err);
+        }
       }
+    };
+
+    // Si es la primera vez que entra a este capítulo, mostrar título en grande con efecto máquina de escribir
+    if (!this.shownChapterIntros.has(index)) {
+      this.shownChapterIntros.add(index);
+      this.guardarProgreso();
+      this.mostrarChapterIntro(index, enterScene);
+    } else {
+      enterScene();
     }
+  }
+
+  mostrarChapterIntro(index, onComplete) {
+    const est = window.PIZARRA_DATA.ESTACIONES[index];
+    const text = `Capítulo ${index + 1}: ${est.titulo}`;
+    const screen = document.getElementById('chapter-intro-screen');
+    const textEl = document.getElementById('chapter-intro-text');
+    const promptEl = document.getElementById('chapter-intro-prompt');
+
+    if (!screen || !textEl) {
+      onComplete();
+      return;
+    }
+
+    screen.style.display = 'flex';
+    screen.classList.remove('fade-out');
+    textEl.textContent = '';
+    if (promptEl) promptEl.classList.remove('visible');
+
+    let i = 0;
+    let isTyping = true;
+    const timer = setInterval(() => {
+      if (i < text.length) {
+        textEl.textContent += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(timer);
+        isTyping = false;
+        if (promptEl) promptEl.classList.add('visible');
+      }
+    }, 28);
+
+    let dismissed = false;
+    const dismiss = () => {
+      if (dismissed) return;
+      if (isTyping) {
+        clearInterval(timer);
+        textEl.textContent = text;
+        isTyping = false;
+        if (promptEl) promptEl.classList.add('visible');
+        return;
+      }
+      dismissed = true;
+      screen.classList.add('fade-out');
+      setTimeout(() => {
+        screen.style.display = 'none';
+        screen.removeEventListener('click', dismiss);
+        window.removeEventListener('keydown', keyDismiss);
+        onComplete();
+      }, 450);
+    };
+
+    const keyDismiss = (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        dismiss();
+      }
+    };
+
+    screen.addEventListener('click', dismiss);
+    window.addEventListener('keydown', keyDismiss);
   }
 
   cerrarEscena(triggerHistory = false) {
@@ -235,8 +308,8 @@ class PizarraEngine {
 
     this.currentLineIndex = index;
     const totalLines = est.narracion.length;
-    this.narrCounter.textContent = `${index + 1} / ${totalLines}`;
-    this.speakerTag.textContent = `NARRADOR · ${est.faseNombre}`;
+    if (this.narrCounter) this.narrCounter.textContent = `${index + 1} / ${totalLines}`;
+    if (this.speakerTag) this.speakerTag.textContent = `NARRADOR · ${est.faseNombre}`;
 
     const text = est.narracion[index];
     this.currentFullLine = text;
@@ -246,7 +319,7 @@ class PizarraEngine {
     this.narrTextEl.textContent = '';
     let charIdx = 0;
 
-    const speed = 22;
+    const speed = 20;
     this.typewriterTimer = setInterval(() => {
       if (charIdx < text.length) {
         this.narrTextEl.textContent += text.charAt(charIdx);
@@ -259,9 +332,9 @@ class PizarraEngine {
     }, speed);
 
     if (index === totalLines - 1) {
-      this.btnContinue.textContent = 'Volver al Esquema ➔';
+      this.btnContinue.textContent = 'Volver al Esquema';
     } else {
-      this.btnContinue.textContent = 'Siguiente ›';
+      this.btnContinue.textContent = 'Siguiente';
     }
   }
 
@@ -301,14 +374,10 @@ class PizarraEngine {
     this.reproducirSonido('pop');
     const modal = document.getElementById('character-detail-modal');
     const imgEl = document.getElementById('modal-char-img');
-    const catEl = document.getElementById('modal-badge-cat');
     const titleEl = document.getElementById('modal-char-title');
-    const descEl = document.getElementById('modal-char-desc');
 
-    imgEl.src = window.PIZARRA_DATA.ASSETS[p.img];
-    catEl.textContent = est.titulo;
-    titleEl.textContent = p.nombre;
-    descEl.textContent = p.desc;
+    if (imgEl) imgEl.src = window.PIZARRA_DATA.ASSETS[p.img];
+    if (titleEl) titleEl.textContent = p.nombre;
 
     modal.classList.add('active');
   }
@@ -354,8 +423,8 @@ class PizarraEngine {
     document.getElementById('btn-close-modal-char').addEventListener('click', () => {
       this.cerrarFichaPersonaje();
     });
-    document.getElementById('character-detail-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'character-detail-modal') this.cerrarFichaPersonaje();
+    document.getElementById('character-detail-modal').addEventListener('click', () => {
+      this.cerrarFichaPersonaje();
     });
 
     // --- NAVEGACIÓN HACIA ATRÁS ---
@@ -521,7 +590,8 @@ class PizarraEngine {
     try {
       const data = {
         visited: Array.from(this.visitedStations),
-        current: this.currentStationIndex
+        current: this.currentStationIndex,
+        shownIntros: Array.from(this.shownChapterIntros)
       };
       localStorage.setItem('pizarra_inmuno_save', JSON.stringify(data));
     } catch (e) {}
@@ -534,6 +604,7 @@ class PizarraEngine {
         const data = JSON.parse(saved);
         if (data.visited) this.visitedStations = new Set(data.visited);
         if (typeof data.current === 'number') this.currentStationIndex = data.current;
+        if (data.shownIntros) this.shownChapterIntros = new Set(data.shownIntros);
       }
     } catch (e) {}
   }

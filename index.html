@@ -7,7 +7,7 @@
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>El Sistema Inmunitario — Infografía Interactiva</title>
-  <link rel="stylesheet" href="css/pizarra.css?v=7">
+  <link rel="stylesheet" href="css/pizarra.css?v=8">
 </head>
 <body>
 
@@ -26,44 +26,84 @@
     </div>
   </section>
 
+  <!-- PANTALLA DE INTRODUCCIÓN AL ENTRAR A UN CAPÍTULO POR PRIMERA VEZ -->
+  <section id="chapter-intro-screen" style="display: none;" title="Haz clic para continuar">
+    <div class="intro-container">
+      <div class="intro-terminal-box">
+        <span id="chapter-intro-text" class="typewriter-text"></span>
+        <span class="intro-cursor">_</span>
+      </div>
+      <div id="chapter-intro-prompt" class="intro-prompt">
+        <span>Pulsa la pantalla para continuar</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ======================================================================
        1. PANEL PRINCIPAL: 7 PUNTOS EN CUADRÍCULA (4 ARRIBA, 3 ABAJO) CONECTADOS
        ====================================================================== -->
   <main id="main-panel">
     
+    <!-- Título principal e indicación -->
+    <header class="main-header">
+      <h1 class="main-title">EL SISTEMA INMUNITARIO</h1>
+      <p class="main-subtitle">Pincha en el primer capítulo para comenzar</p>
+    </header>
+
     <!-- Capa SVG con la línea normal conectora -->
     <svg id="connections-svg" class="connections-svg">
       <path id="main-connecting-path" class="connecting-line" d=""></path>
     </svg>
 
-    <!-- Cuadrícula limpia de los 7 puntos con fotos redondeadas sin textos -->
+    <!-- Cuadrícula limpia de los 7 puntos con capítulos debajo -->
     <div class="grid-container">
-      <!-- Fila superior: 1, 2, 3, 4 -->
+      <!-- Fila superior: Capítulos 1, 2, 3, 4 -->
       <div class="grid-row row-top">
-        <div class="station-card station-card-0 current-active" data-index="0" title="Punto 1: Barreras Anatómicas y el Antígeno">
-          <img src="imagenes/fondos/P45_piel.png" alt="Punto 1">
+        <div class="station-item">
+          <div class="station-card station-card-0 current-active" data-index="0" title="Capítulo 1: Barreras Anatómicas y el Antígeno">
+            <img src="imagenes/fondos/P45_piel.png" alt="Capítulo 1">
+          </div>
+          <span class="station-label">Capítulo 1</span>
         </div>
-        <div class="station-card station-card-1" data-index="1" title="Punto 2: La Fábrica Celular: Médula Ósea">
-          <img src="imagenes/fondos/P47_medula.png" alt="Punto 2">
+        <div class="station-item">
+          <div class="station-card station-card-1" data-index="1" title="Capítulo 2: La Fábrica Celular: Médula Ósea">
+            <img src="imagenes/fondos/P47_medula.png" alt="Capítulo 2">
+          </div>
+          <span class="station-label">Capítulo 2</span>
         </div>
-        <div class="station-card station-card-2" data-index="2" title="Punto 3: Alarma Tisular, Quimiotaxis y Fagocitosis">
-          <img src="imagenes/fondos/P49_tejido_infectado.png" alt="Punto 3">
+        <div class="station-item">
+          <div class="station-card station-card-2" data-index="2" title="Capítulo 3: Alarma Tisular, Quimiotaxis y Fagocitosis">
+            <img src="imagenes/fondos/P49_tejido_infectado.png" alt="Capítulo 3">
+          </div>
+          <span class="station-label">Capítulo 3</span>
         </div>
-        <div class="station-card station-card-3" data-index="3" title="Punto 4: El Sistema del Complemento">
-          <img src="imagenes/fondos/P48_vaso.png" alt="Punto 4">
+        <div class="station-item">
+          <div class="station-card station-card-3" data-index="3" title="Capítulo 4: El Sistema del Complemento">
+            <img src="imagenes/fondos/P48_vaso.png" alt="Capítulo 4">
+          </div>
+          <span class="station-label">Capítulo 4</span>
         </div>
       </div>
 
-      <!-- Fila inferior: 5, 6, 7 -->
+      <!-- Fila inferior: Capítulos 5, 6, 7 -->
       <div class="grid-row row-bottom">
-        <div class="station-card station-card-4" data-index="4" title="Punto 5: La Célula Dendrítica y Presentación en Ganglio">
-          <img src="imagenes/fondos/P50_ganglio.png" alt="Punto 5">
+        <div class="station-item">
+          <div class="station-card station-card-4" data-index="4" title="Capítulo 5: La Célula Dendrítica y el Ganglio Linfático">
+            <img src="imagenes/fondos/P51_mapa_ganglios.png" alt="Capítulo 5">
+          </div>
+          <span class="station-label">Capítulo 5</span>
         </div>
-        <div class="station-card station-card-5" data-index="5" title="Punto 6: Inmunidad Adaptativa: Celular y Humoral">
-          <img src="imagenes/fondos/P49_tejido_infectado.png" alt="Punto 6">
+        <div class="station-item">
+          <div class="station-card station-card-5" data-index="5" title="Capítulo 6: Lisis por CD8+ y Expansión Clonal B">
+            <img src="imagenes/fondos/P50_ganglio.png" alt="Capítulo 6">
+          </div>
+          <span class="station-label">Capítulo 6</span>
         </div>
-        <div class="station-card station-card-6" data-index="6" title="Punto 7: Anticuerpos y Memoria Inmunológica">
-          <img src="imagenes/fondos/P52_tejido_sano.png" alt="Punto 7">
+        <div class="station-item">
+          <div class="station-card station-card-6" data-index="6" title="Capítulo 7: Anticuerpos y Memoria Inmunológica">
+            <img src="imagenes/fondos/P52_tejido_sano.png" alt="Capítulo 7">
+          </div>
+          <span class="station-label">Capítulo 7</span>
         </div>
       </div>
     </div>
@@ -78,9 +118,9 @@
     <!-- Fondo nítido de la escena activa -->
     <img id="stage-hero-bg" class="stage-hero-background" src="" alt="Escenario Biológico">
 
-    <!-- Botón para volver al panel de los 7 puntos -->
-    <button id="btn-back-to-panel" class="back-to-panel-btn" title="Volver al panel principal (Flecha atrás, botón del ratón o Escape)">
-      <span>← Volver al Esquema</span>
+    <!-- Botón para volver al panel de los 7 puntos (sin flecha) -->
+    <button id="btn-back-to-panel" class="back-to-panel-btn" title="Volver al panel principal">
+      <span>Volver al Esquema</span>
     </button>
 
     <!-- Capa de personajes vivos, flotantes y animados -->
@@ -88,13 +128,8 @@
       <!-- Personajes inyectados dinámicamente -->
     </div>
 
-    <!-- Caja de narración inferior con mecanografiado (Typewriter) -->
+    <!-- Caja de narración inferior con mecanografiado (sin etiqueta de narrador) -->
     <div id="pizarra-narration-box">
-      <div class="narration-header">
-        <span id="narration-speaker" class="narration-speaker-tag">NARRADOR</span>
-        <span id="narration-counter" class="narration-counter">1 / 5</span>
-      </div>
-
       <div id="narration-text" class="narration-text-content">
         Cargando narración...
       </div>
@@ -102,7 +137,7 @@
       <div class="narration-footer">
         <span class="narration-hint">Clic para avanzar · Flecha atrás, Clic dcho o Botón ratón para volver</span>
         <div class="narration-btn-row">
-          <button id="btn-narr-continue" class="narration-nav-btn">Siguiente ›</button>
+          <button id="btn-narr-continue" class="narration-nav-btn">Siguiente</button>
         </div>
       </div>
     </div>
@@ -110,25 +145,23 @@
   </div>
 
   <!-- ======================================================================
-       3. MODAL DE FICHA EDUCATIVA DE PERSONAJE
+       3. MODAL DE VISUALIZACIÓN DE CÉLULA (SOLO CÉLULA MÁS GRANDE Y SU NOMBRE)
        ====================================================================== -->
   <div id="character-detail-modal">
     <div class="modal-dialog-panel">
       <button id="btn-close-modal-char" class="modal-close-btn">&times;</button>
       
       <div class="modal-char-preview-box">
-        <img id="modal-char-img" src="" alt="Ilustración del personaje">
+        <img id="modal-char-img" src="" alt="Célula">
       </div>
 
-      <span id="modal-badge-cat" class="modal-badge-cat">Categoría Biológica</span>
-      <h2 id="modal-char-title" class="modal-char-title">Nombre del Personaje</h2>
-      <p id="modal-char-desc" class="modal-char-desc">Descripción anatomofisiológica.</p>
+      <h2 id="modal-char-title" class="modal-char-title">Nombre</h2>
     </div>
   </div>
 
   <!-- Scripts con versionado anti-cache -->
-  <script src="js/pizarra_data.js?v=7"></script>
-  <script src="js/pizarra_engine.js?v=7"></script>
+  <script src="js/pizarra_data.js?v=8"></script>
+  <script src="js/pizarra_engine.js?v=8"></script>
 
 </body>
 </html>

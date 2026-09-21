@@ -126,10 +126,38 @@ html, body {
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: var(--bg-deep);
   overflow: hidden;
+  gap: clamp(14px, 2.6vh, 26px);
+}
+
+/* Encabezado del panel principal */
+.main-header {
+  text-align: center;
+  z-index: 5;
+  user-select: none;
+}
+
+.main-title {
+  font-family: var(--font-family);
+  font-size: clamp(24px, 3.4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.main-subtitle {
+  font-family: var(--font-family);
+  font-size: clamp(13px, 1.3vw, 16px);
+  font-weight: 500;
+  color: #94a3b8;
+  margin-top: 5px;
+  letter-spacing: 0.3px;
 }
 
 /* Capa SVG para la línea conectora normal */
@@ -157,7 +185,7 @@ html, body {
   width: min(1280px, 94vw);
   display: flex;
   flex-direction: column;
-  gap: clamp(50px, 8.5vh, 90px);
+  gap: clamp(34px, 5.8vh, 60px);
   position: relative;
   z-index: 2;
 }
@@ -166,7 +194,35 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(24px, 3.2vw, 48px);
+  gap: clamp(20px, 2.8vw, 44px);
+}
+
+.station-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+}
+
+.station-label {
+  position: relative;
+  z-index: 5;
+  background-color: var(--bg-deep);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.2px;
+  transition: color 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.station-item:hover .station-label {
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 /* Tarjeta individual: solo la foto con bordes redondeados */
@@ -264,15 +320,15 @@ html, body {
   position: absolute;
   top: 24px;
   left: 28px;
-  padding: 8px 18px;
-  background: rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 9px 20px;
+  background: rgba(18, 18, 22, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 8px;
   color: #f5f5f7;
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: -0.2px;
+  letter-spacing: 0.1px;
   cursor: pointer;
   z-index: 150;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
@@ -281,12 +337,12 @@ html, body {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
 }
 
 .back-to-panel-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(35, 35, 44, 0.95);
+  border-color: rgba(255, 255, 255, 0.35);
   color: #ffffff;
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
@@ -294,7 +350,6 @@ html, body {
 
 .back-to-panel-btn:active {
   transform: translateY(0px) scale(0.98);
-  background: rgba(255, 255, 255, 0.08);
 }
 
 .stage-characters-container {
@@ -402,24 +457,9 @@ html, body {
   box-shadow: 0 24px 56px rgba(0, 0, 0, 0.8);
 }
 
+/* Se oculta la etiqueta de narrador y contador */
 .narration-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.narration-speaker-tag {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: #a1a1a6;
-}
-
-.narration-counter {
-  font-size: 11.5px;
-  color: #86868b;
-  font-weight: 500;
+  display: none !important;
 }
 
 .narration-text-content {
@@ -427,7 +467,7 @@ html, body {
   font-size: 16.5px;
   line-height: 1.6;
   color: #f5f5f7;
-  min-height: 52px;
+  min-height: 48px;
   letter-spacing: -0.2px;
 }
 
@@ -451,23 +491,24 @@ html, body {
 }
 
 .narration-nav-btn {
-  padding: 7px 18px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 8px 22px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
-  color: #f5f5f7;
+  color: #ffffff;
   font-family: var(--font-family);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: -0.1px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .narration-nav-btn:hover {
-  background: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.24);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
 }
 
 .narration-nav-btn:active {
@@ -475,7 +516,7 @@ html, body {
 }
 
 /* ==========================================================================
-   4. MODAL DE FICHA EDUCATIVA DE PERSONAJE — ESTILO APPLE MODERNO
+   4. MODAL DE VISUALIZACIÓN DE CÉLULA — SOLO CÉLULA MÁS GRANDE Y SU NOMBRE
    ========================================================================== */
 
 #character-detail-modal {
@@ -484,7 +525,7 @@ html, body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 200;
@@ -494,6 +535,7 @@ html, body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s, visibility 0.25s;
+  cursor: pointer;
 }
 
 #character-detail-modal.active {
@@ -502,16 +544,20 @@ html, body {
 }
 
 .modal-dialog-panel {
-  width: min(480px, 90vw);
-  background: rgba(18, 18, 20, 0.94);
+  width: min(380px, 90vw);
+  background: rgba(18, 18, 22, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 12px;
-  padding: 28px;
+  padding: 30px 24px 26px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   position: relative;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
 }
 
 .modal-close-btn {
@@ -538,44 +584,51 @@ html, body {
 }
 
 .modal-char-preview-box {
-  height: 160px;
+  height: 180px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .modal-char-preview-box img {
-  max-height: 150px;
+  max-height: 180px;
   max-width: 100%;
   object-fit: contain;
-}
-
-.modal-badge-cat {
-  display: inline-block;
-  padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: #a1a1a6;
-  margin-bottom: 10px;
-  text-transform: uppercase;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7));
 }
 
 .modal-char-title {
-  font-size: 20px;
-  font-weight: 600;
+  font-family: var(--font-family);
+  font-size: 22px;
+  font-weight: 700;
   letter-spacing: -0.3px;
-  color: #f5f5f7;
-  margin-bottom: 10px;
+  color: #ffffff;
+  margin: 0;
 }
 
-.modal-char-desc {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #a1a1a6;
-  text-align: left;
+/* ==========================================================================
+   5. PANTALLA INTRO DEL CAPÍTULO AL ENTRAR POR PRIMERA VEZ
+   ========================================================================== */
+
+#chapter-intro-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-deep);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  user-select: none;
+}
+
+#chapter-intro-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
