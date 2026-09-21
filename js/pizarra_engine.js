@@ -179,7 +179,6 @@ class PizarraEngine {
 
       const imgSrc = data.ASSETS[p.img];
       charEl.innerHTML = `
-        <div class="stage-character-radar"></div>
         <img src="${imgSrc}" alt="${p.nombre}">
         <span class="stage-character-badge">${p.nombre}</span>
       `;
