@@ -423,6 +423,50 @@ class PizarraEngine {
         <div class="barrier-pill"><span>🦠</span> Microbiota Comensal</div>
       `;
       this.stageDecorations.appendChild(pills);
+    } else if (decoradoTipo === 'linajes') {
+      const banner = document.createElement('div');
+      banner.className = 'two-paths-banner';
+      banner.innerHTML = `
+        <div class="path-badge mieloide">
+          <div class="path-title">Progenitor Mieloide</div>
+          <div class="path-desc">Inmunidad Innata · Granulocitos, Monocitos/Macrófagos y Dendríticas</div>
+        </div>
+        <div class="path-badge linfoide">
+          <div class="path-title">Progenitor Linfoide</div>
+          <div class="path-desc">Inmunidad Adaptativa (Linfocitos B y T) + Células NK (Innata)</div>
+        </div>
+      `;
+      this.stageDecorations.appendChild(banner);
+    } else if (decoradoTipo === 'vias_complemento') {
+      const banner = document.createElement('div');
+      banner.className = 'two-paths-banner';
+      banner.innerHTML = `
+        <div class="path-badge clasica">
+          <div class="path-title">Vía Clásica</div>
+          <div class="path-desc">Activada por complejos Anticuerpo–Antígeno</div>
+        </div>
+        <div class="path-badge alterna">
+          <div class="path-title">Vía Alterna</div>
+          <div class="path-desc">Directamente sobre la superficie del microorganismo</div>
+        </div>
+        <div class="path-badge lectinas">
+          <div class="path-title">Vía Lectinas</div>
+          <div class="path-desc">Reconocimiento de manosa y azúcares patógenos</div>
+        </div>
+      `;
+      this.stageDecorations.appendChild(banner);
+    } else if (decoradoTipo === 'resumen_final') {
+      const banner = document.createElement('div');
+      banner.className = 'timeline-summary-banner';
+      banner.innerHTML = `
+        <div class="timeline-step-chip">1. Entrada</div>
+        <div class="timeline-step-chip">2. Innata</div>
+        <div class="timeline-step-chip">3. Presentación</div>
+        <div class="timeline-step-chip">4. Adaptativa</div>
+        <div class="timeline-step-chip">5. Eliminación</div>
+        <div class="timeline-step-chip active">6. Memoria ✔</div>
+      `;
+      this.stageDecorations.appendChild(banner);
     }
   }
 
