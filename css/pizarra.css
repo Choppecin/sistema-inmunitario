@@ -1,20 +1,20 @@
 /* ==========================================================================
-   PIZARRA.CSS — Estilos para el Lienzo Infográfico con Zoom Dinámico
-   Estilo Pizarra Científica / Blueprint Bioluminiscente / Genially & Prezi
+   PIZARRA.CSS — Infografía Interactiva
+   Fondo azul oscuro liso, tipografía clásica limpia y pantalla de introducción
    ========================================================================== */
 
 :root {
-  --bg-deep: #060a12;
-  --bg-card: rgba(13, 22, 38, 0.88);
+  --bg-deep: #070e1b;
+  --bg-card: rgba(12, 21, 38, 0.94);
   --border-card: rgba(56, 189, 248, 0.25);
-  --border-glow: rgba(56, 189, 248, 0.65);
+  --border-glow: rgba(56, 189, 248, 0.7);
   --chalk-cyan: #38bdf8;
   --chalk-yellow: #facc15;
   --chalk-green: #4ade80;
-  --chalk-pink: #f43f5e;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'Consolas', 'Courier New', Monaco, monospace;
 }
 
 * {
@@ -35,7 +35,92 @@ html, body {
 }
 
 /* ==========================================================================
-   1. VIEWPORT DE LA PIZARRA Y MUNDO INFINITO (CÁMARA CON ZOOM)
+   0. PANTALLA DE INTRODUCCIÓN CON EFECTO MÁQUINA DE ESCRIBIR
+   ========================================================================== */
+
+#intro-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-deep);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  user-select: none;
+}
+
+#intro-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.intro-container {
+  max-width: 900px;
+  width: 90%;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.intro-terminal-box {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.typewriter-text {
+  font-family: var(--font-mono);
+  font-size: clamp(22px, 3.8vw, 36px);
+  color: #f1f5f9;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.intro-cursor {
+  font-family: var(--font-mono);
+  font-size: clamp(24px, 4vw, 38px);
+  color: var(--chalk-cyan);
+  margin-left: 4px;
+  font-weight: bold;
+  animation: introCursorBlink 0.8s infinite;
+}
+
+@keyframes introCursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.intro-prompt {
+  margin-top: 55px;
+  font-family: var(--font-family);
+  font-size: clamp(14px, 1.8vw, 17px);
+  color: #64748b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.intro-prompt.visible {
+  opacity: 1;
+  animation: promptPulse 2s ease-in-out infinite;
+}
+
+@keyframes promptPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ==========================================================================
+   1. VIEWPORT Y MUNDO VIRTUAL (FONDO AZUL OSCURO LISO, SIN PUNTOS)
    ========================================================================== */
 
 #pizarra-viewport {
@@ -44,11 +129,6 @@ html, body {
   position: relative;
   overflow: hidden;
   background-color: var(--bg-deep);
-  background-image: 
-    radial-gradient(circle, rgba(56, 189, 248, 0.12) 1.5px, transparent 1.5px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 40px 40px, 120px 120px;
-  background-position: 0 0, 20px 20px;
   cursor: grab;
 }
 
@@ -67,44 +147,8 @@ html, body {
   will-change: transform;
 }
 
-/* Marca de agua / silueta anatómica de fondo sobre la pizarra */
-.pizarra-bg-decor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0.15;
-  background: radial-gradient(ellipse at center, rgba(30, 58, 138, 0.25) 0%, transparent 70%);
-}
-
-.pizarra-blueprint-title {
-  position: absolute;
-  top: 60px;
-  left: 100px;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.pizarra-blueprint-title h1 {
-  font-size: 38px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: #e2e8f0;
-  text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-  text-transform: uppercase;
-}
-
-.pizarra-blueprint-title p {
-  font-size: 16px;
-  color: var(--chalk-cyan);
-  letter-spacing: 1px;
-  margin-top: 4px;
-}
-
 /* ==========================================================================
-   2. CAPA DE TRAZOS DE TIZA SVG (LÍNEAS Y FLECHAS ANIMADAS)
+   2. CAPA DE TRAZOS SVG (LÍNEAS Y FLECHAS ANIMADAS)
    ========================================================================== */
 
 #pizarra-svg-layer {
@@ -134,20 +178,8 @@ html, body {
   transition: stroke-dashoffset 1.3s ease-out;
 }
 
-.chalk-drawing-tip {
-  r: 8px;
-  fill: #fff;
-  filter: drop-shadow(0 0 12px #38bdf8);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.chalk-drawing-tip.active {
-  opacity: 1;
-}
-
 /* ==========================================================================
-   3. ESTACIONES DEL ÁRBOL EN LA PIZARRA (VISTA MACRO)
+   3. ESTACIONES DEL PANEL PRINCIPAL
    ========================================================================== */
 
 .pizarra-station-node {
@@ -158,7 +190,7 @@ html, body {
   border-radius: 22px;
   background: var(--bg-card);
   border: 2px solid var(--border-card);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   overflow: hidden;
   cursor: pointer;
   z-index: 5;
@@ -170,10 +202,9 @@ html, body {
 .pizarra-station-node:hover {
   transform: translate(-50%, -55%) scale(1.04);
   border-color: var(--chalk-cyan);
-  box-shadow: 0 20px 45px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 45px rgba(56, 189, 248, 0.3);
 }
 
-/* Estación actual que pulsa */
 .pizarra-station-node.current-active {
   border-color: var(--chalk-cyan);
   animation: stationPulseGlow 2.5s infinite;
@@ -181,10 +212,10 @@ html, body {
 
 @keyframes stationPulseGlow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), inset 0 0 10px rgba(56, 189, 248, 0.2);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
   }
   50% {
-    box-shadow: 0 0 45px rgba(56, 189, 248, 0.8), inset 0 0 25px rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 45px rgba(56, 189, 248, 0.8);
   }
 }
 
@@ -194,7 +225,7 @@ html, body {
 
 .station-thumb-backdrop {
   width: 100%;
-  height: 140px;
+  height: 160px;
   position: relative;
   overflow: hidden;
   background-color: #0c1524;
@@ -217,7 +248,7 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, rgba(6, 10, 18, 0.2) 0%, rgba(13, 22, 38, 0.95) 100%);
+  background: linear-gradient(to bottom, rgba(7, 14, 27, 0.15) 0%, rgba(12, 21, 38, 0.95) 100%);
   display: flex;
   justify-content: space-between;
   padding: 12px;
@@ -235,7 +266,6 @@ html, body {
   display: flex;
   align-items: center;
   gap: 5px;
-  backdrop-filter: blur(4px);
 }
 
 .station-status-badge {
@@ -244,7 +274,6 @@ html, body {
   border-radius: 12px;
   font-size: 11px;
   font-weight: 600;
-  backdrop-filter: blur(4px);
 }
 
 .station-status-badge.pending {
@@ -260,7 +289,7 @@ html, body {
 }
 
 .station-info-body {
-  padding: 12px 16px;
+  padding: 12px 18px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -268,14 +297,14 @@ html, body {
 }
 
 .station-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.3;
 }
 
 .station-sub {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   margin-top: 4px;
 }
@@ -303,18 +332,17 @@ html, body {
 }
 
 .station-explore-cta {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   color: var(--chalk-cyan);
   display: flex;
   align-items: center;
   gap: 4px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 /* ==========================================================================
-   4. ESCENARIO DE NOVELA VISUAL INTEGRADO (VISTA MICRO CON ZOOM)
+   4. ESCENARIO AMPLIADO (VISTA DETALLE)
    ========================================================================== */
 
 #zoomed-stage-overlay {
@@ -338,7 +366,6 @@ html, body {
   pointer-events: auto;
 }
 
-/* Fondo a pantalla completa en la escena */
 .stage-hero-background {
   position: absolute;
   top: 0;
@@ -350,7 +377,6 @@ html, body {
   filter: brightness(0.85);
 }
 
-/* Capa de personajes vivos y flotantes estilo Kurzgesagt */
 .stage-characters-container {
   position: absolute;
   top: 0;
@@ -411,7 +437,6 @@ html, body {
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   pointer-events: none;
 }
 
@@ -433,78 +458,7 @@ html, body {
 }
 
 /* ==========================================================================
-   5. BARRA SUPERIOR DE CONTROLES FLOTANTES (PREZI / GENIALLY)
-   ========================================================================== */
-
-.floating-top-bar {
-  position: fixed;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 16px;
-  background: rgba(13, 22, 38, 0.92);
-  border: 1px solid var(--border-card);
-  border-radius: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(12px);
-  z-index: 150;
-  pointer-events: auto;
-}
-
-.prezi-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 16px;
-  background: rgba(30, 41, 59, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 25px;
-  color: #f1f5f9;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.prezi-action-btn:hover {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: var(--chalk-cyan);
-  transform: translateY(-1px);
-}
-
-.prezi-action-btn.btn-overview {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  border-color: #38bdf8;
-  color: #fff;
-}
-
-.prezi-action-btn.btn-overview:hover {
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
-}
-
-.prezi-station-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--chalk-cyan);
-}
-
-.prezi-indicator-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--chalk-cyan);
-  box-shadow: 0 0 8px var(--chalk-cyan);
-}
-
-/* ==========================================================================
-   6. CAJA DE NARRACIÓN (TYPEWRITER MODERNO EN VISTA MICRO)
+   5. CAJA DE NARRACIÓN (TYPEWRITER)
    ========================================================================== */
 
 #pizarra-narration-box {
@@ -513,11 +467,11 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   width: min(1040px, 92vw);
-  background: rgba(11, 19, 34, 0.94);
+  background: rgba(11, 19, 34, 0.95);
   border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: 18px;
   padding: 20px 26px;
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(14px);
   z-index: 120;
   cursor: pointer;
@@ -545,9 +499,6 @@ html, body {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--chalk-cyan);
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .narration-counter {
@@ -557,6 +508,7 @@ html, body {
 }
 
 .narration-text-content {
+  font-family: var(--font-family);
   font-size: 17px;
   line-height: 1.55;
   color: #f8fafc;
@@ -574,9 +526,6 @@ html, body {
 .narration-hint {
   font-size: 12px;
   color: #64748b;
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 
 .narration-btn-row {
@@ -602,7 +551,7 @@ html, body {
 }
 
 /* ==========================================================================
-   7. MODAL DE FICHA EDUCATIVA (AL TOCAR PERSONAJE)
+   6. MODAL DE FICHA EDUCATIVA DE PERSONAJE
    ========================================================================== */
 
 #character-detail-modal {
@@ -636,12 +585,6 @@ html, body {
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
   position: relative;
   text-align: center;
-  animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes modalPopIn {
-  0% { transform: scale(0.85); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
 }
 
 .modal-close-btn {
@@ -678,7 +621,6 @@ html, body {
   max-height: 150px;
   max-width: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7));
 }
 
 .modal-badge-cat {
@@ -705,102 +647,5 @@ html, body {
   font-size: 14px;
   line-height: 1.6;
   color: #cbd5e1;
-  margin-bottom: 18px;
   text-align: left;
-}
-
-.modal-checklist-note {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px;
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.4);
-  border-radius: 12px;
-  color: #86efac;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* ==========================================================================
-   8. MODAL DE MINIJUEGO & CHECKLIST
-   ========================================================================== */
-
-#minigame-launcher-modal, #checklist-full-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(3, 7, 18, 0.85);
-  backdrop-filter: blur(10px);
-  z-index: 250;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
-}
-
-#minigame-launcher-modal.active, #checklist-full-modal.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.minigame-card-box {
-  width: min(650px, 94vw);
-  background: #0d1728;
-  border: 2px solid var(--chalk-yellow);
-  border-radius: 24px;
-  padding: 32px;
-  text-align: center;
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.9);
-}
-
-.checklist-card-box {
-  width: min(840px, 94vw);
-  max-height: 85vh;
-  overflow-y: auto;
-  background: #0d1728;
-  border: 2px solid var(--chalk-cyan);
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.9);
-}
-
-.checklist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 14px;
-  margin-top: 18px;
-}
-
-.checklist-item {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.checklist-item.learned {
-  border-color: var(--chalk-green);
-  background: rgba(34, 197, 94, 0.08);
-}
-
-.checklist-item-header {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.checklist-item-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.4;
 }

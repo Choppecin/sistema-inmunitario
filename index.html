@@ -3,64 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>El Sistema Inmunitario — Infografía en Pizarra con Zoom Dinámico</title>
+  <title>El Sistema Inmunitario — Infografía Interactiva</title>
   <link rel="stylesheet" href="css/pizarra.css">
 </head>
 <body>
 
   <!-- ======================================================================
-       1. BARRA SUPERIOR DE NAVEGACIÓN FLOTANTE (ESTILO PREZI / GENIALLY)
+       0. PANTALLA DE INTRODUCCIÓN CON EFECTO MÁQUINA DE ESCRIBIR
        ====================================================================== -->
-  <header class="floating-top-bar">
-    <button id="btn-prezi-overview" class="prezi-action-btn btn-overview" title="Alejar la cámara para ver todo el esquema en la pizarra">
-      <span>🗺️ Ver Pizarra</span>
-    </button>
-    
-    <button id="btn-prezi-prev" class="prezi-action-btn" title="Ir a la estación anterior">
-      <span>‹</span>
-    </button>
-
-    <div id="prezi-station-title" class="prezi-station-indicator">
-      <span class="prezi-indicator-dot"></span>
-      <span>Pizarra Global del Sistema Inmunitario</span>
+  <section id="intro-screen" title="Haz clic en cualquier parte para continuar">
+    <div class="intro-container">
+      <div class="intro-terminal-box">
+        <span id="intro-text" class="typewriter-text"></span>
+        <span class="intro-cursor">_</span>
+      </div>
+      <div id="intro-prompt" class="intro-prompt">
+        <span>Pulsa la pantalla para continuar</span>
+      </div>
     </div>
-
-    <button id="btn-prezi-next" class="prezi-action-btn" title="Ir a la estación siguiente">
-      <span>›</span>
-    </button>
-
-    <button id="btn-open-checklist" class="prezi-action-btn" title="Ver conceptos evaluativos aprendidos">
-      <span>📋 Checklist:</span>
-      <span id="top-checklist-badge" style="color: #38bdf8; font-weight: bold;">0/9</span>
-    </button>
-
-    <button id="btn-toggle-sound" class="prezi-action-btn" title="Silenciar / Activar audio">
-      <span>🔊</span>
-    </button>
-  </header>
+  </section>
 
   <!-- ======================================================================
-       2. VIEWPORT Y MUNDO VIRTUAL DE LA PIZARRA (3200 × 2000 PX)
+       1. VIEWPORT Y PANEL PRINCIPAL (FONDO AZUL OSCURO LISO)
        ====================================================================== -->
   <main id="pizarra-viewport">
     
     <div id="pizarra-world">
       
-      <!-- Fondo decorativo técnico / blueprint anatómico -->
-      <div class="pizarra-bg-decor"></div>
-
-      <!-- Título de la infografía pintado en la pizarra -->
-      <div class="pizarra-blueprint-title">
-        <h1>El Sistema Inmunitario</h1>
-        <p>Atlas Biológico & Esquema Ramificado · Desde la Invasión hasta la Eliminación</p>
-      </div>
-
-      <!-- Capa de trazos de tiza/neón SVG conectando las estaciones -->
+      <!-- Capa de trazos SVG conectando las estaciones -->
       <svg id="pizarra-svg-layer" viewBox="0 0 2200 1300" xmlns="http://www.w3.org/2000/svg">
         <!-- Generado dinámicamente desde pizarra_data.js -->
       </svg>
 
-      <!-- Capa de tarjetas / viñetas de las 8 estaciones -->
+      <!-- Capa de estaciones del panel principal -->
       <div id="pizarra-stations-layer">
         <!-- Generado dinámicamente desde pizarra_data.js -->
       </div>
@@ -70,7 +45,7 @@
   </main>
 
   <!-- ======================================================================
-       3. ESCENA AMPLIADA / NOVELA VISUAL (VISTA MICRO CON ZOOM)
+       2. ESCENA AMPLIADA / VISTA DETALLE
        ====================================================================== -->
   <div id="zoomed-stage-overlay">
     
@@ -85,7 +60,7 @@
     <!-- Caja de narración inferior con mecanografiado (Typewriter) -->
     <div id="pizarra-narration-box">
       <div class="narration-header">
-        <span id="narration-speaker" class="narration-speaker-tag">🎙️ NARRADOR</span>
+        <span id="narration-speaker" class="narration-speaker-tag">NARRADOR</span>
         <span id="narration-counter" class="narration-counter">1 / 5</span>
       </div>
 
@@ -94,7 +69,7 @@
       </div>
 
       <div class="narration-footer">
-        <span class="narration-hint">👆 Haz clic para avanzar diálogo · Pulsa Espacio o Flecha</span>
+        <span class="narration-hint">Haz clic para avanzar · Pulsa Espacio o Flecha</span>
         <div class="narration-btn-row">
           <button id="btn-narr-continue" class="narration-nav-btn">Siguiente ›</button>
         </div>
@@ -104,7 +79,7 @@
   </div>
 
   <!-- ======================================================================
-       4. MODAL DE FICHA EDUCATIVA DE PERSONAJE
+       3. MODAL DE FICHA EDUCATIVA DE PERSONAJE
        ====================================================================== -->
   <div id="character-detail-modal">
     <div class="modal-dialog-panel">
@@ -117,33 +92,10 @@
       <span id="modal-badge-cat" class="modal-badge-cat">Categoría Biológica</span>
       <h2 id="modal-char-title" class="modal-char-title">Nombre del Personaje</h2>
       <p id="modal-char-desc" class="modal-char-desc">Descripción anatomofisiológica.</p>
-
-      <div class="modal-checklist-note">
-        <span>✔ Concepto analizado y registrado en tu checklist</span>
-      </div>
     </div>
   </div>
 
-  <!-- ======================================================================
-       5. MODAL DE CHECKLIST DE CONCEPTOS CLAVE
-       ====================================================================== -->
-  <div id="checklist-full-modal">
-    <div class="checklist-card-box">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h2 style="font-size: 24px; color: #fff;">📋 Checklist de Conceptos Evaluativos</h2>
-        <button id="btn-close-modal-checklist" class="modal-close-btn" style="position: static;">&times;</button>
-      </div>
-      <p style="font-size: 13px; color: #94a3b8;">
-        Haz clic en cada estación y en sus personajes interactivos para desbloquear y dominar todos los conceptos fundamentales del sistema inmunitario.
-      </p>
-
-      <div id="checklist-modal-grid" class="checklist-grid">
-        <!-- Renderizado dinámicamente desde pizarra_data.js -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts de la Pizarra con Zoom Dinámico -->
+  <!-- Scripts -->
   <script src="js/pizarra_data.js"></script>
   <script src="js/games.js"></script>
   <script src="js/pizarra_engine.js"></script>

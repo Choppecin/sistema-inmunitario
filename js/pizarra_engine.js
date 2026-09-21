@@ -1,10 +1,14 @@
 /**
- * PIZARRA_ENGINE.JS — Motor de Cámara con Zoom Dinámico, Trazado de Tiza
- * y Narración Interactiva (Estilo Genially / Prezi / Whiteboard)
+ * PIZARRA_ENGINE.JS — Motor de la Infografía Interactiva
+ * Pantalla de bienvenida con máquina de escribir, fondo azul oscuro liso y panel principal
  */
 
 class PizarraEngine {
   constructor() {
+    this.introScreen = document.getElementById('intro-screen');
+    this.introTextEl = document.getElementById('intro-text');
+    this.introPromptEl = document.getElementById('intro-prompt');
+
     this.viewport = document.getElementById('pizarra-viewport');
     this.world = document.getElementById('pizarra-world');
     this.svgLayer = document.getElementById('pizarra-svg-layer');
@@ -17,21 +21,20 @@ class PizarraEngine {
     this.narrTextEl = document.getElementById('narration-text');
     this.narrCounter = document.getElementById('narration-counter');
     this.btnContinue = document.getElementById('btn-narr-continue');
-    this.topIndicator = document.getElementById('prezi-station-title');
-    this.checklistBadge = document.getElementById('top-checklist-badge');
-    this.audioToggleBtn = document.getElementById('btn-toggle-sound');
 
     // Estado de la cámara y de la historia
     this.cameraMode = 'overview'; // 'overview' | 'station'
     this.currentStationIndex = 0;
     this.visitedStations = new Set();
-    this.learnedChecklist = new Set();
 
-    // Estado del mecanografiado
+    // Estado del mecanografiado de la escena
     this.currentLineIndex = 0;
     this.isTyping = false;
     this.typewriterTimer = null;
     this.currentFullLine = '';
+
+    // Estado de la introducción
+    this.introTyping = false;
 
     // Audio WebAudio
     this.soundEnabled = true;
@@ -45,8 +48,8 @@ class PizarraEngine {
     this.construirPizarra();
     this.setupEventListeners();
     this.ajustarCamaraOverview(false);
+    this.iniciarIntro();
 
-    // Si no ha visitado ninguna, la primera estación es la 0
     if (this.visitedStations.size === 0) {
       this.currentStationIndex = 0;
     }
@@ -54,40 +57,84 @@ class PizarraEngine {
   }
 
   // =========================================================================
-  // 1. CONSTRUCCIÓN DE LA PIZARRA (SVG DE TIZA Y TARJETAS DE ESTACIÓN)
+  // 0. INTRODUCCIÓN CON EFECTO MÁQUINA DE ESCRIBIR
+  // =========================================================================
+
+  iniciarIntro() {
+    const textoCompleto = "Hola, profe, esta es mi infografía interactiva del aparato inmunitario.";
+    this.introTextEl.textContent = '';
+    this.introTyping = true;
+    let i = 0;
+    const velocidad = 40; // ms por carácter
+
+    const timer = setInterval(() => {
+      if (i < textoCompleto.length) {
+        this.introTextEl.textContent += textoCompleto.charAt(i);
+        i++;
+      } else {
+        clearInterval(timer);
+        this.introTyping = false;
+        if (this.introPromptEl) {
+          this.introPromptEl.classList.add('visible');
+        }
+      }
+    }, velocidad);
+
+    const finalizarIntro = () => {
+      if (this.introTyping) {
+        // Completar texto inmediatamente
+        clearInterval(timer);
+        this.introTextEl.textContent = textoCompleto;
+        this.introTyping = false;
+        if (this.introPromptEl) this.introPromptEl.classList.add('visible');
+        return;
+      }
+
+      // Transición hacia el panel principal
+      this.reproducirSonido('whoosh_out');
+      this.introScreen.classList.add('fade-out');
+      setTimeout(() => {
+        this.introScreen.style.display = 'none';
+      }, 650);
+    };
+
+    this.introScreen.addEventListener('click', finalizarIntro);
+    window.addEventListener('keydown', (e) => {
+      if (this.introScreen.style.display !== 'none' && (e.key === ' ' || e.key === 'Enter')) {
+        e.preventDefault();
+        finalizarIntro();
+      }
+    });
+  }
+
+  // =========================================================================
+  // 1. CONSTRUCCIÓN DEL PANEL PRINCIPAL (RUTAS SVG Y TARJETAS DE ESTACIÓN)
   // =========================================================================
 
   construirPizarra() {
     const data = window.PIZARRA_DATA;
 
-    // 1. Construir capas SVG para los trazos de tiza
+    // 1. Capa SVG de conexiones
     this.svgLayer.innerHTML = '';
-    data.CONEXIONES.forEach((con, idx) => {
-      // Línea de fondo discontinua
+    data.CONEXIONES.forEach(con => {
       const pathBase = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       pathBase.setAttribute('d', con.d);
       pathBase.setAttribute('class', 'chalk-path-base');
       this.svgLayer.appendChild(pathBase);
 
-      // Línea de tiza/neón animable
       const pathDrawn = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       pathDrawn.setAttribute('d', con.d);
       pathDrawn.setAttribute('class', 'chalk-path-drawn');
       pathDrawn.id = `chalk-path-${con.desde}-${con.hacia}`;
-
-      // Configurar dasharray para animación
       this.svgLayer.appendChild(pathDrawn);
     });
 
-    // Calcular longitud de trazos tras renderizado
     setTimeout(() => {
       data.CONEXIONES.forEach(con => {
         const p = document.getElementById(`chalk-path-${con.desde}-${con.hacia}`);
         if (p) {
           const len = p.getTotalLength();
           p.style.strokeDasharray = len;
-          // Si ambas estaciones ya fueron visitadas, mostrar trazada
-          const desdeIdx = data.ESTACIONES.findIndex(e => e.id === con.desde);
           const haciaIdx = data.ESTACIONES.findIndex(e => e.id === con.hacia);
           if (this.visitedStations.has(haciaIdx)) {
             p.style.strokeDashoffset = '0';
@@ -96,9 +143,9 @@ class PizarraEngine {
           }
         }
       });
-    }, 100);
+    }, 80);
 
-    // 2. Construir nodos/tarjetas de las 8 estaciones en la pizarra
+    // 2. Tarjetas de estación del panel principal
     this.stationsContainer.innerHTML = '';
     data.ESTACIONES.forEach((est, idx) => {
       const node = document.createElement('div');
@@ -124,7 +171,7 @@ class PizarraEngine {
           <div class="station-thumb-overlay">
             <div class="station-pill-num">${est.icono} ${est.numero}</div>
             <div class="station-status-badge ${isVisited ? 'completed' : 'pending'}">
-              ${isVisited ? '✔ Explorado' : (isCurrent ? '⚡ Por explorar' : '🔒 En ruta')}
+              ${isVisited ? '✔ Completado' : (isCurrent ? '⚡ Activo' : 'En ruta')}
             </div>
           </div>
         </div>
@@ -135,7 +182,7 @@ class PizarraEngine {
           </div>
           <div class="station-footer">
             <div class="station-chars-preview">${previewChars}</div>
-            <div class="station-explore-cta">Explorar ➔</div>
+            <div class="station-explore-cta">Entrar ➔</div>
           </div>
         </div>
       `;
@@ -150,7 +197,7 @@ class PizarraEngine {
   }
 
   // =========================================================================
-  // 2. MOTOR DE CÁMARA CON ZOOM DINÁMICO (ESTILO GENIALLY / PREZI)
+  // 2. MOTOR DE CÁMARA (VISTA MACRO / ZOOM A DETALLE)
   // =========================================================================
 
   ajustarCamaraOverview(animar = true) {
@@ -163,7 +210,6 @@ class PizarraEngine {
     const mw = window.PIZARRA_DATA.MUNDO_ANCHO;
     const mh = window.PIZARRA_DATA.MUNDO_ALTO;
 
-    // Calcular escala óptima para que quepa todo el lienzo con margen elegante
     const scaleX = vw / mw;
     const scaleY = vh / mh;
     const scale = Math.min(scaleX, scaleY) * 0.94;
@@ -174,19 +220,13 @@ class PizarraEngine {
     if (!animar) {
       this.world.style.transition = 'none';
       this.world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
-      this.world.offsetHeight; // forzar reflow
+      this.world.offsetHeight;
       this.world.style.transition = 'transform 1.25s cubic-bezier(0.22, 1, 0.36, 1)';
     } else {
       this.reproducirSonido('whoosh_out');
       this.world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
     }
 
-    this.topIndicator.innerHTML = `
-      <span class="prezi-indicator-dot"></span>
-      <span>Pizarra Global del Sistema Inmunitario</span>
-    `;
-
-    // Resaltar la estación actual en el mapa
     this.actualizarNodosPizarra();
   }
 
@@ -204,18 +244,14 @@ class PizarraEngine {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // Sonido cinemático de zoom
     this.reproducirSonido('whoosh_in');
 
-    // Escala del zoom a la viñeta
     const zoomScale = Math.max(1.15, Math.min(vw / 900, vh / 600));
     const tx = vw / 2 - est.x * zoomScale;
     const ty = vh / 2 - est.y * zoomScale;
 
-    // 1. Mover y ampliar la cámara hacia la estación
     this.world.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${zoomScale})`;
 
-    // 2. Tras la mitad de la animación de cámara, activar la escena ampliada
     setTimeout(() => {
       this.cargarEscenaAmpliada(est);
     }, 450);
@@ -230,10 +266,8 @@ class PizarraEngine {
   cargarEscenaAmpliada(est) {
     const data = window.PIZARRA_DATA;
 
-    // 1. Fondo de la escena
     this.stageBg.src = data.ASSETS[est.fondo];
 
-    // 2. Renderizar personajes vivos y animados
     this.stageChars.innerHTML = '';
     est.personajes.forEach(p => {
       const charEl = document.createElement('div');
@@ -249,7 +283,6 @@ class PizarraEngine {
         <span class="stage-character-badge">${p.nombre}</span>
       `;
 
-      // Clic para abrir ficha educativa
       charEl.addEventListener('click', (e) => {
         e.stopPropagation();
         this.abrirFichaPersonaje(p, est);
@@ -258,14 +291,8 @@ class PizarraEngine {
       this.stageChars.appendChild(charEl);
     });
 
-    // 3. Preparar narración
     this.currentLineIndex = 0;
     this.zoomedOverlay.classList.add('active');
-    this.topIndicator.innerHTML = `
-      <span class="prezi-indicator-dot" style="background:#4ade80;"></span>
-      <span>${est.numero}. ${est.titulo}</span>
-    `;
-
     this.mostrarLineaNarracion(0);
   }
 
@@ -279,18 +306,17 @@ class PizarraEngine {
     this.currentLineIndex = index;
     const totalLines = est.narracion.length;
     this.narrCounter.textContent = `${index + 1} / ${totalLines}`;
-    this.speakerTag.innerHTML = `🎙️ NARRADOR · ${est.faseNombre}`;
+    this.speakerTag.textContent = `NARRADOR · ${est.faseNombre}`;
 
     const text = est.narracion[index];
     this.currentFullLine = text;
 
-    // Mecanografiado
     if (this.typewriterTimer) clearInterval(this.typewriterTimer);
     this.isTyping = true;
     this.narrTextEl.textContent = '';
     let charIdx = 0;
 
-    const speed = 24; // ms por carácter
+    const speed = 24;
     this.typewriterTimer = setInterval(() => {
       if (charIdx < text.length) {
         this.narrTextEl.textContent += text.charAt(charIdx);
@@ -302,16 +328,14 @@ class PizarraEngine {
       }
     }, speed);
 
-    // Texto del botón
     if (index === totalLines - 1) {
-      this.btnContinue.textContent = 'Continuar en Pizarra ➔';
+      this.btnContinue.textContent = 'Volver al Panel Principal ➔';
     } else {
       this.btnContinue.textContent = 'Siguiente ›';
     }
   }
 
   avanzarNarracion() {
-    // Si aún está escribiendo, completar la frase al instante
     if (this.isTyping) {
       if (this.typewriterTimer) clearInterval(this.typewriterTimer);
       this.typewriterTimer = null;
@@ -335,11 +359,9 @@ class PizarraEngine {
     const currentIndex = this.currentStationIndex;
     const nextIndex = currentIndex + 1;
 
-    // Cerrar vista escena y volver a la pizarra con animación de trazo
     this.ajustarCamaraOverview(true);
 
     if (nextIndex < window.PIZARRA_DATA.ESTACIONES.length) {
-      // Dibujar la línea de conexión animada hacia la siguiente estación
       const currentId = window.PIZARRA_DATA.ESTACIONES[currentIndex].id;
       const nextId = window.PIZARRA_DATA.ESTACIONES[nextIndex].id;
       this.animarTrazoTiza(currentId, nextId, () => {
@@ -347,14 +369,9 @@ class PizarraEngine {
         this.actualizarUI();
       });
     } else {
-      // ¡Recorrido completo!
       this.actualizarUI();
     }
   }
-
-  // =========================================================================
-  // 4. ANIMACIÓN DE TRAZO DE TIZA EN LA PIZARRA (CONECTANDO ESTACIONES)
-  // =========================================================================
 
   animarTrazoTiza(desdeId, haciaId, onComplete) {
     const pathEl = document.getElementById(`chalk-path-${desdeId}-${haciaId}`);
@@ -364,18 +381,17 @@ class PizarraEngine {
     }
 
     this.reproducirSonido('chalk');
-    const len = pathEl.getTotalLength();
-    pathEl.style.transition = 'stroke-dashoffset 1.4s ease-in-out';
+    pathEl.style.transition = 'stroke-dashoffset 1.3s ease-in-out';
     pathEl.style.strokeDashoffset = '0';
 
     setTimeout(() => {
       this.reproducirSonido('pop');
       if (onComplete) onComplete();
-    }, 1450);
+    }, 1350);
   }
 
   // =========================================================================
-  // 5. MODAL DE FICHA EDUCATIVA DE PERSONAJE
+  // 4. MODAL DE FICHA EDUCATIVA DE PERSONAJE
   // =========================================================================
 
   abrirFichaPersonaje(p, est) {
@@ -391,13 +407,6 @@ class PizarraEngine {
     titleEl.textContent = p.nombre;
     descEl.textContent = p.desc;
 
-    // Registrar en checklist si aplica
-    if (est.checklistConceptos) {
-      est.checklistConceptos.forEach(cid => this.learnedChecklist.add(cid));
-      this.guardarProgreso();
-      this.actualizarChecklistBadge();
-    }
-
     modal.classList.add('active');
   }
 
@@ -407,87 +416,22 @@ class PizarraEngine {
   }
 
   // =========================================================================
-  // 6. GESTIÓN DEL CHECKLIST Y MODALES
-  // =========================================================================
-
-  actualizarChecklistBadge() {
-    const total = window.PIZARRA_DATA.CHECKLIST.length;
-    const aprendidos = this.learnedChecklist.size;
-    this.checklistBadge.textContent = `${aprendidos}/${total}`;
-  }
-
-  abrirModalChecklist() {
-    this.reproducirSonido('click');
-    const modal = document.getElementById('checklist-full-modal');
-    const grid = document.getElementById('checklist-modal-grid');
-    grid.innerHTML = '';
-
-    window.PIZARRA_DATA.CHECKLIST.forEach(item => {
-      const isLearned = this.learnedChecklist.has(item.id);
-      const card = document.createElement('div');
-      card.className = `checklist-item ${isLearned ? 'learned' : ''}`;
-      card.innerHTML = `
-        <div class="checklist-item-header">
-          <span>${isLearned ? '✔' : '⏳'} ${item.nombre}</span>
-          <span style="font-size:11px;color:${isLearned ? '#86efac' : '#94a3b8'}">
-            ${isLearned ? 'Dominado' : 'Por explorar'}
-          </span>
-        </div>
-        <p class="checklist-item-desc">${item.desc}</p>
-      `;
-      grid.appendChild(card);
-    });
-
-    modal.classList.add('active');
-  }
-
-  cerrarModalChecklist() {
-    this.reproducirSonido('click');
-    document.getElementById('checklist-full-modal').classList.remove('active');
-  }
-
-  // =========================================================================
-  // 7. EVENT LISTENERS & NAVEGACIÓN
+  // 5. EVENT LISTENERS
   // =========================================================================
 
   setupEventListeners() {
-    // Redimensionado de ventana: recalcular escala de pizarra si está en overview
     window.addEventListener('resize', () => {
       if (this.cameraMode === 'overview') {
         this.ajustarCamaraOverview(false);
       }
     });
 
-    // Clic en la caja de narración o botón continuar
     this.narrationBox.addEventListener('click', () => this.avanzarNarracion());
     this.btnContinue.addEventListener('click', (e) => {
       e.stopPropagation();
       this.avanzarNarracion();
     });
 
-    // Botón superior "Ver Pizarra Global" (Zoom Out)
-    document.getElementById('btn-prezi-overview').addEventListener('click', () => {
-      this.ajustarCamaraOverview(true);
-    });
-
-    // Botón superior "Siguiente Estación"
-    document.getElementById('btn-prezi-next').addEventListener('click', () => {
-      const nextIdx = (this.currentStationIndex + 1) % window.PIZARRA_DATA.ESTACIONES.length;
-      this.hacerZoomAEstacion(nextIdx);
-    });
-
-    // Botón superior "Estación Anterior"
-    document.getElementById('btn-prezi-prev').addEventListener('click', () => {
-      const prevIdx = Math.max(0, this.currentStationIndex - 1);
-      this.hacerZoomAEstacion(prevIdx);
-    });
-
-    // Checklist botón superior
-    document.getElementById('btn-open-checklist').addEventListener('click', () => {
-      this.abrirModalChecklist();
-    });
-
-    // Cerrar modal personaje
     document.getElementById('btn-close-modal-char').addEventListener('click', () => {
       this.cerrarFichaPersonaje();
     });
@@ -495,22 +439,9 @@ class PizarraEngine {
       if (e.target.id === 'character-detail-modal') this.cerrarFichaPersonaje();
     });
 
-    // Cerrar modal checklist
-    document.getElementById('btn-close-modal-checklist').addEventListener('click', () => {
-      this.cerrarModalChecklist();
-    });
-    document.getElementById('checklist-full-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'checklist-full-modal') this.cerrarModalChecklist();
-    });
-
-    // Sonido toggle
-    this.audioToggleBtn.addEventListener('click', () => {
-      this.soundEnabled = !this.soundEnabled;
-      this.audioToggleBtn.textContent = this.soundEnabled ? '🔊' : '🔇';
-    });
-
-    // Teclas: Espacio / Flechas / Escape
     window.addEventListener('keydown', (e) => {
+      if (this.introScreen.style.display !== 'none') return;
+
       if (e.key === ' ' || e.key === 'Enter') {
         if (this.cameraMode === 'station') {
           e.preventDefault();
@@ -521,7 +452,6 @@ class PizarraEngine {
           this.ajustarCamaraOverview(true);
         }
         this.cerrarFichaPersonaje();
-        this.cerrarModalChecklist();
       } else if (e.key === 'ArrowRight') {
         if (this.cameraMode === 'overview') {
           this.hacerZoomAEstacion(this.currentStationIndex);
@@ -550,18 +480,17 @@ class PizarraEngine {
       const badge = node.querySelector('.station-status-badge');
       if (badge) {
         badge.className = `station-status-badge ${isVisited ? 'completed' : 'pending'}`;
-        badge.textContent = isVisited ? '✔ Explorado' : (isCurrent ? '⚡ Por explorar' : '🔒 En ruta');
+        badge.textContent = isVisited ? '✔ Completado' : (isCurrent ? '⚡ Activo' : 'En ruta');
       }
     });
   }
 
   actualizarUI() {
     this.actualizarNodosPizarra();
-    this.actualizarChecklistBadge();
   }
 
   // =========================================================================
-  // 8. AUDIO SINTÉTICO WEBAUDIO (FAIL-PROOF)
+  // 6. AUDIO SINTÉTICO WEBAUDIO (FAIL-PROOF)
   // =========================================================================
 
   reproducirSonido(tipo) {
@@ -601,7 +530,6 @@ class PizarraEngine {
         osc.start(now);
         osc.stop(now + 0.4);
       } else if (tipo === 'chalk') {
-        // Trazado de tiza sutil
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
@@ -614,7 +542,6 @@ class PizarraEngine {
         osc.start(now);
         osc.stop(now + 0.26);
       } else if (tipo === 'chime') {
-        // Éxito al completar estación
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
@@ -653,25 +580,22 @@ class PizarraEngine {
         osc.stop(now + 0.13);
       }
     } catch (err) {
-      console.warn('Audio no disponible:', err);
+      console.warn('Audio:', err);
     }
   }
 
   // =========================================================================
-  // 9. PERSISTENCIA
+  // 7. PERSISTENCIA
   // =========================================================================
 
   guardarProgreso() {
     try {
       const data = {
         visited: Array.from(this.visitedStations),
-        checklist: Array.from(this.learnedChecklist),
         current: this.currentStationIndex
       };
       localStorage.setItem('pizarra_inmuno_save', JSON.stringify(data));
-    } catch (e) {
-      // LocalStorage deshabilitado o privado
-    }
+    } catch (e) {}
   }
 
   cargarProgreso() {
@@ -680,16 +604,12 @@ class PizarraEngine {
       if (saved) {
         const data = JSON.parse(saved);
         if (data.visited) this.visitedStations = new Set(data.visited);
-        if (data.checklist) this.learnedChecklist = new Set(data.checklist);
         if (typeof data.current === 'number') this.currentStationIndex = data.current;
       }
-    } catch (e) {
-      // Ignorar si falla lectura
-    }
+    } catch (e) {}
   }
 }
 
-// Arrancar motor cuando el DOM esté listo
 window.addEventListener('DOMContentLoaded', () => {
   window.appPizarra = new PizarraEngine();
 });
