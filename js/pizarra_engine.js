@@ -553,14 +553,53 @@ class PizarraEngine {
       imgEl.src = imgSrc;
       imgEl.alt = p.nombre;
 
-      // Aplicar multiplicador de escala si está definido (ej. 1.25)
-      let scaleMult = 1;
-      if (typeof p.scale === 'number' && p.scale >= 0.5) {
-        scaleMult = p.scale;
+      // Tamaño duplicado en pantalla para protagonismo visual máximo,
+      // EXCEPTO para la célula madre hematopoyética multipotente (P08) según instrucción explícita del usuario
+      const isStemCell = (p.id === 'celula_madre' || p.img === 'P08');
+      const numChars = personajes ? personajes.length : 1;
+      let baseMin, baseVh, baseMax, maxW;
+
+      if (isStemCell) {
+        // La célula madre conserva su escala equilibrada para los esquemas de la médula
+        baseMin = 190;
+        baseVh = 25;
+        baseMax = 260;
+        maxW = 340;
+      } else if (numChars >= 5) {
+        // Escenas con 5 células alineadas (ej. paso 19 en la cinta de la fábrica)
+        baseMin = 210;
+        baseVh = 27;
+        baseMax = 270;
+        maxW = 300;
+      } else if (numChars === 4) {
+        // Escenas con 4 células (ej. paso 21, paso 30)
+        baseMin = 260;
+        baseVh = 33;
+        baseMax = 330;
+        maxW = 360;
+      } else if (numChars === 3) {
+        // Escenas con 3 células (ej. paso 5, paso 22)
+        baseMin = 320;
+        baseVh = 40;
+        baseMax = 410;
+        maxW = 460;
+      } else {
+        // Escenas con 1 o 2 elementos (antígeno, virus, epitelial, plasmática, macrófago, CD8, etc.)
+        // TAMAÑO DUPLICADO EN PANTALLA
+        baseMin = 420;
+        baseVh = 52;
+        baseMax = 550;
+        maxW = 720;
       }
-      if (scaleMult !== 1) {
-        imgEl.style.height = `clamp(${Math.round(220 * scaleMult)}px, ${Math.round(30 * scaleMult)}vh, ${Math.round(320 * scaleMult)}px)`;
-      }
+
+      let scaleMult = (typeof p.scale === 'number' && p.scale >= 0.5) ? p.scale : 1;
+      const finalMin = Math.round(baseMin * (scaleMult >= 1.5 ? scaleMult : (0.85 + scaleMult * 0.15)));
+      const finalVh = Math.round(baseVh * (scaleMult >= 1.5 ? scaleMult : (0.85 + scaleMult * 0.15)));
+      const finalMax = Math.round(baseMax * (scaleMult >= 1.5 ? scaleMult : (0.85 + scaleMult * 0.15)));
+      const finalMaxW = Math.round(maxW * (scaleMult >= 1.5 ? scaleMult : (0.85 + scaleMult * 0.15)));
+
+      imgEl.style.height = `clamp(${finalMin}px, ${finalVh}vh, ${finalMax}px)`;
+      imgEl.style.maxWidth = `${finalMaxW}px`;
 
       innerEl.appendChild(imgEl);
 

@@ -750,9 +750,9 @@ window.PIZARRA_DATA = {
             { id: 'lisis', img: 'P31', nombre: 'Lisis celular', desc: 'Perforación de membrana y destrucción de la célula con virus.', x: 0.70, y: 0.28, scale: 1.45, entra: 'pop', anim: 'trapped', shake: true, sinBadge: true }
           ],
           callout: {
-            texto: 'LISIS POR CD8+ (INMUNIDAD CELULAR)',
+            texto: 'LISIS POR CD8+',
             x: 0.70,
-            y: 0.49,
+            y: 0.45,
             flechaDir: 'up',
             delay: 550
           }

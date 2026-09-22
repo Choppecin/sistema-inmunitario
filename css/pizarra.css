@@ -636,14 +636,14 @@ html, body {
   will-change: transform;
 }
 
-/* Tamaño de las células visiblemente ampliado para protagonismo biológico */
+/* Tamaño de las células visiblemente ampliado y duplicado para protagonismo biológico */
 .stage-character-item img {
-  height: clamp(210px, 29vh, 290px);
+  height: clamp(380px, 48vh, 520px);
   width: auto;
-  max-width: 360px;
+  max-width: 720px;
   object-fit: contain;
   pointer-events: none;
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.7));
   transition: filter 0.25s ease;
 }
 
