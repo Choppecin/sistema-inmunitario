@@ -126,7 +126,11 @@ class PizarraEngine {
   // =========================================================================
 
   actualizarLineaConectora() {
-    if (!this.cards || this.cards.length < 7 || !this.connectingPath) return;
+    if (!this.connectingPath) return;
+    if (!this.cards || this.cards.length < 2) {
+      this.connectingPath.setAttribute('d', '');
+      return;
+    }
 
     const panelRect = this.mainPanel.getBoundingClientRect();
     if (panelRect.width === 0 || panelRect.height === 0) return;
@@ -210,7 +214,7 @@ class PizarraEngine {
 
   mostrarChapterIntro(index, onComplete) {
     const est = window.PIZARRA_DATA.ESTACIONES[index];
-    const text = `Capítulo ${index + 1}: ${est.titulo}`;
+    const text = est.titulo || "Recorrido: El Sistema Inmunitario";
     const screen = document.getElementById('chapter-intro-screen');
     const textEl = document.getElementById('chapter-intro-text');
     const promptEl = document.getElementById('chapter-intro-prompt');
@@ -684,7 +688,7 @@ class PizarraEngine {
     }
 
     if (index === totalLines - 1) {
-      this.btnContinue.textContent = 'Volver al Esquema';
+      this.btnContinue.textContent = 'Volver al Inicio';
     } else {
       this.btnContinue.textContent = 'Siguiente';
     }

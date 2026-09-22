@@ -1,8 +1,6 @@
 /**
- * PIZARRA_DATA.JS — Datos de las 7 Estaciones de la Infografía Interactiva
- * Mapeo exacto de toda la historia biológica en 7 puntos en orden:
- * Fila superior: 1, 2, 3, 4
- * Fila inferior: 5, 6, 7
+ * PIZARRA_DATA.JS — Datos del Recorrido Completo y Unificado
+ * Guion biológico cronológico exacto de 22 escenas (S01–S21 de AGENTS.md)
  * 
  * Regla de oro (AGENTS.md): Los textos de narración son EXACTOS.
  */
@@ -69,61 +67,127 @@ window.PIZARRA_DATA = {
     'P54': 'imagenes/assets/P54_respuesta_secundaria.png'
   },
 
-  // 7 Estaciones organizadas exactamente según el esquema del usuario:
-  // Fila 1 (arriba): Puntos 1, 2, 3, 4
-  // Fila 2 (abajo):  Puntos 5, 6, 7
+  // Recorrido único unificado: orden cronológico fiel a las 22 escenas originales
   ESTACIONES: [
-    // -------------------------------------------------------------
-    // PUNTO 1 (Fila 1, Pos 1): La Invasión y Barreras Innatas
-    // -------------------------------------------------------------
     {
-      id: 'punto_1',
+      id: 'recorrido',
       numero: '1',
       fila: 1,
-      fondo: 'P45', // Fondo representativo para la tarjeta del panel principal
-      faseNombre: '1. Puerta de Entrada y Barreras',
-      titulo: 'Barreras Anatómicas y el Antígeno',
+      fondo: 'P02',
+      faseNombre: 'Recorrido Completo',
+      titulo: 'Recorrido: El Sistema Inmunitario',
       narracion: [
+        // S01: Nuestro cuerpo (0, 1, 2)
         'Este es nuestro <strong>cuerpo humano</strong>. Un mundo complejo de aparatos y sistemas.',
         'Entre ellos, el <strong>sistema inmunitario</strong>, compuesto por todas las células, moléculas, órganos y tejidos que se encargan de defender a nuestro cuerpo de todos los <strong>antígenos</strong>.',
         'No es un órgano aislado, sino un <strong>sistema de vigilancia distribuido</strong> por todo el organismo.',
-        'Para empezar a entenderlo todo, un <strong>antígeno</strong> es toda molécula que el cuerpo humano reconoce como extraña y capaz de desencadenar una respuesta inmunitaria. Es decir, un <strong>GUIRI</strong>, un extranjero que quiere robarnos todos los dineros.',
+
+        // S02: El antígeno (3, 4, 5)
+        'Para empezar a entenderlo todo, un <strong>antígeno</strong> es toda molécula que el cuerpo humano reconoce como extraña y capaz de desencadenar una respuesta inmunitaria. Es decir, un <strong>GUIRI</strong>, un extranjero <strong>que quiere atacarnos</strong>.',
         'Pueden ser desde <strong>virus</strong>, bacterias, hongos, parásitos, polen o tejidos trasplantados.',
         'Y su enemigo natural es el <strong>anticuerpo</strong>: una proteína producida por los linfocitos B que reconoce específicamente a un antígeno y facilita su neutralización y eliminación.',
+
+        // S03: Dos tipos de amenaza (6, 7)
         'Está claro que nuestro sistema no va a atacar de la misma manera a un tipo de ataques que a otros. No es lo mismo un <strong>carterista</strong> que un <strong>aviso de bomba</strong> en una ciudad importante.',
         'Por eso, podemos distinguir entre dos tipos de respuestas: la <strong>respuesta innata</strong> y la <strong>respuesta adaptativa</strong>.',
+
+        // S04: Barreras innatas (8, 9)
         'La <strong>respuesta innata</strong> es la rápida, la inespecífica, la inmediata; es lo primero que se encuentra el patógeno antes de hacer nada, y está presente desde el nacimiento.',
         'Entre los métodos de defensa de esta inmunidad podemos encontrar barreras bioquímicas y físicas: la <strong>piel</strong>, los <strong>cilios</strong>, las <strong>mucosas</strong>, los MALT, los ácidos… y la <strong>microbiota</strong>.',
+
+        // S05: El complemento (10, 11, 12)
+        'Por otra parte, podemos encontrarnos el <strong>sistema del complemento</strong>. Este es un conjunto de más de treinta proteínas plasmáticas termolábiles que circulan por la sangre de forma inactiva, y que se activan cuando detectan anomalías.',
+        'Tiene tres vías de activación: la <strong>clásica</strong> (a través de un anticuerpo unido al antígeno), la <strong>alterna</strong> (directamente sobre la superficie de muchos microorganismos, sin anticuerpos) y la vía de las <strong>lectinas</strong> (cuando reconocen azúcares de la superficie del microbio), pero eso es otra cosa.',
+        'Cuando se activa, el complemento marca al patógeno para los fagocitos, provoca <strong>inflamación</strong> reclutando más células al foco de la infección y puede <strong>lisar directamente</strong> al microorganismo.',
+
+        // S06: La fábrica de células (13, 14, 15, 16, 17)
+        'Y lo más importante, de lo que no hemos hablado aún: los <strong>policías</strong> que se encargan de que todo funcione bien.',
+        'Vamos a hablar de las células, los <strong>leucocitos o glóbulos blancos</strong>, las verdaderas defensoras de todo.',
+        'Vamos una por una. Se dividen en dos tipos según tengan o no gránulos visibles en el citoplasma: los <strong>granulocitos</strong> y los <strong>agranulocitos</strong>. Los granulocitos son los neutrófilos, los basófilos y los eosinófilos; los agranulocitos son los linfocitos y los monocitos.',
+        'Además, todas vienen de <strong>células madre hematopoyéticas multipotenciales</strong>, situadas en la médula ósea, pero pueden venir de un progenitor linfoide o un progenitor mieloide.',
+        'Las células <strong>mieloides</strong> son las que se encargan de la respuesta innata y las <strong>linfoides</strong> forman la respuesta adaptativa —ojo: las células <strong>NK</strong> son linfoides pero participan en la respuesta innata—.',
+
+        // S07: Desfile mieloide (18, 19, 20, 21)
+        'Vamos a ver las células mieloides, las de la respuesta innata: los <strong>glóbulos rojos</strong> y las <strong>plaquetas</strong>, que también derivan de este progenitor, aunque no son células inmunitarias: los glóbulos rojos transportan oxígeno y las plaquetas taponan las heridas.',
+        'Los granulocitos que hemos visto antes y los <strong>monocitos</strong>, que al entrar en los tejidos se convierten en <strong>macrófagos</strong>, grandes comedores que fagocitan patógenos y restos celulares, y que además secretan <strong>citoquinas</strong>: mensajeros químicos que activan a otras células inmunitarias.',
+        'Y las <strong>células dendríticas</strong>, las mejores presentadoras de antígeno: son el principal puente entre la inmunidad innata y la adaptativa.',
+        'Los granulocitos: los <strong>neutrófilos</strong> son los más abundantes (60-70% de los leucocitos) y los primeros en llegar al foco de la infección; los <strong>eosinófilos</strong> atacan sobre todo parásitos; y los <strong>basófilos</strong> y los <strong>mastocitos</strong> liberan histamina, provocando inflamación y alergias.',
+
+        // S08: Desfile linfoide (22, 23, 24, 25)
+        'Ahora veamos las células de la parte linfoide, las de la <strong>respuesta adaptativa</strong>: los <strong>linfocitos B</strong> y los <strong>linfocitos T</strong>, además de las <strong>NK o natural killers</strong>, que aunque son linfoides pertenecen a la respuesta innata porque destruyen células infectadas y tumorales sin necesidad de reconocer un antígeno específico.',
+        'Los <strong>mastocitos</strong>, en cambio, son mieloides.',
+        'Los <strong>linfocitos B</strong> maduran en la médula ósea (de ahí su inicial) y producen anticuerpos; los <strong>linfocitos T</strong> maduran en el timo y se dividen en dos equipos: los <strong>CD4+ colaboradores</strong>, que dirigen la respuesta liberando citoquinas, y los <strong>CD8+ citotóxicos</strong>, que eliminan células infectadas.',
+        'Vamos a imaginar que entra un <strong>virus malo</strong> en nuestro cuerpo. Gracias a esto vamos a explicar todos los procesos del sistema inmunitario.',
+
+        // S09: Entra el virus (26, 27)
         'Imaginemos que el virus entra por la nariz, debido a un <strong>aerosol</strong>, por ejemplo el virus de la <strong>COVID-19</strong>.',
-        'Lo primero que hace nuestro cuerpo de manera automática es intentar pararlo con los mecanismos físicos más básicos: <strong>pelos en la nariz</strong>, <strong>mucosas</strong>…'
+        'Lo primero que hace nuestro cuerpo de manera automática es intentar pararlo con los mecanismos físicos más básicos: <strong>pelos en la nariz</strong>, <strong>mucosas</strong>…',
+
+        // S10: La barrera falla (28, 29)
+        'Nuestro cuerpo es un poco malo y el virus ha comenzado a <strong>infectar células</strong>.',
+        'Lo primero que entra en acción son las células de la <strong>respuesta inmunitaria innata</strong>.',
+
+        // S11: Quimiotaxis (30)
+        'Los fagocitos (neutrófilos y macrófagos) comienzan a actuar. Comienzan a buscar patógenos de manera natural, como vigilantes de seguridad, atraídos por señales químicas que emiten las células dañadas (<strong>quimiotaxis</strong>).',
+
+        // S12: Fagocitosis (31)
+        'Allí los fagocitos hacen su proceso de <strong>fagocitosis</strong>: reconocen al microorganismo, lo engloban y lo destruyen en su interior, con su marcación u <strong>opsonización</strong> —los anticuerpos que marcan al patógeno reciben el nombre de opsoninas— y digestión con enzimas.',
+
+        // S13: Viaje al ganglio (32, 33, 34)
+        'Por otra parte, las <strong>células dendríticas</strong>, que también van por allí, una vez captan los antígenos en los tejidos, maduran y viajan hasta los <strong>ganglios linfáticos</strong>.',
+        'Allí, como células presentadoras de antígeno, muestran los fragmentos de estos virus unidos a sus moléculas del <strong>CMH</strong> (complejo mayor de histocompatibilidad, en inglés MHC), como si agitaran banderitas de alarma.',
+        'Y es que los linfocitos T no pueden reconocer un antígeno libre: necesitan que otra célula se lo muestre, y lo detectan mediante su receptor <strong>TCR</strong>.',
+
+        // S14: Presentación antigénica adaptativa (35)
+        'Si la infección es grave, estas células presentan esos fragmentos de estos virus en los ganglios linfáticos a los <strong>linfocitos T</strong> y ya comienza la <strong>respuesta adaptativa</strong>.',
+
+        // S15: CD4+ y CD8+ atacan (36, 37)
+        'Una vez ha llegado a los ganglios, los linfocitos T ya se han enterado. Los <strong>T CD4+</strong>, que reconocen el antígeno presentado sobre moléculas CMH-II, activan a los linfocitos B liberando <strong>citoquinas</strong>.',
+        'Y los <strong>T CD8+</strong>, que reconocen el antígeno sobre CMH-I en la superficie de las células infectadas, comienzan a eliminar por <strong>lisis</strong> todas las células que están plagadas de virus. Esta es la <strong>inmunidad celular</strong>, la que actúa contra los patógenos que viven dentro de las células.',
+
+        // S16: Expansión clonal B (38)
+        'Los <strong>linfocitos B</strong> activados —que reconocen su antígeno específico y reciben la ayuda de los T CD4+— se dividen y se diferencian en células plasmáticas que generan anticuerpos, multiplicándose en lo que se llama la <strong>expansión clonal</strong> y comenzando la <strong>inmunidad humoral</strong>, la que actúa contra los patógenos extracelulares y sus toxinas.',
+
+        // S17: Fábrica de anticuerpos (39)
+        'Estas células comienzan a formar anticuerpos: se trata de moléculas llamadas glicoproteínas o <strong>inmunoglobulinas (Ig)</strong> —las primeras en aparecer son las <strong>IgM</strong> y las más abundantes en sangre son las <strong>IgG</strong>—.',
+
+        // S18: La batalla final (40)
+        'Estos anticuerpos se unen a los <strong>epítopos</strong>, zonas concretas de la superficie de los virus, a los que atacan para neutralizarlos, facilitando su opsonización y su fagocitosis, además de activar el <strong>complemento</strong>.',
+
+        // S19: Victoria (41)
+        'Además, también se crean <strong>linfocitos B y T de memoria</strong> que consiguen que, cuando todo acabe, el organismo recuerde a este patógeno.',
+
+        // S20: Memoria inmunológica (42)
+        'Y si vuelve a atacar, la respuesta será <strong>mucho más rápida y eficaz</strong> que la primera vez.',
+
+        // S21: Final (43)
+        'Con todo esto acabamos el proceso de la respuesta inmunitaria. <strong>Muchas gracias.</strong>'
       ],
-      personajes: [
-        // Personajes por defecto para visualización general
-        { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.72, y: 0.58, scale: 0.28, anim: 'float' },
-        { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.48, y: 0.42, scale: 0.22, anim: 'pulse' },
-        { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Muralla celular externa y protectora del organismo.', x: 0.22, y: 0.60, scale: 0.28, anim: 'float' }
-      ],
-      // Definición paso a paso del dinamismo biológico de las escenas de AGENTS.md
+
+      // Pasos visuales sincronizados exactamente con cada línea del guion
       pasos: [
-        // S01: Nuestro cuerpo (Fondo P02, red inmunitaria P03)
+        // 0: S01 Cuerpo humano
         {
           fondo: 'P02',
           fondoAnim: 'slide-up',
           overlay: null,
           personajes: []
         },
+        // 1: S01 Red inmunitaria
         {
           fondo: 'P02',
-          overlay: 'P03', // Se enciende la red inmunitaria
+          overlay: 'P03',
           burst: { x: 0.5, y: 0.45, tipo: 'spark' },
           personajes: []
         },
+        // 2: S01 Vigilancia distribuida
         {
           fondo: 'P02',
           overlay: 'P03',
           personajes: []
         },
-        // S02: El antígeno (Fondo P02, Guiri P04 entra con animación, sin badge inicial, callout en grande DEBAJO con flecha hacia arriba)
+
+        // 3: S02 El antígeno (Guiri P04) con flecha arriba y callout destacado
         {
           fondo: 'P02',
           overlay: null,
@@ -147,10 +211,11 @@ window.PIZARRA_DATA = {
             x: 0.65,
             y: 0.49,
             flechaDir: 'up',
-            delay: 650
+            delay: 600
           }
         },
-        // Virus presentado con su cartel debajo y flecha
+
+        // 4: S02 Virus P25 con flecha arriba y callout destacado
         {
           fondo: 'P02',
           overlay: null,
@@ -164,535 +229,629 @@ window.PIZARRA_DATA = {
             x: 0.28,
             y: 0.49,
             flechaDir: 'up',
-            delay: 600
+            delay: 550
           }
         },
-        // Anticuerpo presentado con su cartel debajo y flecha
+
+        // 5: S02 Anticuerpo P32 con flecha arriba y callout destacado
         {
           fondo: 'P02',
           overlay: null,
           burst: { x: 0.78, y: 0.30, tipo: 'spark' },
           personajes: [
             { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.20, y: 0.36, scale: 1.05, entra: null, anim: 'pulse' },
-            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.48, y: 0.36, scale: 1.1, entra: null, anim: 'float' },
-            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulina producida por linfocitos B para neutralizar patógenos.', x: 0.78, y: 0.30, scale: 1.2, entra: 'slideRight', anim: 'float', sinBadge: true }
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.48, y: 0.36, scale: 1.10, entra: null, anim: 'float' },
+            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulina producida por linfocitos B para neutralizar patógenos.', x: 0.78, y: 0.30, scale: 1.20, entra: 'slideRight', anim: 'float', sinBadge: true }
           ],
           callout: {
             texto: 'ANTICUERPO',
             x: 0.78,
             y: 0.49,
             flechaDir: 'up',
-            delay: 600
+            delay: 550
           }
         },
-        // S03: Dos tipos de amenaza (Fondo P05 carterista -> P07 dos caminos innata y adaptativa)
+
+        // 6: S03 Dos tipos de amenaza (P05 Carterista)
         {
           fondo: 'P05',
           overlay: null,
           shakeStage: true,
           personajes: []
         },
+
+        // 7: S03 P07 Dos caminos (Carteles grandes de Respuesta Innata y Adaptativa)
         {
           fondo: 'P07',
           overlay: null,
           decorado: 'dos_caminos',
           personajes: []
         },
-        // S04: Barreras innatas (Fondo P45 piel -> P46 mucosa)
+
+        // 8: S04 Barreras Innatas (P45 Piel, Célula epitelial P29 mucho más grande con callout)
         {
           fondo: 'P45',
           overlay: null,
-          burst: { x: 0.50, y: 0.54, tipo: 'spark' },
+          burst: { x: 0.50, y: 0.30, tipo: 'spark' },
           personajes: [
-            { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Barrera física queratinizada que bloquea la penetración microbiana.', x: 0.50, y: 0.54, scale: 0.32, entra: 'pop', anim: 'float' }
-          ]
+            {
+              id: 'epitelio',
+              img: 'P29',
+              nombre: 'Célula epitelial',
+              desc: 'Barrera física queratinizada que bloquea la penetración microbiana.',
+              x: 0.50,
+              y: 0.30,
+              scale: 1.25,
+              entra: 'pop',
+              anim: 'float',
+              sinBadge: true
+            }
+          ],
+          callout: {
+            texto: 'CÉLULA EPITELIAL',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 500
+          }
         },
+
+        // 9: S04 P46 Mucosa, Cilios y Microbiota (Decorado ampliado y célula epitelial grande)
         {
           fondo: 'P46',
           overlay: null,
           decorado: 'barreras',
           personajes: [
-            { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Barrera física queratinizada que bloquea la penetración microbiana.', x: 0.26, y: 0.54, scale: 0.28, entra: null, anim: 'float' }
+            {
+              id: 'epitelio',
+              img: 'P29',
+              nombre: 'Célula epitelial',
+              desc: 'Muralla celular externa y protectora del organismo.',
+              x: 0.50,
+              y: 0.16,
+              scale: 1.15,
+              entra: null,
+              anim: 'float'
+            }
           ]
         },
-        // S09: Entra el virus (Fondo P44 nariz, aerosoles y virus filtrándose)
-        {
-          fondo: 'P44',
-          overlay: null,
-          burst: { x: 0.50, y: 0.38, tipo: 'aerosol' },
-          personajes: [
-            { id: 'virus_nasal', img: 'P25', nombre: 'Virus', desc: 'Partícula viral transportada por microgotas de aerosol.', x: 0.50, y: 0.38, scale: 0.28, entra: 'zoom', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P44',
-          overlay: null,
-          shakeStage: true,
-          burst: { x: 0.32, y: 0.58, tipo: 'spark' },
-          personajes: [
-            { id: 'virus_atrapado', img: 'P25', nombre: 'Virus', desc: 'Patógeno inmovilizado por la barrera física de cilios y moco.', x: 0.32, y: 0.58, scale: 0.23, entra: null, anim: 'trapped' },
-            { id: 'virus_infiltrado', img: 'P25', nombre: 'Virus', desc: 'Virus que logra superar el filtrado mecánico nasal.', x: 0.74, y: 0.42, scale: 0.25, entra: 'slideRight', anim: 'pulse' }
-          ]
-        }
-      ]
-    },
 
-    // -------------------------------------------------------------
-    // PUNTO 2 (Fila 1, Pos 2): La Fábrica Hematopoyética
-    // -------------------------------------------------------------
-    {
-      id: 'punto_2',
-      numero: '2',
-      fila: 1,
-      fondo: 'P47',
-      faseNombre: '2. Fábrica Celular',
-      titulo: 'La Fábrica Celular: Médula Ósea y Linajes',
-      narracion: [
-        'Y lo más importante, de lo que no hemos hablado aún: los policías que se encargan de que todo funcione bien.',
-        'Vamos a hablar de las células, los leucocitos o glóbulos blancos, las verdaderas defensoras de todo.',
-        'Vamos una por una. Se dividen en dos tipos según tengan o no gránulos visibles en el citoplasma: los granulocitos y los agranulocitos. Los granulocitos son los neutrófilos, los basófilos y los eosinófilos; los agranulocitos son los linfocitos y los monocitos.',
-        'Además, todas vienen de células madre hematopoyéticas multipotenciales, situadas en la médula óseo, pero pueden venir de un progenitor linfoide o un progenitor mieloide.',
-        'Las células mieloides son las que se encargan de la respuesta innata y las linfoides forman la respuesta adaptativa —ojo: las células NK son linfoides pero participan en la respuesta innata—.',
-        'Vamos a ver las células mieloides, las de la respuesta innata: los glóbulos rojos y las plaquetas, que también derivan de este progenitor, aunque no son células inmunitarias: los glóbulos rojos transportan oxígeno y las plaquetas taponan las heridas.',
-        'Los granulocitos que hemos visto antes y los monocitos, que al entrar en los tejidos se convierten en macrófagos, grandes comedores que fagocitan patógenos y restos celulares, y que además secretan citoquinas: mensajeros químicos que activan a otras células inmunitarias.',
-        'Y las células dendríticas, las mejores presentadoras de antígeno: son el principal puente entre la inmunidad innata y la adaptativa.',
-        'Los granulocitos: los neutrófilos son los más abundantes (60-70% de los leucocitos) y los primeros en llegar al foco de la infección; los eosinófilos atacan sobre todo parásitos; y los basófilos y los mastocitos liberan histamina, provocando inflamación y alergias.',
-        'Ahora veamos las células de la parte linfoide, las de la respuesta adaptativa: los linfocitos B y los linfocitos T, además de las NK o natural killers, que aunque son linfoides pertenecen a la respuesta innata porque destruyen células infectadas y tumorales sin necesidad de reconocer un antígeno específico.',
-        'Los mastocitos, en cambio, son mieloides.',
-        'Los linfocitos B maduran en la médula óseo (de ahí su inicial) y producen anticuerpos; los linfocitos T maduran en el timo y se dividen en dos equipos: los CD4+ colaboradores, que dirigen la respuesta liberando citoquinas, y los CD8+ citotóxicos, que eliminan células infectadas.',
-        'Vamos a imaginar que entra un virus malo en nuestro cuerpo. Gracias a esto vamos a explicar todos los procesos del sistema inmunitario.'
-      ],
-      personajes: [
-        { id: 'celula_madre', img: 'P08', nombre: 'Célula madre', desc: 'Célula pluripotencial precursora de todos los leucocitos.', x: 0.18, y: 0.50, scale: 0.28, anim: 'pulse' },
-        { id: 'neutrofilo', img: 'P09', nombre: 'Neutrófilo', desc: 'Leucocito más abundante (60-70%), primer respondedor y fagocito.', x: 0.42, y: 0.40, scale: 0.24, anim: 'float' },
-        { id: 'macrofago', img: 'P14', nombre: 'Macrófago', desc: 'Gran comedor fagocitario derivado de monocitos sanguíneos.', x: 0.65, y: 0.55, scale: 0.28, anim: 'float' },
-        { id: 'nk', img: 'P21', nombre: 'Célula NK', desc: 'Linfocito innato destructor de infectadas y tumorales sin antígeno específico.', x: 0.85, y: 0.62, scale: 0.24, anim: 'pulse' }
-      ],
-      pasos: [
-        // S06
-        {
-          fondo: 'P47',
-          fondoAnim: 'slide-up',
-          overlay: null,
-          personajes: []
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          personajes: []
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          personajes: []
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.50, y: 0.48, tipo: 'gold' },
-          personajes: [
-            { id: 'celula_madre', img: 'P08', nombre: 'Célula madre', desc: 'Célula multipotencial precursora de todos los leucocitos.', x: 0.50, y: 0.48, scale: 0.35, entra: 'pop', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          decorado: 'linajes',
-          personajes: [
-            { id: 'celula_madre', img: 'P08', nombre: 'Célula madre', desc: 'Célula multipotencial precursora de todos los leucocitos.', x: 0.50, y: 0.34, scale: 0.28, entra: null, anim: 'pulse' }
-          ]
-        },
-        // S07: Desfile mieloide
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'globulo_rojo', img: 'P16', nombre: 'Glóbulo rojo', desc: 'Transporta oxígeno unido a hemoglobina.', x: 0.35, y: 0.52, scale: 0.28, entra: 'slideRight', anim: 'float' },
-            { id: 'plaqueta', img: 'P17', nombre: 'Plaqueta', desc: 'Fragmento celular que tapona heridas (hemostasia).', x: 0.65, y: 0.52, scale: 0.26, entra: 'slideRight', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'monocito', img: 'P13', nombre: 'Monocito', desc: 'Leucocito agranulocito que patrulla en sangre.', x: 0.32, y: 0.52, scale: 0.28, entra: 'pop', anim: 'float' },
-            { id: 'macrofago', img: 'P14', nombre: 'Macrófago', desc: 'Gran comedor fagocitario secretor de citoquinas.', x: 0.68, y: 0.52, scale: 0.32, entra: 'slideRight', anim: 'float' }
-          ]
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Puente clave entre la inmunidad innata y adaptativa.', x: 0.50, y: 0.50, scale: 0.32, entra: 'pop', anim: 'float' }
-          ]
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'neutrofilo', img: 'P09', nombre: 'Neutrófilo', desc: 'Primer respondedor celular (60-70% de leucocitos).', x: 0.20, y: 0.52, scale: 0.25, entra: 'slideRight', anim: 'float' },
-            { id: 'eosinofilo', img: 'P10', nombre: 'Eosinófilo', desc: 'Especialista en defensa contra helmintos y parásitos.', x: 0.40, y: 0.52, scale: 0.25, entra: 'slideRight', anim: 'float' },
-            { id: 'basofilo', img: 'P11', nombre: 'Basófilo', desc: 'Granulocito liberador de histamina e inflamación.', x: 0.60, y: 0.52, scale: 0.25, entra: 'slideRight', anim: 'float' },
-            { id: 'mastocito', img: 'P12', nombre: 'Mastocito', desc: 'Célula tisular mieloide inductora de alergias e histamina.', x: 0.80, y: 0.52, scale: 0.25, entra: 'slideRight', anim: 'pulse' }
-          ]
-        },
-        // S08: Desfile linfoide
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Madura en médula y produce anticuerpos específicos.', x: 0.25, y: 0.50, scale: 0.28, entra: 'pop', anim: 'float' },
-            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Colaborador que orquesta la respuesta liberando citoquinas.', x: 0.50, y: 0.50, scale: 0.28, entra: 'pop', anim: 'float' },
-            { id: 'nk', img: 'P21', nombre: 'Célula NK', desc: 'Linfocito innato que destruye tumorales e infectadas sin antígeno específico.', x: 0.75, y: 0.50, scale: 0.28, entra: 'pop', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          personajes: [
-            { id: 'mastocito', img: 'P12', nombre: 'Mastocito', desc: 'Célula de origen mieloide residente en tejidos.', x: 0.50, y: 0.50, scale: 0.32, entra: 'pop', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.75, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Maduración medular productora de inmunoglobulinas.', x: 0.25, y: 0.50, scale: 0.28, entra: null, anim: 'float' },
-            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Reconoce CMH-II y comanda la respuesta.', x: 0.50, y: 0.50, scale: 0.28, entra: null, anim: 'float' },
-            { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+', desc: 'Reconoce CMH-I y ejecuta lisis citotóxica.', x: 0.75, y: 0.50, scale: 0.28, entra: 'slideRight', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P47',
-          overlay: null,
-          burst: { x: 0.50, y: 0.45, tipo: 'spark' },
-          personajes: [
-            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno invasor.', x: 0.50, y: 0.45, scale: 0.32, entra: 'zoom', anim: 'pulse' }
-          ]
-        }
-      ]
-    },
-
-    // -------------------------------------------------------------
-    // PUNTO 3 (Fila 1, Pos 3): Alarma Tisular, Quimiotaxis y Fagocitosis
-    // -------------------------------------------------------------
-    {
-      id: 'punto_3',
-      numero: '3',
-      fila: 1,
-      fondo: 'P49',
-      faseNombre: '3. Infección y Fagocitosis',
-      titulo: 'Alarma Tisular, Quimiotaxis y Fagocitosis',
-      narracion: [
-        'Nuestro cuerpo es un poco malo y el virus ha comenzado a infectar células.',
-        'Lo primero que entra en acción son las células de la respuesta inmunitaria innata.',
-        'Los fagocitos (neutrófilos y macrófagos) comienzan a actuar. Comienzan a buscar patógenos de manera natural, como vigilantes de seguridad, atradídos por señales químicas que emiten las células dañadas (quimiotaxis).',
-        'Allí los fagocitos hacen su proceso de fagocitosis: reconocen al microorganismo, lo engloban y lo destruyen en su interior, con su marcación u opsonización —los anticuerpos que marcan al patógeno reciben el nombre de opsoninas— y digestión con enzimas.'
-      ],
-      personajes: [
-        { id: 'infectada', img: 'P30', nombre: 'Célula infectada', desc: 'Célula epitelial invadida por virus que emite señales de estrés.', x: 0.22, y: 0.62, scale: 0.28, anim: 'pulse' },
-        { id: 'quimio', img: 'P43', nombre: 'Quimiotaxis', desc: 'Gradiente de citoquinas y quimioquinas que guía a los leucocitos.', x: 0.50, y: 0.52, scale: 0.25, anim: 'float' },
-        { id: 'macro_comilon', img: 'P14', nombre: 'Macrófago', desc: 'Fagocita activamente invasores opsonizados mediante fagosomas.', x: 0.78, y: 0.58, scale: 0.28, anim: 'float' }
-      ],
-      pasos: [
-        // S10: La barrera falla
-        {
-          fondo: 'P49',
-          fondoAnim: 'slide-up',
-          overlay: null,
-          shakeStage: true,
-          burst: { x: 0.40, y: 0.52, tipo: 'spark' },
-          personajes: [
-            { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Célula epitelial sana alcanzada por el virus.', x: 0.30, y: 0.52, scale: 0.28, entra: null, anim: 'float' },
-            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Inyecta su genoma en la célula huésped.', x: 0.45, y: 0.42, scale: 0.24, entra: 'zoom', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P49',
-          overlay: null,
-          shakeStage: true,
-          personajes: [
-            { id: 'infectada', img: 'P30', nombre: 'Célula infectada', desc: 'Célula secuestrada por el virus que emite alarma química.', x: 0.50, y: 0.52, scale: 0.34, entra: 'pop', anim: 'trapped' }
-          ]
-        },
-        // S11: Quimiotaxis
-        {
-          fondo: 'P49',
-          overlay: null,
-          burst: { x: 0.50, y: 0.45, tipo: 'spark' },
-          personajes: [
-            { id: 'quimio', img: 'P43', nombre: 'Quimiotaxis', desc: 'Gradiente químico de atracción hacia el foco de infección.', x: 0.50, y: 0.45, scale: 0.32, entra: 'pop', anim: 'float' },
-            { id: 'neutrofilo', img: 'P09', nombre: 'Neutrófilo', desc: 'Fagocito veloz que acude al rastro químico.', x: 0.22, y: 0.54, scale: 0.26, entra: 'slideRight', anim: 'float' },
-            { id: 'macrofago', img: 'P14', nombre: 'Macrófago', desc: 'Fagocito residente que acude a la zona afectada.', x: 0.78, y: 0.54, scale: 0.30, entra: 'slideRight', anim: 'float' }
-          ]
-        },
-        // S12: Fagocitosis y opsonización
-        {
-          fondo: 'P49',
-          overlay: null,
-          shakeStage: true,
-          burst: { x: 0.65, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'opsonina', img: 'P36', nombre: 'Opsonina', desc: 'Marca la superficie del patógeno para su reconocimiento.', x: 0.32, y: 0.42, scale: 0.24, entra: 'pop', anim: 'pulse' },
-            { id: 'virus_opsonizado', img: 'P27', nombre: 'Virus opsonizado', desc: 'Virus cubierto de opsoninas listo para ser englobado.', x: 0.46, y: 0.50, scale: 0.26, entra: 'pop', anim: 'trapped' },
-            { id: 'macrofago', img: 'P14', nombre: 'Macrófago', desc: 'Engloba y destruye mediante fagosomas y enzimas digestivas.', x: 0.76, y: 0.50, scale: 0.35, entra: 'slideRight', anim: 'float' }
-          ]
-        }
-      ]
-    },
-
-    // -------------------------------------------------------------
-    // PUNTO 4 (Fila 1, Pos 4): El Sistema del Complemento
-    // -------------------------------------------------------------
-    {
-      id: 'punto_4',
-      numero: '4',
-      fila: 1,
-      fondo: 'P48',
-      faseNombre: '4. Bioquímica del Complemento',
-      titulo: 'El Sistema del Complemento',
-      narracion: [
-        'Por otra parte, podemos encontrarnos el sistema del complemento. Este es un conjunto de más de treinta proteínas plasmáticas termolábiles que circulan por la sangre de forma inactiva, y que se activan cuando detectan anomalías.',
-        'Tiene tres vías de activación: la clásica (a través de un anticuerpo unido al antígeno), la alterna (directamente sobre la superficie de muchos microorganismos, sin anticuerpos) y la vía de las lectinas (cuando reconocen azúcares de la superficie del microbio), pero eso es otra cosa.',
-        'Cuando se activa, el complemento marca al patógeno para los fagocitos, provoca inflamación reclutando más células al foco de la infección y puede lisar directamente al microorganismo.'
-      ],
-      personajes: [
-        { id: 'dormido', img: 'P37', nombre: 'Proteínas del complemento', desc: 'Proteínas termolábiles sintetizadas en hígado que patrullan la sangre.', x: 0.25, y: 0.54, scale: 0.26, anim: 'float' },
-        { id: 'cascada', img: 'P38', nombre: 'Cascada del complemento', desc: 'Activación proteolítica secuencial (C3 convertasa, C5 convertasa).', x: 0.55, y: 0.45, scale: 0.28, anim: 'pulse' },
-        { id: 'mac_drill', img: 'P39', nombre: 'Complejo MAC', desc: 'Poro lítico (C5b-9) que perfora la envoltura y causa lisis osmótica.', x: 0.82, y: 0.58, scale: 0.28, anim: 'pulse' }
-      ],
-      pasos: [
-        // S05: El complemento
+        // 10: S05 El Complemento (P48 torrente sanguíneo, P37 durmiente con callout)
         {
           fondo: 'P48',
           fondoAnim: 'slide-up',
           overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
+          burst: { x: 0.50, y: 0.32, tipo: 'spark' },
           personajes: [
-            { id: 'dormido', img: 'P37', nombre: 'Proteínas del complemento', desc: 'Más de 30 proteínas plasmáticas inactivas en torrente sanguíneo.', x: 0.50, y: 0.50, scale: 0.35, entra: 'pop', anim: 'float' }
-          ]
+            {
+              id: 'dormido',
+              img: 'P37',
+              nombre: 'Proteínas del complemento',
+              desc: 'Más de 30 proteínas plasmáticas inactivas en torrente sanguíneo.',
+              x: 0.50,
+              y: 0.32,
+              scale: 1.20,
+              entra: 'pop',
+              anim: 'float',
+              sinBadge: true
+            }
+          ],
+          callout: {
+            texto: 'SISTEMA DEL COMPLEMENTO',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
+
+        // 11: S05 Las 3 vías del complemento
         {
           fondo: 'P48',
           overlay: null,
           decorado: 'vias_complemento',
           personajes: [
-            { id: 'dormido', img: 'P37', nombre: 'Proteínas del complemento', desc: 'Despiertan ante anomalías patógenas por 3 vías moleculares.', x: 0.50, y: 0.34, scale: 0.26, entra: null, anim: 'pulse', shake: true }
+            { id: 'dormido', img: 'P37', nombre: 'Proteínas del complemento', desc: 'Despiertan ante anomalías patógenas por 3 vías moleculares.', x: 0.50, y: 0.30, scale: 1.05, entra: null, anim: 'pulse', shake: true }
           ]
         },
+
+        // 12: S05 Cascada P38 y Taladro MAC P39 perforando
         {
           fondo: 'P48',
           overlay: null,
           shakeStage: true,
-          burst: { x: 0.72, y: 0.48, tipo: 'spark' },
+          burst: { x: 0.72, y: 0.34, tipo: 'spark' },
           personajes: [
-            { id: 'cascada', img: 'P38', nombre: 'Cascada del complemento', desc: 'Reacción proteolítica en cadena C3a, C3b, C5a, C5b.', x: 0.32, y: 0.50, scale: 0.32, entra: 'pop', anim: 'pulse' },
-            { id: 'mac_drill', img: 'P39', nombre: 'Complejo MAC', desc: 'Taladro citolítico (C5b-9) que perfora la envoltura y causa lisis osmótica.', x: 0.72, y: 0.48, scale: 0.34, entra: 'slideRight', anim: 'pulse', shake: true }
-          ]
-        }
-      ]
-    },
+            { id: 'cascada', img: 'P38', nombre: 'Cascada del complemento', desc: 'Reacción proteolítica en cadena C3a, C3b, C5a, C5b.', x: 0.30, y: 0.34, scale: 1.10, entra: 'pop', anim: 'pulse' },
+            { id: 'mac_drill', img: 'P39', nombre: 'Complejo MAC', desc: 'Taladro citolítico (C5b-9) que perfora la envoltura y causa lisis osmótica.', x: 0.72, y: 0.32, scale: 1.15, entra: 'slideRight', anim: 'pulse', shake: true, sinBadge: true }
+          ],
+          callout: {
+            texto: 'COMPLEJO MAC (PORO LÍTICO)',
+            x: 0.72,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
 
-    // -------------------------------------------------------------
-    // PUNTO 5 (Fila 2, Pos 1): Migración y Presentación Antigénica
-    // -------------------------------------------------------------
-    {
-      id: 'punto_5',
-      numero: '5',
-      fila: 2,
-      fondo: 'P51',
-      faseNombre: '5. Presentación Antigénica',
-      titulo: 'La Célula Dendrítica y el Ganglio Linfático',
-      narracion: [
-        'Por otra parte, las células dendríticas, que también van por allí, una vez captan los antígenos en los tejidos, maduran y viajan hasta los ganglios linfáticos.',
-        'Allí, como células presentadoras de antígeno, muestran los fragmentos de estos virus unidos a sus moléculas del CMH (complejo mayor de histocompatibilidad, en inglés MHC), como si agitaran banderitas de alarma.',
-        'Y es que los linfocitos T no pueden reconocer un antígeno libre: necesitan que otra célula se lo muestre, y lo detectan mediante su receptor TCR.',
-        'Si la infección es grave, estas células presentan esos fragmentos de estos virus en los ganglios linfáticos a los linfocitos T y ya comienza la respuesta adaptativa.'
-      ],
-      personajes: [
-        { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Centinela que procesa el antígeno y viaja al ganglio linfático.', x: 0.26, y: 0.55, scale: 0.28, anim: 'float' },
-        { id: 'cmh', img: 'P34', nombre: 'Complejo CMH', desc: 'Molécula de superficie que exhibe el péptido antigénico.', x: 0.50, y: 0.46, scale: 0.28, anim: 'pulse' },
-        { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Reconoce CMH-II y orquesta la respuesta liberando citoquinas.', x: 0.78, y: 0.54, scale: 0.28, anim: 'float' }
-      ],
-      pasos: [
-        // S13: La dendrítica viaja al ganglio
+        // 13: S06 Médula ósea P47
+        {
+          fondo: 'P47',
+          fondoAnim: 'slide-up',
+          overlay: null,
+          personajes: []
+        },
+        // 14: S06 Leucocitos defensores
+        {
+          fondo: 'P47',
+          overlay: null,
+          personajes: []
+        },
+        // 15: S06 Granulocitos vs agranulocitos
+        {
+          fondo: 'P47',
+          overlay: null,
+          personajes: []
+        },
+        // 16: S06 Célula madre hematopoyética P08 con callout
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.50, y: 0.30, tipo: 'gold' },
+          personajes: [
+            { id: 'celula_madre', img: 'P08', nombre: 'Célula madre', desc: 'Célula multipotencial precursora de todos los leucocitos.', x: 0.50, y: 0.30, scale: 1.25, entra: 'pop', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'CÉLULA MADRE HEMATOPOYÉTICA',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+        // 17: S06 Linajes mieloide y linfoide
+        {
+          fondo: 'P47',
+          overlay: null,
+          decorado: 'linajes',
+          personajes: [
+            { id: 'celula_madre', img: 'P08', nombre: 'Célula madre', desc: 'Célula multipotencial precursora de todos los leucocitos.', x: 0.50, y: 0.30, scale: 1.05, entra: null, anim: 'pulse' }
+          ]
+        },
+
+        // 18: S07 Desfile mieloide - Glóbulo rojo P16 y Plaqueta P17 con callout
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.50, y: 0.32, tipo: 'spark' },
+          personajes: [
+            { id: 'globulo_rojo', img: 'P16', nombre: 'Glóbulo rojo', desc: 'Transporta oxígeno unido a hemoglobina.', x: 0.35, y: 0.32, scale: 1.15, entra: 'slideRight', anim: 'float', sinBadge: true },
+            { id: 'plaqueta', img: 'P17', nombre: 'Plaqueta', desc: 'Fragmento celular que tapona heridas (hemostasia).', x: 0.65, y: 0.32, scale: 1.05, entra: 'slideRight', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'GLÓBULO ROJO Y PLAQUETA',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 19: S07 Monocito P13 y Macrófago P14 con callout
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.68, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'monocito', img: 'P13', nombre: 'Monocito', desc: 'Leucocito agranulocito que patrulla en sangre.', x: 0.32, y: 0.34, scale: 1.10, entra: 'pop', anim: 'float' },
+            { id: 'macrofago', img: 'P14', nombre: 'Macrófago', desc: 'Gran comedor fagocitario secretor de citoquinas.', x: 0.68, y: 0.30, scale: 1.25, entra: 'slideRight', anim: 'float', sinBadge: true }
+          ],
+          callout: {
+            texto: 'MACRÓFAGO',
+            x: 0.68,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 20: S07 Célula dendrítica P15 con callout
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.50, y: 0.30, tipo: 'gold' },
+          personajes: [
+            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Puente clave entre la inmunidad innata y adaptativa.', x: 0.50, y: 0.30, scale: 1.25, entra: 'pop', anim: 'float', sinBadge: true }
+          ],
+          callout: {
+            texto: 'CÉLULA DENDRÍTICA',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 21: S07 Granulocitos (Neutrófilo P09 con callout, Eosinófilo P10, Basófilo P11, Mastocito P12)
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.20, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'neutrofilo', img: 'P09', nombre: 'Neutrófilo', desc: 'Primer respondedor celular (60-70% de leucocitos).', x: 0.20, y: 0.30, scale: 1.15, entra: 'slideRight', anim: 'float', sinBadge: true },
+            { id: 'eosinofilo', img: 'P10', nombre: 'Eosinófilo', desc: 'Especialista en defensa contra helmintos y parásitos.', x: 0.40, y: 0.34, scale: 1.05, entra: 'slideRight', anim: 'float' },
+            { id: 'basofilo', img: 'P11', nombre: 'Basófilo', desc: 'Granulocito liberador de histamina e inflamación.', x: 0.60, y: 0.34, scale: 1.05, entra: 'slideRight', anim: 'float' },
+            { id: 'mastocito', img: 'P12', nombre: 'Mastocito', desc: 'Célula tisular mieloide inductora de alergias e histamina.', x: 0.80, y: 0.34, scale: 1.05, entra: 'slideRight', anim: 'pulse' }
+          ],
+          callout: {
+            texto: 'NEUTRÓFILO (60-70%)',
+            x: 0.20,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 22: S08 Desfile linfoide (Linf B P18, T CD4 P19, NK P21 con callout)
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.25, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Madura en médula y produce anticuerpos específicos.', x: 0.25, y: 0.30, scale: 1.20, entra: 'pop', anim: 'float', sinBadge: true },
+            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Colaborador que orquesta la respuesta liberando citoquinas.', x: 0.52, y: 0.34, scale: 1.10, entra: 'pop', anim: 'float' },
+            { id: 'nk', img: 'P21', nombre: 'Célula NK', desc: 'Linfocito innato que destruye tumorales e infectadas.', x: 0.78, y: 0.34, scale: 1.10, entra: 'pop', anim: 'pulse' }
+          ],
+          callout: {
+            texto: 'LINFOCITO B',
+            x: 0.25,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 23: S08 Mastocito P12
+        {
+          fondo: 'P47',
+          overlay: null,
+          personajes: [
+            { id: 'mastocito', img: 'P12', nombre: 'Mastocito', desc: 'Célula de origen mieloide residente en tejidos.', x: 0.50, y: 0.30, scale: 1.25, entra: 'pop', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'MASTOCITO',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 24: S08 Linf B, CD4 y CD8 P20 con callout
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.75, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Maduración medular productora de inmunoglobulinas.', x: 0.22, y: 0.34, scale: 1.10, entra: null, anim: 'float' },
+            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Reconoce CMH-II y comanda la respuesta.', x: 0.48, y: 0.34, scale: 1.10, entra: null, anim: 'float' },
+            { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+', desc: 'Reconoce CMH-I y ejecuta lisis citotóxica.', x: 0.75, y: 0.30, scale: 1.20, entra: 'slideRight', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'LINFOCITO T CD8+',
+            x: 0.75,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 25: S08 Entra el virus en la historia
+        {
+          fondo: 'P47',
+          overlay: null,
+          burst: { x: 0.50, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno invasor.', x: 0.50, y: 0.30, scale: 1.25, entra: 'zoom', anim: 'pulse' }
+          ]
+        },
+
+        // 26: S09 Entra el virus por la nariz (P44 aerosoles)
+        {
+          fondo: 'P44',
+          overlay: null,
+          burst: { x: 0.50, y: 0.32, tipo: 'aerosol' },
+          personajes: [
+            { id: 'virus_nasal', img: 'P25', nombre: 'Virus en aerosol', desc: 'Partícula viral transportada por microgotas de aerosol.', x: 0.50, y: 0.32, scale: 1.20, entra: 'zoom', anim: 'pulse' }
+          ]
+        },
+
+        // 27: S09 Pelos y mucosas atrapando
+        {
+          fondo: 'P44',
+          overlay: null,
+          shakeStage: true,
+          burst: { x: 0.32, y: 0.34, tipo: 'spark' },
+          personajes: [
+            { id: 'virus_atrapado', img: 'P25', nombre: 'Virus atrapado', desc: 'Patógeno inmovilizado por la barrera física de cilios y moco.', x: 0.32, y: 0.34, scale: 1.05, entra: null, anim: 'trapped' },
+            { id: 'virus_infiltrado', img: 'P25', nombre: 'Virus infiltrado', desc: 'Virus que logra superar el filtrado mecánico nasal.', x: 0.74, y: 0.32, scale: 1.15, entra: 'slideRight', anim: 'pulse' }
+          ]
+        },
+
+        // 28: S10 La barrera falla (P49 célula epitelial y virus infectando)
+        {
+          fondo: 'P49',
+          fondoAnim: 'slide-up',
+          overlay: null,
+          shakeStage: true,
+          burst: { x: 0.40, y: 0.32, tipo: 'spark' },
+          personajes: [
+            { id: 'epitelio', img: 'P29', nombre: 'Célula epitelial', desc: 'Célula epitelial sana alcanzada por el virus.', x: 0.30, y: 0.32, scale: 1.15, entra: null, anim: 'float' },
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Inyecta su genoma en la célula huésped.', x: 0.48, y: 0.30, scale: 1.10, entra: 'zoom', anim: 'pulse' }
+          ]
+        },
+
+        // 29: S10 Célula epitelial infectada P30 con alarma roja y callout
+        {
+          fondo: 'P49',
+          overlay: null,
+          shakeStage: true,
+          burst: { x: 0.50, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'infectada', img: 'P30', nombre: 'Célula infectada', desc: 'Célula secuestrada por el virus que emite alarma química.', x: 0.50, y: 0.30, scale: 1.25, entra: 'pop', anim: 'trapped', sinBadge: true }
+          ],
+          callout: {
+            texto: 'CÉLULA INFECTADA',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 30: S11 Quimiotaxis P43 (señales químicas y neutrófilos) con callout
+        {
+          fondo: 'P49',
+          overlay: null,
+          burst: { x: 0.50, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'quimio', img: 'P43', nombre: 'Quimiotaxis', desc: 'Gradiente químico de atracción hacia el foco de infección.', x: 0.50, y: 0.30, scale: 1.25, entra: 'pop', anim: 'float', sinBadge: true },
+            { id: 'neutrofilo', img: 'P09', nombre: 'Neutrófilo', desc: 'Fagocito veloz que acude al rastro químico.', x: 0.22, y: 0.34, scale: 1.10, entra: 'slideRight', anim: 'float' },
+            { id: 'macrofago', img: 'P14', nombre: 'Macrófago', desc: 'Fagocito residente que acude a la zona afectada.', x: 0.78, y: 0.34, scale: 1.15, entra: 'slideRight', anim: 'float' }
+          ],
+          callout: {
+            texto: 'SEÑALES QUÍMICAS (QUIMIOTAXIS)',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 31: S12 Fagocitosis (Opsonina P36, virus opsonizado P27 y macrófago P14) con callout
+        {
+          fondo: 'P49',
+          overlay: null,
+          shakeStage: true,
+          burst: { x: 0.46, y: 0.32, tipo: 'spark' },
+          personajes: [
+            { id: 'opsonina', img: 'P36', nombre: 'Opsonina', desc: 'Marca la superficie del patógeno para su reconocimiento.', x: 0.26, y: 0.34, scale: 1.05, entra: 'pop', anim: 'pulse' },
+            { id: 'virus_opsonizado', img: 'P27', nombre: 'Virus opsonizado', desc: 'Virus cubierto de opsoninas listo para ser englobado.', x: 0.46, y: 0.30, scale: 1.20, entra: 'pop', anim: 'trapped', sinBadge: true },
+            { id: 'macrofago', img: 'P14', nombre: 'Macrófago', desc: 'Engloba y destruye mediante fagosomas y enzimas digestivas.', x: 0.78, y: 0.32, scale: 1.25, entra: 'slideRight', anim: 'float' }
+          ],
+          callout: {
+            texto: 'VIRUS OPSONIZADO',
+            x: 0.46,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 32: S13 Viaje al ganglio (P51 mapa ganglios linfáticos, dendrítica P15 migrando) con callout
         {
           fondo: 'P51',
           fondoAnim: 'slide-up',
           overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
+          burst: { x: 0.50, y: 0.32, tipo: 'gold' },
           personajes: [
-            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Centinela procesadora que migra por los vasos linfáticos.', x: 0.50, y: 0.50, scale: 0.32, entra: 'slideRight', anim: 'float' }
-          ]
+            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Centinela procesadora que migra por los vasos linfáticos.', x: 0.50, y: 0.32, scale: 1.25, entra: 'slideRight', anim: 'float', sinBadge: true }
+          ],
+          callout: {
+            texto: 'VIAJE AL GANGLIO LINFÁTICO',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
-        {
-          fondo: 'P50',
-          overlay: null,
-          burst: { x: 0.45, y: 0.45, tipo: 'spark' },
-          personajes: [
-            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Presentadora profesional de antígenos en el ganglio.', x: 0.35, y: 0.52, scale: 0.30, entra: null, anim: 'float' },
-            { id: 'cmh', img: 'P34', nombre: 'Complejo CMH', desc: 'Banderita molecular de alarma que exhibe el péptido antigénico.', x: 0.65, y: 0.48, scale: 0.32, entra: 'pop', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P50',
-          overlay: null,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
-          personajes: [
-            { id: 'cmh', img: 'P34', nombre: 'Complejo CMH', desc: 'Molécula que presenta el péptido antigénico al TCR.', x: 0.38, y: 0.50, scale: 0.30, entra: null, anim: 'float' },
-            { id: 'tcr', img: 'P35', nombre: 'Receptor TCR', desc: 'Receptor del linfocito T con encaje específico de alta afinidad.', x: 0.68, y: 0.50, scale: 0.30, entra: 'slideRight', anim: 'pulse' }
-          ]
-        },
-        // S14: Presentación antigénica adaptativa
-        {
-          fondo: 'P50',
-          overlay: null,
-          burst: { x: 0.50, y: 0.46, tipo: 'gold' },
-          personajes: [
-            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Presenta el antígeno a los linfocitos T en el ganglio.', x: 0.25, y: 0.52, scale: 0.28, entra: null, anim: 'float' },
-            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Reconoce CMH-II e inicia la orquestación colaboradora.', x: 0.52, y: 0.48, scale: 0.30, entra: 'pop', anim: 'float' },
-            { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+', desc: 'Reconoce CMH-I y prepara la respuesta citotóxica.', x: 0.78, y: 0.52, scale: 0.30, entra: 'pop', anim: 'pulse' }
-          ]
-        }
-      ]
-    },
 
-    // -------------------------------------------------------------
-    // PUNTO 6 (Fila 2, Pos 2): Batalla Adaptativa Celular y Humoral
-    // -------------------------------------------------------------
-    {
-      id: 'punto_6',
-      numero: '6',
-      fila: 2,
-      fondo: 'P50',
-      faseNombre: '6. Inmunidad Celular y Humoral',
-      titulo: 'Lisis por CD8+ y Expansión Clonal B',
-      narracion: [
-        'Una vez ha llegado a los ganglios, los linfocitos T ya se han enterado. Los T CD4+, que reconocen el antígeno presentado sobre moléculas CMH-II, activan a los linfocitos B liberando citoquinas.',
-        'Y los T CD8+, que reconocen el antígeno sobre CMH-I en la superficie de las células infectadas, comienzan a eliminar por lisis todas las células que están plagadas de virus. Esta es la inmunidad celular, la que actúa contra los patógenos que viven dentro de las células.',
-        'Los linfocitos B activados —que reconocen su antígeno específico y reciben la ayuda de los T CD4+— se dividen y se diferencian en células plasmáticas que generan anticuerpos, multiplicándose en lo que se llama la expansión clonal y comenzando la inmunidad humoral, la que actúa contra los patógenos extracelulares y sus toxinas.'
-      ],
-      personajes: [
-        { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+', desc: 'Elimina células infectadas que exhiben CMH-I mediante lisis.', x: 0.22, y: 0.52, scale: 0.28, anim: 'pulse' },
-        { id: 'lysis', img: 'P31', nombre: 'Lisis celular', desc: 'Perforación e inducción de apoptosis de la célula infectada.', x: 0.46, y: 0.48, scale: 0.26, anim: 'float' },
-        { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Célula de la inmunidad humoral productora de anticuerpos.', x: 0.70, y: 0.54, scale: 0.26, anim: 'float' },
-        { id: 'plasmatica', img: 'P22', nombre: 'Célula plasmática', desc: 'Fábrica celular multiplicada por expansión clonal secretora de anticuerpos.', x: 0.88, y: 0.60, scale: 0.28, anim: 'pulse' }
-      ],
-      pasos: [
-        // S15: Los CD4+ dirigen y CD8+ atacan
+        // 33: S13 P50 Ganglio, dendrítica con CMH P34 con callout
+        {
+          fondo: 'P50',
+          overlay: null,
+          burst: { x: 0.65, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Presentadora profesional de antígenos en el ganglio.', x: 0.32, y: 0.34, scale: 1.15, entra: null, anim: 'float' },
+            { id: 'cmh', img: 'P34', nombre: 'Complejo CMH', desc: 'Banderita molecular de alarma que exhibe el péptido antigénico.', x: 0.65, y: 0.30, scale: 1.25, entra: 'pop', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'COMPLEJO CMH (BANDERITA)',
+            x: 0.65,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 34: S13 Acople CMH P34 y TCR P35 con callout
+        {
+          fondo: 'P50',
+          overlay: null,
+          burst: { x: 0.68, y: 0.30, tipo: 'spark' },
+          personajes: [
+            { id: 'cmh', img: 'P34', nombre: 'Complejo CMH', desc: 'Molécula que presenta el péptido antigénico al TCR.', x: 0.35, y: 0.34, scale: 1.15, entra: null, anim: 'float' },
+            { id: 'tcr', img: 'P35', nombre: 'Receptor TCR', desc: 'Receptor del linfocito T con encaje específico de alta afinidad.', x: 0.68, y: 0.30, scale: 1.25, entra: 'slideRight', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'RECEPTOR TCR',
+            x: 0.68,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
+
+        // 35: S14 Presentación antigénica adaptativa (Dendrítica, CD4 y CD8)
+        {
+          fondo: 'P50',
+          overlay: null,
+          burst: { x: 0.50, y: 0.30, tipo: 'gold' },
+          personajes: [
+            { id: 'dendritica', img: 'P15', nombre: 'Célula dendrítica', desc: 'Presenta el antígeno a los linfocitos T en el ganglio.', x: 0.22, y: 0.34, scale: 1.10, entra: null, anim: 'float' },
+            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Reconoce CMH-II e inicia la orquestación colaboradora.', x: 0.50, y: 0.32, scale: 1.15, entra: 'pop', anim: 'float' },
+            { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+', desc: 'Reconoce CMH-I y prepara la respuesta citotóxica.', x: 0.78, y: 0.34, scale: 1.15, entra: 'pop', anim: 'pulse' }
+          ]
+        },
+
+        // 36: S15 T CD4+ orquestando con Citoquinas P40 con callout
         {
           fondo: 'P50',
           fondoAnim: 'slide-up',
           overlay: null,
-          burst: { x: 0.50, y: 0.48, tipo: 'spark' },
+          burst: { x: 0.68, y: 0.30, tipo: 'spark' },
           personajes: [
-            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Comanda la respuesta adaptativa liberando citoquinas.', x: 0.35, y: 0.50, scale: 0.32, entra: 'pop', anim: 'float' },
-            { id: 'citoquinas', img: 'P40', nombre: 'Citoquinas', desc: 'Mensajeros químicos que activan y reclutan linfocitos B.', x: 0.68, y: 0.48, scale: 0.30, entra: 'slideRight', anim: 'pulse' }
-          ]
+            { id: 't_cd4', img: 'P19', nombre: 'Linfocito T CD4+', desc: 'Comanda la respuesta adaptativa liberando citoquinas.', x: 0.32, y: 0.34, scale: 1.15, entra: 'pop', anim: 'float' },
+            { id: 'citoquinas', img: 'P40', nombre: 'Citoquinas', desc: 'Mensajeros químicos que activan y reclutan linfocitos B.', x: 0.68, y: 0.30, scale: 1.25, entra: 'slideRight', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'CITOQUINAS',
+            x: 0.68,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
+
+        // 37: S15 Lisis citotóxica CD8+ P20 y Lisis P31 con callout
         {
           fondo: 'P49',
           overlay: null,
           shakeStage: true,
-          burst: { x: 0.65, y: 0.50, tipo: 'spark' },
+          burst: { x: 0.70, y: 0.30, tipo: 'spark' },
           personajes: [
-            { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+', desc: 'Inmunidad celular: lisis directa de células infectadas.', x: 0.35, y: 0.50, scale: 0.32, entra: 'slideRight', anim: 'pulse' },
-            { id: 'lisis', img: 'P31', nombre: 'Lisis celular', desc: 'Perforación de membrana y destrucción de la célula con virus.', x: 0.70, y: 0.50, scale: 0.34, entra: 'pop', anim: 'trapped', shake: true }
-          ]
+            { id: 't_cd8', img: 'P20', nombre: 'Linfocito T CD8+', desc: 'Inmunidad celular: lisis directa de células infectadas.', x: 0.32, y: 0.34, scale: 1.15, entra: 'slideRight', anim: 'pulse' },
+            { id: 'lisis', img: 'P31', nombre: 'Lisis celular', desc: 'Perforación de membrana y destrucción de la célula con virus.', x: 0.70, y: 0.30, scale: 1.25, entra: 'pop', anim: 'trapped', shake: true, sinBadge: true }
+          ],
+          callout: {
+            texto: 'LISIS POR CD8+ (INMUNIDAD CELULAR)',
+            x: 0.70,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
-        // S16: Expansión clonal B
+
+        // 38: S16 Expansión clonal B (P18 Linf B, P42 Expansión clonal, P22 Plasmática) con callout
         {
           fondo: 'P50',
           overlay: null,
-          burst: { x: 0.50, y: 0.48, tipo: 'gold' },
+          burst: { x: 0.50, y: 0.30, tipo: 'gold' },
           personajes: [
-            { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Activado por el antígeno y CD4+ para multiplicarse.', x: 0.22, y: 0.52, scale: 0.28, entra: 'pop', anim: 'float' },
-            { id: 'expansion', img: 'P42', nombre: 'Expansión clonal', desc: 'Multiplicación exponencial de clones específicos (1→2→4→8).', x: 0.50, y: 0.46, scale: 0.32, entra: 'pop', anim: 'pulse' },
-            { id: 'plasmatica', img: 'P22', nombre: 'Célula plasmática', desc: 'Fábrica celular diferenciada secretora masiva de anticuerpos.', x: 0.78, y: 0.52, scale: 0.32, entra: 'slideRight', anim: 'float' }
-          ]
-        }
-      ]
-    },
+            { id: 'linf_b', img: 'P18', nombre: 'Linfocito B', desc: 'Activado por el antígeno y CD4+ para multiplicarse.', x: 0.20, y: 0.34, scale: 1.10, entra: 'pop', anim: 'float' },
+            { id: 'expansion', img: 'P42', nombre: 'Expansión clonal', desc: 'Multiplicación exponencial de clones específicos (1→2→4→8).', x: 0.50, y: 0.30, scale: 1.25, entra: 'pop', anim: 'pulse', sinBadge: true },
+            { id: 'plasmatica', img: 'P22', nombre: 'Célula plasmática', desc: 'Fábrica celular diferenciada secretora masiva de anticuerpos.', x: 0.80, y: 0.34, scale: 1.15, entra: 'slideRight', anim: 'float' }
+          ],
+          callout: {
+            texto: 'EXPANSIÓN CLONAL B',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
+        },
 
-    // -------------------------------------------------------------
-    // PUNTO 7 (Fila 2, Pos 3): Neutralización Terminal y Memoria
-    // -------------------------------------------------------------
-    {
-      id: 'punto_7',
-      numero: '7',
-      fila: 2,
-      fondo: 'P52',
-      faseNombre: '7. Victoria y Memoria',
-      titulo: 'Anticuerpos y Memoria Inmunológica',
-      narracion: [
-        'Estas células comienzan a formar anticuerpos: se trata de moléculas llamadas glicoproteínas o inmunoglobulinas (Ig) —las primeras en aparecer son las IgM y las más abundantes en sangre son las IgG—.',
-        'Estos anticuerpos se unen a los epítopos, zonas concretas de la superficie de los virus, a los que atacan para neutralizarlos, facilitando su opsonización y su fagocitosis, además de activar el complemento.',
-        'Además, también se crean linfocitos B y T de memoria que consiguen que, cuando todo acabe, el organismo recuerde a este patógeno.',
-        'Y si vuelve a atacar, la respuesta será mucho más rápida y eficaz que la primera vez.',
-        'Con todo esto acabamos el proceso de la respuesta inmunitaria. Muchas gracias.'
-      ],
-      personajes: [
-        { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Proteína específica que neutraliza epítopos y activa el complemento.', x: 0.20, y: 0.46, scale: 0.26, anim: 'pulse' },
-        { id: 'enjambre', img: 'P33', nombre: 'Neutralización', desc: 'Inmovilización y bloqueo masivo de los viriones.', x: 0.46, y: 0.52, scale: 0.30, anim: 'float' },
-        { id: 'patrulla', img: 'P53', nombre: 'Linfocitos de memoria', desc: 'Vigilancia permanente de larga duración para respuesta secundaria inmediata.', x: 0.76, y: 0.50, scale: 0.30, anim: 'float' },
-        { id: 'secundaria', img: 'P54', nombre: 'Respuesta secundaria', desc: 'Eliminación en cuestión de horas ante una segunda exposición.', x: 0.90, y: 0.60, scale: 0.26, anim: 'pulse' }
-      ],
-      pasos: [
-        // S17: Fábrica de anticuerpos
+        // 39: S17 Fábrica de anticuerpos (Plasmática P22 secretando IgM e IgG P32) con callout
         {
           fondo: 'P48',
           fondoAnim: 'slide-up',
           overlay: null,
-          burst: { x: 0.65, y: 0.48, tipo: 'spark' },
+          burst: { x: 0.30, y: 0.30, tipo: 'spark' },
           personajes: [
-            { id: 'plasmatica', img: 'P22', nombre: 'Célula plasmática', desc: 'Fábrica celular que secreta miles de anticuerpos por segundo.', x: 0.30, y: 0.52, scale: 0.32, entra: 'pop', anim: 'float' },
-            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulinas específicas (IgM e IgG) liberadas a circulación.', x: 0.70, y: 0.48, scale: 0.30, entra: 'slideRight', anim: 'pulse' }
-          ]
+            { id: 'plasmatica', img: 'P22', nombre: 'Célula plasmática', desc: 'Fábrica celular que secreta miles de anticuerpos por segundo.', x: 0.30, y: 0.30, scale: 1.25, entra: 'pop', anim: 'float', sinBadge: true },
+            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulinas específicas (IgM e IgG) liberadas a circulación.', x: 0.72, y: 0.34, scale: 1.15, entra: 'slideRight', anim: 'pulse' }
+          ],
+          callout: {
+            texto: 'CÉLULA PLASMÁTICA (IgM / IgG)',
+            x: 0.30,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
-        // S18: Batalla final
+
+        // 40: S18 Batalla final (Virus epítopos P26, Enjambre P33 y Perforado P28) con callout
         {
           fondo: 'P49',
           overlay: null,
           shakeStage: true,
-          burst: { x: 0.50, y: 0.50, tipo: 'spark' },
+          burst: { x: 0.58, y: 0.30, tipo: 'spark' },
           personajes: [
-            { id: 'virus_epitopos', img: 'P26', nombre: 'Virus con epítopos', desc: 'Superficie antigénica diana de los anticuerpos.', x: 0.26, y: 0.52, scale: 0.28, entra: 'pop', anim: 'trapped' },
-            { id: 'enjambre', img: 'P33', nombre: 'Neutralización', desc: 'Enjambre de anticuerpos inmovilizando y bloqueando los virus.', x: 0.58, y: 0.48, scale: 0.32, entra: 'slideRight', anim: 'float' },
-            { id: 'virus_perforado', img: 'P28', nombre: 'Virus perforado', desc: 'Lisis osmótica tras ataque del complemento.', x: 0.84, y: 0.52, scale: 0.26, entra: 'pop', anim: 'pulse' }
-          ]
+            { id: 'virus_epitopos', img: 'P26', nombre: 'Virus con epítopos', desc: 'Superficie antigénica diana de los anticuerpos.', x: 0.22, y: 0.34, scale: 1.10, entra: 'pop', anim: 'trapped' },
+            { id: 'enjambre', img: 'P33', nombre: 'Neutralización', desc: 'Enjambre de anticuerpos inmovilizando y bloqueando los virus.', x: 0.58, y: 0.30, scale: 1.25, entra: 'slideRight', anim: 'float', sinBadge: true },
+            { id: 'virus_perforado', img: 'P28', nombre: 'Virus perforado', desc: 'Lisis osmótica tras ataque del complemento.', x: 0.86, y: 0.34, scale: 1.10, entra: 'pop', anim: 'pulse' }
+          ],
+          callout: {
+            texto: 'NEUTRALIZACIÓN POR ANTICUERPOS',
+            x: 0.58,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
-        // S19: Victoria
+
+        // 41: S19 Victoria (Tejido sano P52, B memoria P23 y T memoria P24) con callout
         {
           fondo: 'P52',
           overlay: null,
-          burst: { x: 0.50, y: 0.45, tipo: 'gold' },
+          burst: { x: 0.50, y: 0.30, tipo: 'gold' },
           personajes: [
-            { id: 'b_memoria', img: 'P23', nombre: 'Linfocito B de memoria', desc: 'Guarda el registro antigénico para crear anticuerpos ultra-rápidos.', x: 0.32, y: 0.52, scale: 0.30, entra: 'pop', anim: 'float' },
-            { id: 't_memoria', img: 'P24', nombre: 'Linfocito T de memoria', desc: 'Patrulla de larga vida ante reexposiciones.', x: 0.68, y: 0.52, scale: 0.30, entra: 'pop', anim: 'float' }
-          ]
+            { id: 'b_memoria', img: 'P23', nombre: 'Linfocito B de memoria', desc: 'Guarda el registro antigénico para crear anticuerpos ultra-rápidos.', x: 0.32, y: 0.30, scale: 1.20, entra: 'pop', anim: 'float', sinBadge: true },
+            { id: 't_memoria', img: 'P24', nombre: 'Linfocito T de memoria', desc: 'Patrulla de larga vida ante reexposiciones.', x: 0.68, y: 0.30, scale: 1.20, entra: 'pop', anim: 'float', sinBadge: true }
+          ],
+          callout: {
+            texto: 'LINFOCITOS DE MEMORIA',
+            x: 0.50,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
-        // S20: Memoria inmunológica
+
+        // 42: S20 Memoria inmunológica (Patrulla P53 y Respuesta secundaria P54) con callout
         {
           fondo: 'P52',
           overlay: null,
-          burst: { x: 0.70, y: 0.48, tipo: 'gold' },
+          burst: { x: 0.70, y: 0.30, tipo: 'gold' },
           personajes: [
-            { id: 'patrulla', img: 'P53', nombre: 'Linfocitos de memoria', desc: 'Vigilancia permanente por todos los tejidos.', x: 0.32, y: 0.50, scale: 0.32, entra: 'slideRight', anim: 'float' },
-            { id: 'secundaria', img: 'P54', nombre: 'Respuesta secundaria', desc: 'Eliminación masiva en horas, sin dar tiempo a enfermedad.', x: 0.70, y: 0.48, scale: 0.32, entra: 'zoom', anim: 'pulse' }
-          ]
+            { id: 'patrulla', img: 'P53', nombre: 'Linfocitos de memoria', desc: 'Vigilancia permanente por todos los tejidos.', x: 0.30, y: 0.34, scale: 1.15, entra: 'slideRight', anim: 'float' },
+            { id: 'secundaria', img: 'P54', nombre: 'Respuesta secundaria', desc: 'Eliminación masiva en horas, sin dar tiempo a enfermedad.', x: 0.70, y: 0.30, scale: 1.25, entra: 'zoom', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'MEMORIA INMUNOLÓGICA (RESPUESTA SECUNDARIA)',
+            x: 0.70,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 550
+          }
         },
-        // S21: Final
+
+        // 43: S21 Final (P55 agradecimiento y resumen)
         {
           fondo: 'P55',
           overlay: null,
           decorado: 'resumen_final',
-          burst: { x: 0.50, y: 0.40, tipo: 'gold' },
+          burst: { x: 0.50, y: 0.35, tipo: 'gold' },
           personajes: []
         }
       ]

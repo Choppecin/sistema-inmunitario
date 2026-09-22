@@ -7,7 +7,7 @@
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>El Sistema Inmunitario — Infografía Interactiva</title>
-  <link rel="stylesheet" href="css/pizarra.css?v=11">
+  <link rel="stylesheet" href="css/pizarra.css?v=12">
 </head>
 <body>
 
@@ -47,64 +47,21 @@
     <!-- Título principal e indicación -->
     <header class="main-header">
       <h1 class="main-title">EL SISTEMA INMUNITARIO</h1>
-      <p class="main-subtitle">Pincha en el primer capítulo para comenzar</p>
+      <p class="main-subtitle">Pincha en el recorrido para comenzar</p>
     </header>
 
-    <!-- Capa SVG con la línea normal conectora -->
+    <!-- Capa SVG decorativa -->
     <svg id="connections-svg" class="connections-svg">
       <path id="main-connecting-path" class="connecting-line" d=""></path>
     </svg>
 
-    <!-- Cuadrícula limpia de los 7 puntos con capítulos debajo -->
-    <div class="grid-container">
-      <!-- Fila superior: Capítulos 1, 2, 3, 4 -->
-      <div class="grid-row row-top">
-        <div class="station-item">
-          <div class="station-card station-card-0 current-active" data-index="0" title="Capítulo 1: Barreras Anatómicas y el Antígeno">
-            <img src="imagenes/fondos/P45_piel.png" alt="Capítulo 1">
-          </div>
-          <span class="station-label">Capítulo 1</span>
+    <!-- Contenedor centrado para la tarjeta del Recorrido -->
+    <div class="grid-container single-recorrido-container">
+      <div class="station-item">
+        <div class="station-card station-card-0 current-active recorrido-hero" data-index="0" title="Recorrido Completo: El Sistema Inmunitario">
+          <img src="imagenes/fondos/P02_cuerpo.png" alt="Recorrido">
         </div>
-        <div class="station-item">
-          <div class="station-card station-card-1" data-index="1" title="Capítulo 2: La Fábrica Celular: Médula Ósea">
-            <img src="imagenes/fondos/P47_medula.png" alt="Capítulo 2">
-          </div>
-          <span class="station-label">Capítulo 2</span>
-        </div>
-        <div class="station-item">
-          <div class="station-card station-card-2" data-index="2" title="Capítulo 3: Alarma Tisular, Quimiotaxis y Fagocitosis">
-            <img src="imagenes/fondos/P49_tejido_infectado.png" alt="Capítulo 3">
-          </div>
-          <span class="station-label">Capítulo 3</span>
-        </div>
-        <div class="station-item">
-          <div class="station-card station-card-3" data-index="3" title="Capítulo 4: El Sistema del Complemento">
-            <img src="imagenes/fondos/P48_vaso.png" alt="Capítulo 4">
-          </div>
-          <span class="station-label">Capítulo 4</span>
-        </div>
-      </div>
-
-      <!-- Fila inferior: Capítulos 5, 6, 7 -->
-      <div class="grid-row row-bottom">
-        <div class="station-item">
-          <div class="station-card station-card-4" data-index="4" title="Capítulo 5: La Célula Dendrítica y el Ganglio Linfático">
-            <img src="imagenes/fondos/P51_mapa_ganglios.png" alt="Capítulo 5">
-          </div>
-          <span class="station-label">Capítulo 5</span>
-        </div>
-        <div class="station-item">
-          <div class="station-card station-card-5" data-index="5" title="Capítulo 6: Lisis por CD8+ y Expansión Clonal B">
-            <img src="imagenes/fondos/P50_ganglio.png" alt="Capítulo 6">
-          </div>
-          <span class="station-label">Capítulo 6</span>
-        </div>
-        <div class="station-item">
-          <div class="station-card station-card-6" data-index="6" title="Capítulo 7: Anticuerpos y Memoria Inmunológica">
-            <img src="imagenes/fondos/P52_tejido_sano.png" alt="Capítulo 7">
-          </div>
-          <span class="station-label">Capítulo 7</span>
-        </div>
+        <span class="station-label recorrido-hero-label">Recorrido</span>
       </div>
     </div>
 
@@ -125,9 +82,9 @@
     <!-- Capa de decorados de escena (ej. Dos Caminos, Barreras) -->
     <div id="stage-decorations-layer" class="stage-decorations-container"></div>
 
-    <!-- Botón para volver al panel de los 7 puntos (sin flecha) -->
+    <!-- Botón para volver al panel de inicio -->
     <button id="btn-back-to-panel" class="back-to-panel-btn" title="Volver al panel principal">
-      <span>Volver al Esquema</span>
+      <span>Volver al Inicio</span>
     </button>
 
     <!-- Capa de personajes vivos, flotantes y animados -->
@@ -171,8 +128,8 @@
   </div>
 
   <!-- Scripts con versionado anti-cache -->
-  <script src="js/pizarra_data.js?v=11"></script>
-  <script src="js/pizarra_engine.js?v=11"></script>
+  <script src="js/pizarra_data.js?v=12"></script>
+  <script src="js/pizarra_engine.js?v=12"></script>
 
 </body>
 </html>
