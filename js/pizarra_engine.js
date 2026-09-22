@@ -41,6 +41,7 @@ class PizarraEngine {
     this.isTyping = false;
     this.typewriterTimer = null;
     this.currentFullLine = '';
+    this.calloutTimer = null;
 
     // Estado de la introducción
     this.introTyping = false;
@@ -74,11 +75,11 @@ class PizarraEngine {
   // =========================================================================
 
   iniciarIntro() {
-    const textoCompleto = "Hola, profe, esta es mi infografía interactiva del aparato inmunitario.";
+    const textoCompleto = "Hola, profe, esta es mi infografía/novela visual del aparato inmunitario. Ves recorriendo los capítulos para descubrir la historia completa.";
     this.introTextEl.textContent = '';
     this.introTyping = true;
     let i = 0;
-    const velocidad = 38;
+    const velocidad = 30;
 
     const timer = setInterval(() => {
       if (i < textoCompleto.length) {
@@ -269,6 +270,11 @@ class PizarraEngine {
 
   cerrarEscena(triggerHistory = false) {
     if (!this.zoomedOverlay.classList.contains('active')) return;
+
+    if (this.calloutTimer) {
+      clearTimeout(this.calloutTimer);
+      this.calloutTimer = null;
+    }
 
     this.reproducirSonido('whoosh_out');
     this.zoomedOverlay.classList.remove('active');
@@ -470,6 +476,45 @@ class PizarraEngine {
     }
   }
 
+  renderizarCallout(config) {
+    if (!config || !this.stageDecorations) return;
+    const prev = this.stageDecorations.querySelector('.character-spotlight-callout');
+    if (prev) prev.remove();
+
+    const calloutEl = document.createElement('div');
+    calloutEl.className = 'character-spotlight-callout';
+    calloutEl.style.left = `${(config.x || 0.38) * 100}%`;
+    calloutEl.style.top = `${(config.y || 0.44) * 100}%`;
+
+    const arrowDir = config.flechaDir || 'right';
+    let arrowHtml = '';
+    if (arrowDir === 'right') {
+      arrowHtml = `
+        <div class="callout-arrow dir-right">
+          <svg width="68" height="28" viewBox="0 0 68 28" fill="none">
+            <path d="M4 14 H52" stroke="#facc15" stroke-width="4.5" stroke-linecap="round"/>
+            <polygon points="50,5 66,14 50,23" fill="#facc15"/>
+          </svg>
+        </div>
+      `;
+      calloutEl.innerHTML = `
+        <div class="callout-bubble">
+          <span class="callout-title">${config.texto}</span>
+        </div>
+        ${arrowHtml}
+      `;
+    } else {
+      calloutEl.innerHTML = `
+        <div class="callout-bubble">
+          <span class="callout-title">${config.texto}</span>
+        </div>
+      `;
+    }
+
+    this.stageDecorations.appendChild(calloutEl);
+    this.reproducirSonido('chime');
+  }
+
   renderizarPersonajesPaso(personajes, est) {
     if (!this.stageChars) return;
     this.stageChars.innerHTML = '';
@@ -478,19 +523,47 @@ class PizarraEngine {
     const data = window.PIZARRA_DATA;
     personajes.forEach(p => {
       const charEl = document.createElement('div');
-      const animCls = p.anim ? `anim-${p.anim}` : 'anim-float';
-      const enterCls = p.entra ? `anim-enter-${p.entra}` : '';
-      const shakeCls = p.shake ? 'char-shaking' : '';
-      charEl.className = `stage-character-item ${animCls} ${enterCls} ${shakeCls}`.trim();
+      charEl.className = 'stage-character-item';
       charEl.style.left = `${p.x * 100}%`;
       charEl.style.top = `${p.y * 100}%`;
-      charEl.style.transform = 'translate(-50%, -50%)';
+
+      // Capa de movimiento de entrada independiente
+      const motionEl = document.createElement('div');
+      const enterCls = p.entra ? `anim-enter-${p.entra}` : '';
+      const shakeCls = p.shake ? 'char-shaking' : '';
+      motionEl.className = `stage-character-motion ${enterCls} ${shakeCls}`.trim();
+
+      // Capa de animación continua (idle)
+      const innerEl = document.createElement('div');
+      const animCls = p.anim ? `anim-${p.anim}` : 'anim-float';
+      innerEl.className = `stage-character-inner ${animCls}`;
 
       const imgSrc = data.ASSETS[p.img];
-      charEl.innerHTML = `
-        <img src="${imgSrc}" alt="${p.nombre}">
-        <span class="stage-character-badge">${p.nombre}</span>
-      `;
+      const imgEl = document.createElement('img');
+      imgEl.src = imgSrc;
+      imgEl.alt = p.nombre;
+
+      // Aplicar multiplicador de escala si está definido (ej. 1.25)
+      let scaleMult = 1;
+      if (typeof p.scale === 'number' && p.scale >= 0.5) {
+        scaleMult = p.scale;
+      }
+      if (scaleMult !== 1) {
+        imgEl.style.height = `clamp(${Math.round(220 * scaleMult)}px, ${Math.round(30 * scaleMult)}vh, ${Math.round(320 * scaleMult)}px)`;
+      }
+
+      innerEl.appendChild(imgEl);
+
+      // Mostrar badge de nombre si no está explícitamente desactivado
+      if (!p.sinBadge) {
+        const badge = document.createElement('span');
+        badge.className = 'stage-character-badge';
+        badge.textContent = p.nombre;
+        innerEl.appendChild(badge);
+      }
+
+      motionEl.appendChild(innerEl);
+      charEl.appendChild(motionEl);
 
       charEl.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -517,6 +590,16 @@ class PizarraEngine {
     if (this.narrCounter) this.narrCounter.textContent = `${index + 1} / ${totalLines}`;
     if (this.speakerTag) this.speakerTag.textContent = `NARRADOR · ${est.faseNombre}`;
 
+    // Limpiar temporizador de callout previo y callouts huérfanos
+    if (this.calloutTimer) {
+      clearTimeout(this.calloutTimer);
+      this.calloutTimer = null;
+    }
+    if (this.stageDecorations) {
+      const prevCallout = this.stageDecorations.querySelector('.character-spotlight-callout');
+      if (prevCallout) prevCallout.remove();
+    }
+
     // Ejecutar dinamismo biológico de la escena (si la estación define pasos específicos)
     if (est.pasos && est.pasos[index]) {
       const paso = est.pasos[index];
@@ -526,6 +609,13 @@ class PizarraEngine {
       if (paso.burst) this.crearParticulas(paso.burst);
       this.renderizarDecorados(paso.decorado || null);
       this.renderizarPersonajesPaso(paso.personajes || [], est);
+
+      // Si el paso tiene un cartel destacado / flecha indicadora
+      if (paso.callout) {
+        this.calloutTimer = setTimeout(() => {
+          this.renderizarCallout(paso.callout);
+        }, paso.callout.delay || 650);
+      }
     } else {
       // Fallback para estaciones estándar
       this.cambiarFondo(est.fondo);

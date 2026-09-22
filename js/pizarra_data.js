@@ -123,32 +123,50 @@ window.PIZARRA_DATA = {
           overlay: 'P03',
           personajes: []
         },
-        // S02: El antígeno (Fondo P02, Guiri P04 entra con billetes/chispas)
+        // S02: El antígeno (Fondo P02, Guiri P04 entra con animación, sin badge inicial, callout en grande con flecha)
         {
           fondo: 'P02',
           overlay: null,
-          burst: { x: 0.68, y: 0.52, tipo: 'gold' },
+          burst: { x: 0.65, y: 0.48, tipo: 'gold' },
           personajes: [
-            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.68, y: 0.52, scale: 0.32, entra: 'slideRight', anim: 'float', shake: true }
+            {
+              id: 'guiri',
+              img: 'P04',
+              nombre: 'Antígeno',
+              desc: 'Molécula foránea que desencadena la respuesta defensiva.',
+              x: 0.65,
+              y: 0.48,
+              scale: 1.3,
+              entra: 'slideRight',
+              anim: 'float',
+              sinBadge: true
+            }
+          ],
+          callout: {
+            texto: 'ANTÍGENO',
+            x: 0.36,
+            y: 0.44,
+            flechaDir: 'right',
+            delay: 700
+          }
+        },
+        {
+          fondo: 'P02',
+          overlay: null,
+          burst: { x: 0.28, y: 0.46, tipo: 'spark' },
+          personajes: [
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.65, y: 0.48, scale: 1.15, entra: null, anim: 'float' },
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.28, y: 0.46, scale: 1.1, entra: 'pop', anim: 'pulse' }
           ]
         },
         {
           fondo: 'P02',
           overlay: null,
-          burst: { x: 0.34, y: 0.44, tipo: 'spark' },
+          burst: { x: 0.80, y: 0.46, tipo: 'spark' },
           personajes: [
-            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.68, y: 0.52, scale: 0.32, entra: null, anim: 'float' },
-            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.34, y: 0.44, scale: 0.25, entra: 'pop', anim: 'pulse' }
-          ]
-        },
-        {
-          fondo: 'P02',
-          overlay: null,
-          burst: { x: 0.82, y: 0.48, tipo: 'spark' },
-          personajes: [
-            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.50, y: 0.52, scale: 0.28, entra: null, anim: 'float' },
-            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.25, y: 0.44, scale: 0.22, entra: null, anim: 'pulse' },
-            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulina producida por linfocitos B para neutralizar patógenos.', x: 0.80, y: 0.48, scale: 0.26, entra: 'slideRight', anim: 'float' }
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.50, y: 0.48, scale: 1.1, entra: null, anim: 'float' },
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.22, y: 0.46, scale: 1.05, entra: null, anim: 'pulse' },
+            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulina producida por linfocitos B para neutralizar patógenos.', x: 0.80, y: 0.46, scale: 1.15, entra: 'slideRight', anim: 'float' }
           ]
         },
         // S03: Dos tipos de amenaza (Fondo P05 carterista -> P07 dos caminos innata y adaptativa)
