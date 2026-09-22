@@ -510,59 +510,43 @@ html, body {
   color: #38bdf8;
 }
 
+.path-badge.clasica,
+.path-badge.alterna,
+.path-badge.lectinas {
+  max-width: 330px;
+  padding: 12px 18px;
+}
+
 .path-badge.clasica {
-  border-color: rgba(59, 130, 246, 0.55);
+  border-color: rgba(59, 130, 246, 0.65);
 }
 .path-badge.clasica .path-title {
   color: #60a5fa;
+  font-size: clamp(16px, 1.8vw, 20px);
 }
 
 .path-badge.alterna {
-  border-color: rgba(16, 185, 129, 0.55);
+  border-color: rgba(16, 185, 129, 0.65);
 }
 .path-badge.alterna .path-title {
   color: #34d399;
+  font-size: clamp(16px, 1.8vw, 20px);
 }
 
 .path-badge.lectinas {
-  border-color: rgba(245, 158, 11, 0.55);
+  border-color: rgba(245, 158, 11, 0.65);
 }
 .path-badge.lectinas .path-title {
   color: #fbbf24;
+  font-size: clamp(16px, 1.8vw, 20px);
 }
 
-.timeline-summary-banner {
-  display: flex;
-  gap: clamp(8px, 1.4vw, 16px);
-  margin-top: 140px;
-  flex-wrap: wrap;
-  justify-content: center;
-  pointer-events: auto;
-}
-
-.timeline-step-chip {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-family: var(--font-family);
-  font-size: 12px;
-  font-weight: 600;
-  color: #f1f5f9;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
-  animation: badgePop 0.45s ease forwards;
-}
-
-.timeline-step-chip.active {
-  border-color: #38bdf8;
-  background: rgba(56, 189, 248, 0.2);
-  color: #ffffff;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+.path-badge.clasica .path-desc,
+.path-badge.alterna .path-desc,
+.path-badge.lectinas .path-desc {
+  font-size: 13px;
+  margin-top: 6px;
+  line-height: 1.4;
 }
 
 @keyframes badgePop {

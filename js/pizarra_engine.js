@@ -466,18 +466,6 @@ class PizarraEngine {
         </div>
       `;
       this.stageDecorations.appendChild(banner);
-    } else if (decoradoTipo === 'resumen_final') {
-      const banner = document.createElement('div');
-      banner.className = 'timeline-summary-banner';
-      banner.innerHTML = `
-        <div class="timeline-step-chip">1. Entrada</div>
-        <div class="timeline-step-chip">2. Innata</div>
-        <div class="timeline-step-chip">3. Presentación</div>
-        <div class="timeline-step-chip">4. Adaptativa</div>
-        <div class="timeline-step-chip">5. Eliminación</div>
-        <div class="timeline-step-chip active">6. Memoria ✔</div>
-      `;
-      this.stageDecorations.appendChild(banner);
     }
   }
 
