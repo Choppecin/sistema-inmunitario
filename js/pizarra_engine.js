@@ -29,6 +29,7 @@ class PizarraEngine {
     this.speakerTag = document.getElementById('narration-speaker');
     this.narrTextEl = document.getElementById('narration-text');
     this.narrCounter = document.getElementById('narration-counter');
+    this.btnPrev = document.getElementById('btn-narr-prev');
     this.btnContinue = document.getElementById('btn-narr-continue');
 
     // Estado
@@ -75,7 +76,7 @@ class PizarraEngine {
   // =========================================================================
 
   iniciarIntro() {
-    const textoCompleto = "Hola, profe, esta es mi infografía/novela visual del aparato inmunitario. Ves recorriendo los capítulos para descubrir la historia completa.";
+    const textoCompleto = "Hola, profe, esta es mi infografía/novela visual del aparato inmunitario.\n\nVes recorriendo los capítulos para descubrir la historia completa.";
     this.introTextEl.textContent = '';
     this.introTyping = true;
     let i = 0;
@@ -486,9 +487,26 @@ class PizarraEngine {
     calloutEl.style.left = `${(config.x || 0.38) * 100}%`;
     calloutEl.style.top = `${(config.y || 0.44) * 100}%`;
 
-    const arrowDir = config.flechaDir || 'right';
+    const arrowDir = config.flechaDir || 'up';
     let arrowHtml = '';
-    if (arrowDir === 'right') {
+    if (arrowDir === 'up') {
+      calloutEl.classList.add('dir-up');
+      arrowHtml = `
+        <div class="callout-arrow dir-up">
+          <svg width="30" height="28" viewBox="0 0 30 28" fill="none">
+            <path d="M15 26 V6" stroke="#facc15" stroke-width="4.5" stroke-linecap="round"/>
+            <polygon points="6,9 15,2 24,9" fill="#facc15"/>
+          </svg>
+        </div>
+      `;
+      calloutEl.innerHTML = `
+        ${arrowHtml}
+        <div class="callout-bubble">
+          <span class="callout-title">${config.texto}</span>
+        </div>
+      `;
+    } else if (arrowDir === 'right') {
+      calloutEl.classList.add('dir-right');
       arrowHtml = `
         <div class="callout-arrow dir-right">
           <svg width="68" height="28" viewBox="0 0 68 28" fill="none">
@@ -629,20 +647,41 @@ class PizarraEngine {
 
     if (this.typewriterTimer) clearInterval(this.typewriterTimer);
     this.isTyping = true;
-    this.narrTextEl.textContent = '';
+    this.narrTextEl.innerHTML = '';
     let charIdx = 0;
 
-    const speed = 20;
+    const speed = 18;
     this.typewriterTimer = setInterval(() => {
       if (charIdx < text.length) {
-        this.narrTextEl.textContent += text.charAt(charIdx);
-        charIdx++;
+        if (text.charAt(charIdx) === '<') {
+          const closeIdx = text.indexOf('>', charIdx);
+          if (closeIdx !== -1) {
+            charIdx = closeIdx + 1;
+          } else {
+            charIdx++;
+          }
+        } else {
+          charIdx++;
+        }
+        this.narrTextEl.innerHTML = text.substring(0, charIdx);
       } else {
         clearInterval(this.typewriterTimer);
         this.typewriterTimer = null;
         this.isTyping = false;
+        this.narrTextEl.innerHTML = text;
       }
     }, speed);
+
+    // Estado del botón anterior
+    if (this.btnPrev) {
+      if (index === 0) {
+        this.btnPrev.disabled = true;
+        this.btnPrev.classList.add('disabled');
+      } else {
+        this.btnPrev.disabled = false;
+        this.btnPrev.classList.remove('disabled');
+      }
+    }
 
     if (index === totalLines - 1) {
       this.btnContinue.textContent = 'Volver al Esquema';
@@ -656,7 +695,7 @@ class PizarraEngine {
       clearInterval(this.typewriterTimer);
       this.typewriterTimer = null;
       this.isTyping = false;
-      this.narrTextEl.textContent = this.currentFullLine;
+      this.narrTextEl.innerHTML = this.currentFullLine;
       this.reproducirSonido('click');
       return;
     }
@@ -667,6 +706,18 @@ class PizarraEngine {
       this.mostrarLineaNarracion(this.currentLineIndex + 1);
     } else {
       this.completarPunto();
+    }
+  }
+
+  retrocederNarracion() {
+    if (this.isTyping) {
+      clearInterval(this.typewriterTimer);
+      this.typewriterTimer = null;
+      this.isTyping = false;
+    }
+    if (this.currentLineIndex > 0) {
+      this.reproducirSonido('click');
+      this.mostrarLineaNarracion(this.currentLineIndex - 1);
     }
   }
 
@@ -732,6 +783,14 @@ class PizarraEngine {
       this.avanzarNarracion();
     });
 
+    // Retroceder narración con botón Anterior
+    if (this.btnPrev) {
+      this.btnPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.retrocederNarracion();
+      });
+    }
+
     // Cerrar modal personaje
     document.getElementById('btn-close-modal-char').addEventListener('click', () => {
       this.cerrarFichaPersonaje();
@@ -772,7 +831,7 @@ class PizarraEngine {
       this.cerrarEscena(true);
     });
 
-    // 3. Flecha para atrás del teclado (ArrowLeft, Backspace, Escape)
+    // 3. Teclado: Navegación de diapositivas (Flechas / Espacio / Escape)
     window.addEventListener('keydown', (e) => {
       const isSceneOpen = this.zoomedOverlay.classList.contains('active');
       const modalChar = document.getElementById('character-detail-modal');
@@ -790,7 +849,13 @@ class PizarraEngine {
         }
         if (isSceneOpen) {
           e.preventDefault();
-          this.cerrarEscena(true);
+          if (e.key === 'Escape') {
+            this.cerrarEscena(true);
+          } else if (this.currentLineIndex > 0) {
+            this.retrocederNarracion();
+          } else {
+            this.cerrarEscena(true);
+          }
         }
       } else if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') {
         if (isSceneOpen && !isCharModalOpen) {

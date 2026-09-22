@@ -84,18 +84,18 @@ window.PIZARRA_DATA = {
       faseNombre: '1. Puerta de Entrada y Barreras',
       titulo: 'Barreras Anatómicas y el Antígeno',
       narracion: [
-        'Este es nuestro cuerpo humano. Un mundo complejo de aparatos y sistemas.',
-        'Entre ellos, el sistema inmunitario, compuesto por todas las células, moléculas, órganos y tejidos que se encargan de defender a nuestro cuerpo de todos los antígenos.',
-        'No es un órgano aislado, sino un sistema de vigilancia distribuido por todo el organismo.',
-        'Un antígeno es toda molécula que el cuerpo reconoce como extraña y capaz de desencadenar una respuesta inmunitaria. Es decir, un guiri, un extranjero que quiere robarnos todos los dineros.',
-        'Pueden ser desde virus, bacterias, hongos, parásitos, polen o tejidos trasplantados.',
-        'Y su enemigo natural es el anticuerpo: una proteína producida por los linfocitos B que reconoce específicamente a un antígeno y facilita su neutralización y eliminación.',
-        'Está claro que nuestro sistema no va a atacar de la misma manera a un tipo de ataques que a otros. No es lo mismo un carterista que un aviso de bomba en una ciudad importante.',
-        'Por eso, podemos distinguir entre dos tipos de respuestas: la respuesta innata y adaptativa.',
-        'La respuesta innata es la rápida, la inespecífica, la inmediata; es lo primero que se encuentra el patógeno antes de hacer nada, y está presente desde el nacimiento.',
-        'Entre los métodos de defensa de esta inmunidad podemos encontrar barreras bioquímicas y físicas: la piel, los cilios, las mucosas, los MALT, los ácidos… y la microbiota.',
-        'Imaginemos que el virus entra por la nariz, debido a un aerosol, por ejemplo el virus de la COVID-19.',
-        'Lo primero que hace nuestro cuerpo de manera automática es intentar pararlo con los mecanismos físicos más básicos: pelos en la nariz, mucosas…'
+        'Este es nuestro <strong>cuerpo humano</strong>. Un mundo complejo de aparatos y sistemas.',
+        'Entre ellos, el <strong>sistema inmunitario</strong>, compuesto por todas las células, moléculas, órganos y tejidos que se encargan de defender a nuestro cuerpo de todos los <strong>antígenos</strong>.',
+        'No es un órgano aislado, sino un <strong>sistema de vigilancia distribuido</strong> por todo el organismo.',
+        'Para empezar a entenderlo todo, un <strong>antígeno</strong> es toda molécula que el cuerpo humano reconoce como extraña y capaz de desencadenar una respuesta inmunitaria. Es decir, un <strong>GUIRI</strong>, un extranjero que quiere robarnos todos los dineros.',
+        'Pueden ser desde <strong>virus</strong>, bacterias, hongos, parásitos, polen o tejidos trasplantados.',
+        'Y su enemigo natural es el <strong>anticuerpo</strong>: una proteína producida por los linfocitos B que reconoce específicamente a un antígeno y facilita su neutralización y eliminación.',
+        'Está claro que nuestro sistema no va a atacar de la misma manera a un tipo de ataques que a otros. No es lo mismo un <strong>carterista</strong> que un <strong>aviso de bomba</strong> en una ciudad importante.',
+        'Por eso, podemos distinguir entre dos tipos de respuestas: la <strong>respuesta innata</strong> y la <strong>respuesta adaptativa</strong>.',
+        'La <strong>respuesta innata</strong> es la rápida, la inespecífica, la inmediata; es lo primero que se encuentra el patógeno antes de hacer nada, y está presente desde el nacimiento.',
+        'Entre los métodos de defensa de esta inmunidad podemos encontrar barreras bioquímicas y físicas: la <strong>piel</strong>, los <strong>cilios</strong>, las <strong>mucosas</strong>, los MALT, los ácidos… y la <strong>microbiota</strong>.',
+        'Imaginemos que el virus entra por la nariz, debido a un <strong>aerosol</strong>, por ejemplo el virus de la <strong>COVID-19</strong>.',
+        'Lo primero que hace nuestro cuerpo de manera automática es intentar pararlo con los mecanismos físicos más básicos: <strong>pelos en la nariz</strong>, <strong>mucosas</strong>…'
       ],
       personajes: [
         // Personajes por defecto para visualización general
@@ -123,11 +123,11 @@ window.PIZARRA_DATA = {
           overlay: 'P03',
           personajes: []
         },
-        // S02: El antígeno (Fondo P02, Guiri P04 entra con animación, sin badge inicial, callout en grande con flecha)
+        // S02: El antígeno (Fondo P02, Guiri P04 entra con animación, sin badge inicial, callout en grande DEBAJO con flecha hacia arriba)
         {
           fondo: 'P02',
           overlay: null,
-          burst: { x: 0.65, y: 0.48, tipo: 'gold' },
+          burst: { x: 0.65, y: 0.30, tipo: 'gold' },
           personajes: [
             {
               id: 'guiri',
@@ -135,8 +135,8 @@ window.PIZARRA_DATA = {
               nombre: 'Antígeno',
               desc: 'Molécula foránea que desencadena la respuesta defensiva.',
               x: 0.65,
-              y: 0.48,
-              scale: 1.3,
+              y: 0.30,
+              scale: 1.25,
               entra: 'slideRight',
               anim: 'float',
               sinBadge: true
@@ -144,30 +144,46 @@ window.PIZARRA_DATA = {
           ],
           callout: {
             texto: 'ANTÍGENO',
-            x: 0.36,
-            y: 0.44,
-            flechaDir: 'right',
-            delay: 700
+            x: 0.65,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 650
           }
         },
+        // Virus presentado con su cartel debajo y flecha
         {
           fondo: 'P02',
           overlay: null,
-          burst: { x: 0.28, y: 0.46, tipo: 'spark' },
+          burst: { x: 0.28, y: 0.30, tipo: 'spark' },
           personajes: [
-            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.65, y: 0.48, scale: 1.15, entra: null, anim: 'float' },
-            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.28, y: 0.46, scale: 1.1, entra: 'pop', anim: 'pulse' }
-          ]
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.68, y: 0.34, scale: 1.15, entra: null, anim: 'float' },
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.28, y: 0.30, scale: 1.15, entra: 'pop', anim: 'pulse', sinBadge: true }
+          ],
+          callout: {
+            texto: 'VIRUS',
+            x: 0.28,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 600
+          }
         },
+        // Anticuerpo presentado con su cartel debajo y flecha
         {
           fondo: 'P02',
           overlay: null,
-          burst: { x: 0.80, y: 0.46, tipo: 'spark' },
+          burst: { x: 0.78, y: 0.30, tipo: 'spark' },
           personajes: [
-            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.50, y: 0.48, scale: 1.1, entra: null, anim: 'float' },
-            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.22, y: 0.46, scale: 1.05, entra: null, anim: 'pulse' },
-            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulina producida por linfocitos B para neutralizar patógenos.', x: 0.80, y: 0.46, scale: 1.15, entra: 'slideRight', anim: 'float' }
-          ]
+            { id: 'virus', img: 'P25', nombre: 'Virus', desc: 'Microorganismo patógeno que busca replicarse en células huésped.', x: 0.20, y: 0.36, scale: 1.05, entra: null, anim: 'pulse' },
+            { id: 'guiri', img: 'P04', nombre: 'Antígeno', desc: 'Molécula foránea que desencadena la respuesta defensiva.', x: 0.48, y: 0.36, scale: 1.1, entra: null, anim: 'float' },
+            { id: 'anticuerpo', img: 'P32', nombre: 'Anticuerpo', desc: 'Inmunoglobulina producida por linfocitos B para neutralizar patógenos.', x: 0.78, y: 0.30, scale: 1.2, entra: 'slideRight', anim: 'float', sinBadge: true }
+          ],
+          callout: {
+            texto: 'ANTICUERPO',
+            x: 0.78,
+            y: 0.49,
+            flechaDir: 'up',
+            delay: 600
+          }
         },
         // S03: Dos tipos de amenaza (Fondo P05 carterista -> P07 dos caminos innata y adaptativa)
         {
